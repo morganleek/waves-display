@@ -1,2 +1,2 @@
-import './map';
+// import './map';
 import './chart';

@@ -3,7 +3,7 @@
 	Plugin Name:  Waves Display
 	Plugin URI:   https://github.com/morganleek/waves-display/
 	Description:  WP Plugin for displaying buoy data
-	Version:      0.0.1
+	Version:      0.0.2
 	Author:       https://morganleek.me/
 	Author URI:   https://morganleek.me/
 	License:      GPL2
@@ -25,7 +25,10 @@
 	define( 'WAD__VERSION', $plugin_data['Version'] );
 
 	// Admin
-	require_once( WAD__PLUGIN_DIR . 'includes/admin.php' );
+	// require_once( WAD__PLUGIN_DIR . 'includes/admin.php' );
 
-	// Fetch Mechanism
-	require_once( WAD__PLUGIN_DIR . 'includes/fetch.php' );
+	// Display 
+	require_once( WAD__PLUGIN_DIR . 'includes/display.php' );
+
+	// Templates 
+	require_once( WAD__PLUGIN_DIR . 'includes/templates.php' );

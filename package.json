@@ -44,6 +44,7 @@
     "litepicker": "^1.5.7",
     "load-google-maps-api": "^2.0.2",
     "markerwithlabel": "^2.0.2",
+    "slugify": "^1.4.6",
     "vinyl-named": "^1.1.0",
     "webpack-stream": "^5.2.1",
     "yargs": "^15.4.1"
