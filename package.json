@@ -49,5 +49,6 @@
     "webpack-stream": "^5.2.1",
     "yargs": "^15.4.1"
   },
-  "theme_name": "wp_bouy"
+  "theme_name": "wp_bouy",
+  "devDependencies": {}
 }

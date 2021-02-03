@@ -1,5 +1,6 @@
 import $ from 'jquery';
 import { wadProcessBuoyData } from './fetch-buoy';
+import { wadDrawMap } from '../map';
 
 const panelWrapper = "<div class='panel panel-primary'>" +
   "<div class='panel-heading clearfix'><h5>{{ buoyLabel }}</h5></div>" + 
@@ -8,6 +9,7 @@ const panelWrapper = "<div class='panel panel-primary'>" +
 "</div>";
 
 export function wadProcessBuoys( response ) {
+  // Draw charts
   if( document.getElementById( 'buoys' ) != null ) {
     const buoysWrapper = document.getElementById( 'buoys' );
     // Setup boxes
@@ -32,5 +34,10 @@ export function wadProcessBuoys( response ) {
         dataType: 'json'
       })
     }
+  }
+
+  // Draw map
+  if( document.getElementById( 'map' ) ) {
+    wadDrawMap( response );
   }
 }
