@@ -25,10 +25,12 @@ export function wadDrawChart( buoyId, waves ) {
 	// let qfSst = [];  // QF_sst  – quality flag for sea surface temperature
 	// let qfBottTemp = []; // QF_bott_temp – quality flag for bottom temperature
 
-	let arrowImageYellow = new Image( 28, 28 );
-	arrowImageYellow.src = wad.plugin + "/dist/images/arrow-yellow.png";
+	let arrowImageOrange = new Image( 28, 28 );
+	arrowImageOrange.src = wad.plugin + "/dist/images/arrow-orange-g@2x.png";
 	let arrowImageBlue = new Image( 28, 28 );
-	arrowImageBlue.src = wad.plugin + "/dist/images/arrow-blue.png";
+	arrowImageBlue.src = wad.plugin + "/dist/images/arrow-blue-g@2x.png";
+	let arrowImagePink = new Image( 28, 28 );
+	arrowImagePink.src = wad.plugin + "/dist/images/arrow-pink-g@2x.png";
 
 	if( typeof( waves ) != "undefined" ) {
 		if( waves.length > 0 ) {
@@ -64,7 +66,7 @@ export function wadDrawChart( buoyId, waves ) {
 				currentMag.push( { x: time, y: waves[i]["CurrmentMag (m/s)"] } );
 				currentDir.push( { x: time, y: waves[i]["CurrentDir (deg) "] } );
 			}
-			console.log(dp);
+			
 			// Draw Chart
 			var config = {
 				type: 'line',
@@ -73,9 +75,9 @@ export function wadDrawChart( buoyId, waves ) {
 					datasets: [
 						{
 							label: 'Significant Wave Height', // Wave Height (m)
-							backgroundColor: 'rgba(60, 118, 61, 0.7)',
-							borderColor: 'rgba(60, 118, 61, 1)',
-							borderWidth: 2,
+							backgroundColor: 'rgba(75, 192, 192, 1)',
+							borderColor: 'rgba(75, 192, 192, 1)',
+							borderWidth: 0,
 							lineTension: 0,
 							pointRadius: 0,
 							fill: true,
@@ -83,28 +85,38 @@ export function wadDrawChart( buoyId, waves ) {
 							yAxisID: 'y-axis-1',
 						}, {					
 							label: 'Peak Wave Period & Direction (s)', // Peak Period (s)
-							backgroundColor: 'rgba(202, 226, 200, 0.7)',
-							borderColor: 'rgba(238, 238, 238, 1)',
-							borderWidth: 2,
+							backgroundColor: 'rgba(235, 127, 74, 0.7)',
+							borderColor: 'rgba(235, 127, 74, 0.5)',
+							borderWidth: 0,
 							lineTension: 0,
 							pointRadius: 35,
-							pointStyle: arrowImageYellow,
+							pointStyle: arrowImageOrange,
 							rotation: dp,
 							fill: false,
 							data: tp,
 							yAxisID: 'y-axis-2',
 						}, {					
 							label: 'Mean Wave Period & Direction (s)', // Peak Period (s)
-							backgroundColor: 'rgba(202, 226, 200, 0.7)',
-							borderColor: 'rgba(238, 238, 238, 1)',
-							borderWidth: 2,
+							backgroundColor: 'rgba(77, 168, 248, 0.7)',
+							borderColor: 'rgba(77, 168, 248, 0.5)',
+							borderWidth: 0,
 							lineTension: 0,
 							pointRadius: 35,
-							pointStyle: arrowImageYellow,
+							pointStyle: arrowImageBlue,
 							rotation: dm,
 							fill: false,
 							data: tm,
 							yAxisID: 'y-axis-2',
+						}, {					
+							label: 'Sea Surface Temperature (Deg C)', 
+							backgroundColor: 'rgba(255, 206, 87, 0.5)',
+							borderColor: 'rgba(255, 206, 87, 1)',
+							borderWidth: 0,
+							lineTension: 0,
+							pointRadius: 5,
+							fill: true,
+							data: sst,
+							yAxisID: 'y-axis-3',
 						}
 						// {
 						// 	label: 'Mean Wave Period', // Mean Period (s)
@@ -142,10 +154,10 @@ export function wadDrawChart( buoyId, waves ) {
 							// 		return moment( utcMoment ).utcOffset( buoyOffset );
 							// 	},
 							// },
-							ticks: {
-								min: startTime,
-								max: endTime, 
-							},
+							// ticks: {
+							// 	min: startTime,
+							// 	max: endTime, 
+							// },
 							time: {
 								unit: 'hour',
 								displayFormats: {
@@ -190,6 +202,23 @@ export function wadDrawChart( buoyId, waves ) {
 							scaleLabel: {
 								display: true,
 								labelString: 'Period (s)',
+							},
+						}, {
+							type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+							display: true,
+							position: 'right',
+							id: 'y-axis-3',
+							gridLines: {
+								drawOnChartArea: false, // only want the grid lines for one axis to show up
+							},
+							ticks: {
+								beginAtZero: true,
+								min: 0,
+								max: 40
+							},
+							scaleLabel: {
+								display: true,
+								labelString: 'Temp (Deg C)',
 							},
 						}],
 					}
