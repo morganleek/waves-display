@@ -23,7 +23,7 @@
 	define( 'WAD__PLUGIN_DIR', trailingslashit( plugin_dir_path( __FILE__ ) ) );
 	define( 'WAD__PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 	define( 'WAD__VERSION', $plugin_data['Version'] );
-	define( 'WAD__GOOGLE_MAPS_API_KEY', "AIzaSyDXDCNkDLr31Y4AXWM5lGPlChsr39akifs" ); // Move to admin
+	define( 'WAD__GOOGLE_MAPS_API_KEY', "" ); // Move to admin
 	define( 'WAD__GOOGLE_MAPS_LAT', -25.771560246927173 ); // Move to admin
 	define( 'WAD__GOOGLE_MAPS_LNG', 121.81441264778114 ); // Move to admin
 
