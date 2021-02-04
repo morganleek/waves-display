@@ -1,8 +1,8 @@
 // Charts.js
-@import '../../../node_modules/chart.js/dist/Chart';
+@import '../../node_modules/chart.js/dist/Chart';
 
 // Font Awesome
-$fa-font-path: '../../dist/fonts/font-awesome/fonts';
+$fa-font-path: '../dist/fonts/font-awesome/fonts';
 @import '../../fonts/font-awesome/scss/font-awesome';
 
 .chart-surround {
@@ -12,7 +12,7 @@ $fa-font-path: '../../dist/fonts/font-awesome/fonts';
   }
 }
 
-.chart-js-layout {
+// .chart-js-layout {
   .chart-js-menu {
     display: flex;
     justify-content: flex-end;
@@ -44,4 +44,4 @@ $fa-font-path: '../../dist/fonts/font-awesome/fonts';
       }
     }
   }
-}
+// }

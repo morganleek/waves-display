@@ -1,10 +1,16 @@
 import $ from 'jquery';
 import { wadProcessBuoyData } from './fetch-buoy';
 import { wadDrawMap } from '../map';
+import { wadDatePicker } from './controls-buoy';
 
 const panelWrapper = "<div class='panel panel-primary'>" +
   "<div class='panel-heading clearfix'><h5>{{ buoyLabel }}</h5></div>" + 
-  "<div class='panel-body'><p class='loading'><em>Loading&hellip;</em></p></div>" +
+  "<div class='panel-body'>" + 
+    "<div class='chart-js-menu'>" + 
+      "<button class='calendars-trigger' data-buoy-id='{{ buoyId }}'>Date</button>" +
+    "</div>" +
+    "<p class='loading'><em>Loading&hellip;</em></p>" +
+  "</div>" +
   "<canvas></canvas>" +
 "</div>";
 
@@ -17,10 +23,14 @@ export function wadProcessBuoys( response ) {
       const newBuoyWrapper = document.createElement( "div" );
       newBuoyWrapper.id = "buoy-" + response[i].id;
       // Internals
-      const newPanelWrapper = panelWrapper.replace( '{{ buoyLabel }}', response[i].label );
+      const newPanelWrapper = panelWrapper.replace( '{{ buoyLabel }}', response[i].label )
+        .replace( '{{ buoyId }}', response[i].id );
       newBuoyWrapper.insertAdjacentHTML( 'afterbegin', newPanelWrapper );
+      // Setup buttons
+      wadDatePicker( newBuoyWrapper.getElementsByClassName( "calendars-trigger" )[0] );
       // Attach
       buoysWrapper.appendChild( newBuoyWrapper );
+      
 
       // Fetch data
       $.ajax({
@@ -32,7 +42,7 @@ export function wadProcessBuoys( response ) {
         },
         success: wadProcessBuoyData,
         dataType: 'json'
-      })
+      });
     }
   }
 

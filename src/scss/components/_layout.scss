@@ -1,0 +1,26 @@
+body {
+	--headers-height: 80px;
+	&.page-template---templateswave-display-list-php {
+		min-height: calc(100vh - var(--headers-height));
+		main {
+			margin: 0;
+			padding: 0;
+			article {
+				max-width: 100%;
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				height: calc(100vh - var(--headers-height));
+				#map, #buoys {
+					height: calc(100vh - var(--headers-height));
+				}
+				#buoys {
+					overflow: scroll;
+					padding: 10px;
+				}
+			}
+		}
+		&.admin-bar {
+			--headers-height: 112px;
+		}
+	}
+}

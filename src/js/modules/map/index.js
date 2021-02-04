@@ -1,4 +1,4 @@
-import $ from 'jquery';
+// import $ from 'jquery';
 // Google Maps
 const loadGoogleMapsApi = require('load-google-maps-api');
 let map;
@@ -31,19 +31,23 @@ export function wadDrawMap( buoys ) {
 	
 				// Set markers
 				for(var i = 0; i < buoys.length; i++) {
-					console.log(buoys[i]);
-		// 				var point = new MarkerWithLabel({
-		// 					position: {
-		// 						lat: parseFloat(buoys[i][2]), 
-		// 						lng: parseFloat(buoys[i][3])
-		// 					},
-		// 					map: map,
-		// 					title: buoys[i][6],
-		// 					labelContent: buoys[i][5],
-		// 					labelAnchor: new googleMaps.Point(0, -2),
-		// 					labelClass: "maps-label", // the CSS class for the label
-		// 					labelStyle: {opacity: 0.9}
-		// 				});
+					// console.log(buoys[i]);
+					// Core CSV doesn't include lat/lng yet
+
+
+
+					// 				var point = new MarkerWithLabel({
+					// 					position: {
+					// 						lat: parseFloat(buoys[i][2]), 
+					// 						lng: parseFloat(buoys[i][3])
+					// 					},
+					// 					map: map,
+					// 					title: buoys[i][6],
+					// 					labelContent: buoys[i][5],
+					// 					labelAnchor: new googleMaps.Point(0, -2),
+					// 					labelClass: "maps-label", // the CSS class for the label
+					// 					labelStyle: {opacity: 0.9}
+					// 				});
 				}
 			}).catch( (e) => {
 				console.error(e);

@@ -2,6 +2,9 @@
 	// Enqueue scripts and JS object
 	function wad_header_scripts() {
 		if ($GLOBALS['pagenow'] != 'wp-login.php' && !is_admin()) {
+			// Plugin Options
+			$options = get_option('wad_options');
+
 			wp_register_style(
 				'wad-style', WAD__PLUGIN_URL . 'dist/css/bundle.css', array(), WAD_VERSION, 'screen'
 			);
@@ -25,9 +28,9 @@
 				array( 
 					'ajax' => admin_url( 'admin-ajax.php' ),
 					'plugin' => WAD__PLUGIN_URL,
-					'googleApiKey' => WAD__GOOGLE_MAPS_API_KEY,
-					'googleLat' => WAD__GOOGLE_MAPS_LAT,
-					'googleLng' => WAD__GOOGLE_MAPS_LNG
+					'googleApiKey' => $options['maps_key'],
+					'googleLat' => $options['maps_lat'],
+					'googleLng' => $options['maps_lng']
 				)
 			);
 		}

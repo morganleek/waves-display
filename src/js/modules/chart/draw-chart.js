@@ -66,73 +66,63 @@ export function wadDrawChart( buoyId, waves ) {
 				currentMag.push( { x: time, y: waves[i]["CurrmentMag (m/s)"] } );
 				currentDir.push( { x: time, y: waves[i]["CurrentDir (deg) "] } );
 			}
+
+			// Data
+			var data = {
+				labels: chartLabels,
+				datasets: [
+					{
+						label: 'Significant Wave Height', // Wave Height (m)
+						backgroundColor: 'rgba(75, 192, 192, 1)',
+						borderColor: 'rgba(75, 192, 192, 1)',
+						borderWidth: 0,
+						lineTension: 0,
+						pointRadius: 0,
+						fill: true,
+						data: hsig,
+						yAxisID: 'y-axis-1',
+					}, {					
+						label: 'Peak Wave Period & Direction (s)', // Peak Period (s)
+						backgroundColor: 'rgba(235, 127, 74, 0.7)',
+						borderColor: 'rgba(235, 127, 74, 0.5)',
+						borderWidth: 0,
+						lineTension: 0,
+						pointRadius: 35,
+						pointStyle: arrowImageOrange,
+						rotation: dp,
+						fill: false,
+						data: tp,
+						yAxisID: 'y-axis-2',
+					}, {					
+						label: 'Mean Wave Period & Direction (s)', // Peak Period (s)
+						backgroundColor: 'rgba(77, 168, 248, 0.7)',
+						borderColor: 'rgba(77, 168, 248, 0.5)',
+						borderWidth: 0,
+						lineTension: 0,
+						pointRadius: 35,
+						pointStyle: arrowImageBlue,
+						rotation: dm,
+						fill: false,
+						data: tm,
+						yAxisID: 'y-axis-2',
+					}, {					
+						label: 'Sea Surface Temperature (Deg C)', 
+						backgroundColor: 'rgba(255, 206, 87, 0.5)',
+						borderColor: 'rgba(255, 206, 87, 1)',
+						borderWidth: 0,
+						lineTension: 0,
+						pointRadius: 5,
+						fill: true,
+						data: sst,
+						yAxisID: 'y-axis-3',
+					}
+				]
+			};
 			
 			// Draw Chart
 			var config = {
 				type: 'line',
-				data: {
-					labels: chartLabels,
-					datasets: [
-						{
-							label: 'Significant Wave Height', // Wave Height (m)
-							backgroundColor: 'rgba(75, 192, 192, 1)',
-							borderColor: 'rgba(75, 192, 192, 1)',
-							borderWidth: 0,
-							lineTension: 0,
-							pointRadius: 0,
-							fill: true,
-							data: hsig,
-							yAxisID: 'y-axis-1',
-						}, {					
-							label: 'Peak Wave Period & Direction (s)', // Peak Period (s)
-							backgroundColor: 'rgba(235, 127, 74, 0.7)',
-							borderColor: 'rgba(235, 127, 74, 0.5)',
-							borderWidth: 0,
-							lineTension: 0,
-							pointRadius: 35,
-							pointStyle: arrowImageOrange,
-							rotation: dp,
-							fill: false,
-							data: tp,
-							yAxisID: 'y-axis-2',
-						}, {					
-							label: 'Mean Wave Period & Direction (s)', // Peak Period (s)
-							backgroundColor: 'rgba(77, 168, 248, 0.7)',
-							borderColor: 'rgba(77, 168, 248, 0.5)',
-							borderWidth: 0,
-							lineTension: 0,
-							pointRadius: 35,
-							pointStyle: arrowImageBlue,
-							rotation: dm,
-							fill: false,
-							data: tm,
-							yAxisID: 'y-axis-2',
-						}, {					
-							label: 'Sea Surface Temperature (Deg C)', 
-							backgroundColor: 'rgba(255, 206, 87, 0.5)',
-							borderColor: 'rgba(255, 206, 87, 1)',
-							borderWidth: 0,
-							lineTension: 0,
-							pointRadius: 5,
-							fill: true,
-							data: sst,
-							yAxisID: 'y-axis-3',
-						}
-						// {
-						// 	label: 'Mean Wave Period', // Mean Period (s)
-						// 	backgroundColor: 'rgba(51, 122, 183, 0.7)',
-						// 	borderColor: 'rgba(51, 122, 183, 1)',
-						// 	borderWidth: 2,
-						// 	lineTension: 0,
-						// 	pointRadius: 1,
-						// 	fill: true,
-						// 	data: tm,
-						// 	yAxisID: 'y-axis-2',
-							
-						// 	hidden: true,
-						// }
-					]
-				},
+				data: data,
 				options: {
 					responsive: true,
 					aspectRatio: 3,
@@ -225,38 +215,30 @@ export function wadDrawChart( buoyId, waves ) {
 				}
 			};
 
-			// if( window.myLine == undefined ) {
-			// Load chart
-			// window.onload = function() {
-				const buoyWrapper = document.getElementById( 'buoy-' + buoyId );
-				if( buoyWrapper.getElementsByTagName( 'canvas' ).length > 0 ) {
-					const canvasContext = buoyWrapper.getElementsByTagName( 'canvas' )[0].getContext( '2d' );
-					
-					// Hide loading message
-					if( buoyWrapper.getElementsByClassName( 'loading').length > 0 ) {
-						buoyWrapper.getElementsByClassName( 'loading')[0].setAttribute( 'style', 'display: none');
-					}
-					
-					// Load chart
-					window.myLine = new Chart( canvasContext, config );
+			if( typeof( window.myCharts ) == "undefined" ) {
+				window.myCharts = [];
+			}
+			
+			// Destroy existing chart
+			if( window.myCharts.hasOwnProperty( 'buoy' + buoyId ) ) {
+				window.myCharts['buoy' + buoyId].destroy();
+			}
+			// Load new chart
+			const buoyWrapper = document.getElementById( 'buoy-' + buoyId );
+			if( buoyWrapper.getElementsByTagName( 'canvas' ).length > 0 ) {
+				const canvasContext = buoyWrapper.getElementsByTagName( 'canvas' )[0].getContext( '2d' );
+				
+				// Hide loading message
+				if( buoyWrapper.getElementsByClassName( 'loading').length > 0 ) {
+					buoyWrapper.getElementsByClassName( 'loading')[0].setAttribute( 'style', 'display: none');
 				}
-				else {
-					console.log( 'No canvas' );
-				}
-			// };
-			// }
-			// else {
-			// 	// removeData( window.myLine );
-			// 	// addData( window.myLine, config.data.labels, config.data.datasets );
-			// 	// // let ctx = document.getElementById( 'canvas-' + buoyID ).getContext( '2d' );
-			// 	// // // Hide loading message
-			// 	// // const chartWrapper = document.getElementsByClassName('chart-js-layout-' + buoyID);
-			// 	// // if( chartWrapper ) {
-			// 	// // 	chartWrapper[0].getElementsByClassName('loading')[0].setAttribute( 'style', 'display: none');
-			// 	// // }
-			// 	// // // Load chart
-			// 	// // window.myLine = new Chart(ctx, config);
-			// }
+				
+				// Load chart
+				window.myCharts['buoy' + buoyId] = new Chart( canvasContext, config );
+			}
+			else {
+				console.log( 'No canvas' );
+			}
 		}
 	}
 	// Check for no data
@@ -268,105 +250,90 @@ export function wadDrawChart( buoyId, waves ) {
 	}
 }
 
-// function addData(chart, label, data) {
-// 	chart.data.labels.push(label);
-// 	chart.data.datasets.forEach((dataset) => {
-// 			dataset.data.push(data);
-// 	});
-// 	chart.update();
-// }
 
-// function removeData(chart) {
-// 	chart.data.labels.pop();
-// 	chart.data.datasets.forEach((dataset) => {
-// 			dataset.data.pop();
-// 	});
-// 	chart.update();
-// }
+// Chart.defaults.stripe = Chart.helpers.clone(Chart.defaults.line);
+// Chart.controllers.stripe = Chart.controllers.line.extend({
+//   draw: function(ease) {
+//     var result = Chart.controllers.line.prototype.draw.apply(this, arguments);
 
-Chart.defaults.stripe = Chart.helpers.clone(Chart.defaults.line);
-Chart.controllers.stripe = Chart.controllers.line.extend({
-  draw: function(ease) {
-    var result = Chart.controllers.line.prototype.draw.apply(this, arguments);
-
-    // don't render the stripes till we've finished animating
-    if (!this.rendered && ease !== 1)
-      return;
-    this.rendered = true;
+//     // don't render the stripes till we've finished animating
+//     if (!this.rendered && ease !== 1)
+//       return;
+//     this.rendered = true;
 
 
-    var helpers = Chart.helpers;
-    var meta = this.getMeta();
-    var yScale = this.getScaleForId(meta.yAxisID);
-    var yScaleZeroPixel = yScale.getPixelForValue(0);
-    var widths = this.getDataset().width;
-    var ctx = this.chart.chart.ctx;
+//     var helpers = Chart.helpers;
+//     var meta = this.getMeta();
+//     var yScale = this.getScaleForId(meta.yAxisID);
+//     var yScaleZeroPixel = yScale.getPixelForValue(0);
+//     var widths = this.getDataset().width;
+//     var ctx = this.chart.chart.ctx;
 
-    ctx.save();
-    ctx.fillStyle = this.getDataset().backgroundColor;
-    ctx.lineWidth = 1;
-    ctx.beginPath();
+//     ctx.save();
+//     ctx.fillStyle = this.getDataset().backgroundColor;
+//     ctx.lineWidth = 1;
+//     ctx.beginPath();
 
-    // initialize the data and bezier control points for the top of the stripe
-    helpers.each(meta.data, function(point, index) {
-      point._view.y += (yScale.getPixelForValue(widths[index]) - yScaleZeroPixel);
-    });
-    Chart.controllers.line.prototype.updateBezierControlPoints.apply(this);
+//     // initialize the data and bezier control points for the top of the stripe
+//     helpers.each(meta.data, function(point, index) {
+//       point._view.y += (yScale.getPixelForValue(widths[index]) - yScaleZeroPixel);
+//     });
+//     Chart.controllers.line.prototype.updateBezierControlPoints.apply(this);
 
-    // draw the top of the stripe
-    helpers.each(meta.data, function(point, index) {
-      if (index === 0)
-        ctx.moveTo(point._view.x, point._view.y);
-      else {
-        var previous = helpers.previousItem(meta.data, index);
-        var next = helpers.nextItem(meta.data, index);
+//     // draw the top of the stripe
+//     helpers.each(meta.data, function(point, index) {
+//       if (index === 0)
+//         ctx.moveTo(point._view.x, point._view.y);
+//       else {
+//         var previous = helpers.previousItem(meta.data, index);
+//         var next = helpers.nextItem(meta.data, index);
 
-        Chart.elements.Line.prototype.lineToNextPoint.apply({
-          _chart: {
-            ctx: ctx
-          }
-        }, [previous, point, next, null, null])
-      }
-    });
+//         Chart.elements.Line.prototype.lineToNextPoint.apply({
+//           _chart: {
+//             ctx: ctx
+//           }
+//         }, [previous, point, next, null, null])
+//       }
+//     });
 
-    // revert the data for the top of the stripe
-    // initialize the data and bezier control points for the bottom of the stripe
-    helpers.each(meta.data, function(point, index) {
-      point._view.y -= 2 * (yScale.getPixelForValue(widths[index]) - yScaleZeroPixel);
-    });
-    // we are drawing the points in the reverse direction
-    meta.data.reverse();
-    Chart.controllers.line.prototype.updateBezierControlPoints.apply(this);
+//     // revert the data for the top of the stripe
+//     // initialize the data and bezier control points for the bottom of the stripe
+//     helpers.each(meta.data, function(point, index) {
+//       point._view.y -= 2 * (yScale.getPixelForValue(widths[index]) - yScaleZeroPixel);
+//     });
+//     // we are drawing the points in the reverse direction
+//     meta.data.reverse();
+//     Chart.controllers.line.prototype.updateBezierControlPoints.apply(this);
 
-    // draw the bottom of the stripe
-    helpers.each(meta.data, function(point, index) {
-      if (index === 0)
-        ctx.lineTo(point._view.x, point._view.y);
-      else {
-        var previous = helpers.previousItem(meta.data, index);
-        var next = helpers.nextItem(meta.data, index);
+//     // draw the bottom of the stripe
+//     helpers.each(meta.data, function(point, index) {
+//       if (index === 0)
+//         ctx.lineTo(point._view.x, point._view.y);
+//       else {
+//         var previous = helpers.previousItem(meta.data, index);
+//         var next = helpers.nextItem(meta.data, index);
 
-        Chart.elements.Line.prototype.lineToNextPoint.apply({
-          _chart: {
-            ctx: ctx
-          }
-        }, [previous, point, next, null, null])
-      }
+//         Chart.elements.Line.prototype.lineToNextPoint.apply({
+//           _chart: {
+//             ctx: ctx
+//           }
+//         }, [previous, point, next, null, null])
+//       }
 
-    });
+//     });
 
-    // revert the data for the bottom of the stripe
-    meta.data.reverse();
-    helpers.each(meta.data, function(point, index) {
-      point._view.y += (yScale.getPixelForValue(widths[index]) - yScaleZeroPixel);
-    });
-    Chart.controllers.line.prototype.updateBezierControlPoints.apply(this);
+//     // revert the data for the bottom of the stripe
+//     meta.data.reverse();
+//     helpers.each(meta.data, function(point, index) {
+//       point._view.y += (yScale.getPixelForValue(widths[index]) - yScaleZeroPixel);
+//     });
+//     Chart.controllers.line.prototype.updateBezierControlPoints.apply(this);
 
-    ctx.stroke();
-    ctx.closePath();
-    ctx.fill();
-    ctx.restore();
+//     ctx.stroke();
+//     ctx.closePath();
+//     ctx.fill();
+//     ctx.restore();
 
-    return result;
-  }
-});
+//     return result;
+//   }
+// });
