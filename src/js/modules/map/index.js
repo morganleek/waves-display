@@ -31,30 +31,25 @@ export function wadDrawMap( buoys ) {
 	
 				// Set markers
 				for(var i = 0; i < buoys.length; i++) {
-					// console.log(buoys[i]);
-					// Core CSV doesn't include lat/lng yet
-
-
-
-					// 				var point = new MarkerWithLabel({
-					// 					position: {
-					// 						lat: parseFloat(buoys[i][2]), 
-					// 						lng: parseFloat(buoys[i][3])
-					// 					},
-					// 					map: map,
-					// 					title: buoys[i][6],
-					// 					labelContent: buoys[i][5],
-					// 					labelAnchor: new googleMaps.Point(0, -2),
-					// 					labelClass: "maps-label", // the CSS class for the label
-					// 					labelStyle: {opacity: 0.9}
-					// 				});
+					var point = new MarkerWithLabel({
+						position: {
+							lat: parseFloat(buoys[i].lat), 
+							lng: parseFloat(buoys[i].lng)
+						},
+						map: map,
+						title: buoys[i].label,
+						labelContent: buoys[i].type,
+						labelAnchor: new googleMaps.Point(0, -2),
+						labelClass: "maps-label", // the CSS class for the label
+						labelStyle: { opacity: 0.9 }
+					});
 				}
 			}).catch( (e) => {
 				console.error(e);
 			});
 		}
 		
-		// // Centre Map Buttons
+		// Centre Map Buttons
 		// $('.map-focus').on('click', function(e) {
 		// 	let dataBuoy = $(this).closest('.chart-js-layout').attr('data-buoy');
 		// 	let lat = 0, lng = 0;
@@ -72,40 +67,18 @@ export function wadDrawMap( buoys ) {
 		// 	}
 		// });
 	}
+}
 
-	// var map;
-	// function initMap() {
-	// 	if(document.getElementById('map') !== null) {
-	// 		map = new google.maps.Map(document.getElementById('map'), {
-	// 		  center: {lat: parseFloat( wad.googleLat ), lng: parseFloat( wad.googleLat )},
-	// 		  zoom: ($(window).width() < 1200) ? 4 : 5
-	// 		});
+export function wadMapLocator ( trigger ) {
+	if( trigger != "undefined" ) {
+		trigger.addEventListener( 'click', ( e ) => {
+			const center = { 
+				lat: parseFloat( e.target.dataset.buoyLat ),
+				lng: parseFloat( e.target.dataset.buoyLng )
+			};
 
-	// 		/*
-	// 		** Markers 
-	// 		*/
-	// 		// Global Pointers
-	// 		for(var i = 0; i < global_points.length; i++) {
-	// 			var point = new MarkerWithLabel({
-	// 				position: {lat: parseFloat(global_points[i][2]), lng: parseFloat(global_points[i][3])},
-	// 				// draggable: true,
-	// 				// raiseOnDrag: true,
-	// 				map: map,
-	// 				title: global_points[i][6],
-	// 				labelContent: global_points[i][5],
-	// 				labelAnchor: new google.maps.Point(0, -2),
-	// 				labelClass: "maps-label", // the CSS class for the label
-	// 				labelStyle: {opacity: 0.9}
-	// 			});
-				
-	// 			point.addListener('click', function() {
-	// 				window.location = this.getTitle();
-	// 			});
-	// 		}
-	// 	}
-	// }
-
-	// $.when( $.ready ).then(function() {
-	// 	initMap();
-	// });
+			map.panTo( center );
+			// map.setZoom( 11 );
+		} );
+	}
 }
