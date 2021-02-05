@@ -10,6 +10,7 @@ const panelWrapper = "<div class='panel panel-primary'>" +
       "<button class='maps-trigger' data-buoy-lat='{{ buoyLat }}' data-buoy-lng='{{ buoyLng }}'>Map</button>" +
       "<button class='calendars-trigger' data-buoy-id='{{ buoyId }}'>Date</button>" +
     "</div>" +
+    "<div class='chart-info'></div>" +
     "<p class='loading'><em>Loading&hellip;</em></p>" +
   "</div>" +
   "<canvas></canvas>" +

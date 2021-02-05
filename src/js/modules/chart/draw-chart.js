@@ -36,6 +36,12 @@ export function wadDrawChart( buoyId, waves ) {
 		if( waves.length > 0 ) {
 			const startTime = parseInt( waves[0]['Time (UTC)'] ) * 1000; // moment.unix( parseInt( waves[0].time ) ); // .utcOffset( buoyOffset );
 			const endTime = parseInt( waves[waves.length - 1]['Time (UTC)'] ) * 1000; // moment.unix( parseInt( waves[waves.length - 1].time ) ); // .utcOffset( buoyOffset );
+
+			let maxHsig = parseFloat( waves[0]["Hsig (m)"] );
+			let maxWindspeed = parseFloat( waves[0]["WindSpeed (m/s)"] );
+			// let maxWinddirec = parseFloat( waves[0]["WindDirec (deg)"] );
+			let maxCurrentMag = parseFloat( waves[0]["CurrmentMag (m/s)"] );
+			// let maxCurrentDir = parseFloat( waves[0]["CurrentDir (deg) "] );
 			
 			// Loop
 			for( let i = 0; i < waves.length; i++ ) {
@@ -61,11 +67,37 @@ export function wadDrawChart( buoyId, waves ) {
 				if( waves[i]["QF_bott_temp"] == "1") {
 					bottomTemp.push( { x: time, y: waves[i]["Bottom Temp (degC)"] } );
 				}
-				windspeed.push( { x: time, y: waves[i]["WindSpeed (m/s)"] } );
-				winddirec.push( { x: time, y: waves[i]["WindDirec (deg)"] } );
-				currentMag.push( { x: time, y: waves[i]["CurrmentMag (m/s)"] } );
-				currentDir.push( { x: time, y: waves[i]["CurrentDir (deg) "] } );
+				windspeed.push( { x: time, y: parseFloat( waves[i]["WindSpeed (m/s)"] ) } );
+				winddirec.push( { x: time, y: parseFloat( waves[i]["WindDirec (deg)"] ) } );
+				currentMag.push( { x: time, y: parseFloat( waves[i]["CurrmentMag (m/s)"] ) } );
+				currentDir.push( { x: time, y: parseFloat( waves[i]["CurrentDir (deg) "] ) } );
+
+				maxHsig = ( maxHsig < parseFloat( waves[i]["Hsig (m)"] ) ) ? parseFloat( waves[i]["Hsig (m)"] ) : maxHsig;
+				maxWindspeed = ( maxWindspeed < parseFloat( waves[i]["WindSpeed (m/s)"] ) ) ? parseFloat( waves[i]["WindSpeed (m/s)"] ) : maxWindspeed;
+				// maxWinddirec = ( maxWinddirec < parseFloat( waves[i]["WindDirec (deg)"] ) ) ? parseFloat( waves[i]["WindDirec (deg)"] ) : maxWinddirec;
+				maxCurrentMag = ( maxCurrentMag < parseFloat( waves[i]["CurrmentMag (m/s)"] ) ) ? parseFloat( waves[i]["CurrmentMag (m/s)"] ) : maxCurrentMag;
+				// maxCurrentDir = ( maxCurrentDir < parseFloat( waves[i]["CurrentDir (deg) "] ) ) ? parseFloat( waves[i]["CurrentDir (deg) "] ) : maxCurrentDir;
 			}
+
+			// Chart Info
+			let info = [];
+			if( maxHsig > 0 ) {
+				info.push( { title: 'Max Wave Height', value: maxHsig } );
+			}
+			if( maxWindspeed > 0 ) {
+				info.push( { title: 'Max Wind Speed', value: maxWindspeed } );
+			}
+			// if( maxWinddirec > 0 ) {
+			// 	info.push( { title: 'Max Wind Direction', value: maxWinddirec } );
+			// }
+			if( maxCurrentMag > 0 ) {
+				info.push( { title: 'Max Current Mag', value: maxCurrentMag } );
+			}
+			// if( maxCurrentDir > 0 ) {
+			// 	info.push( { title: 'Max Current Direction', value: maxCurrentDir } );
+			// }
+			
+			console.log( info );
 
 			// Data
 			var data = {
@@ -83,7 +115,7 @@ export function wadDrawChart( buoyId, waves ) {
 						yAxisID: 'y-axis-1',
 					}, {					
 						label: 'Peak Wave Period & Direction (s)', // Peak Period (s)
-						backgroundColor: 'rgba(235, 127, 74, 0.7)',
+						backgroundColor: '#0f0f0f',
 						borderColor: 'rgba(235, 127, 74, 0.5)',
 						borderWidth: 0,
 						lineTension: 0,
@@ -125,7 +157,7 @@ export function wadDrawChart( buoyId, waves ) {
 				data: data,
 				options: {
 					responsive: true,
-					aspectRatio: 3,
+					aspectRatio: 2.5,
 					hoverMode: 'index',
 					stacked: false,
 					title: {
@@ -144,10 +176,10 @@ export function wadDrawChart( buoyId, waves ) {
 							// 		return moment( utcMoment ).utcOffset( buoyOffset );
 							// 	},
 							// },
-							// ticks: {
-							// 	min: startTime,
-							// 	max: endTime, 
-							// },
+							ticks: {
+								min: startTime,
+								max: endTime, 
+							},
 							time: {
 								unit: 'hour',
 								displayFormats: {
