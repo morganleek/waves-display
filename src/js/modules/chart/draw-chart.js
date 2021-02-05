@@ -39,12 +39,6 @@ export function wadDrawChart( buoyId, waves ) {
 			const startTime = parseInt( waves[0]['Time (UTC)'] ) * 1000; // moment.unix( parseInt( waves[0].time ) ); // .utcOffset( buoyOffset );
 			const endTime = parseInt( waves[waves.length - 1]['Time (UTC)'] ) * 1000; // moment.unix( parseInt( waves[waves.length - 1].time ) ); // .utcOffset( buoyOffset );
 
-			// let maxHsig = parseFloat( waves[0]["Hsig (m)"] );
-			// let maxWindspeed = parseFloat( waves[0]["WindSpeed (m/s)"] );
-			// let maxWinddirec = parseFloat( waves[0]["WindDirec (deg)"] );
-			// let maxCurrentMag = parseFloat( waves[0]["CurrmentMag (m/s)"] );
-			// let maxCurrentDir = parseFloat( waves[0]["CurrentDir (deg) "] );
-			
 			// Loop
 			for( let i = 0; i < waves.length; i++ ) {
 				// Time as moment object with offset
@@ -74,33 +68,7 @@ export function wadDrawChart( buoyId, waves ) {
 				// Only want last value
 				dataPoints.currentMag.data = [{ x: time, y: parseFloat( waves[i]["CurrmentMag (m/s)"] ) }];
 				dataPoints.currentDir.data = [{ x: time, y: parseFloat( waves[i]["CurrentDir (deg) "] ) }];
-
-				// maxHsig = ( maxHsig < parseFloat( waves[i]["Hsig (m)"] ) ) ? parseFloat( waves[i]["Hsig (m)"] ) : maxHsig;
-				// maxWindspeed = ( maxWindspeed < parseFloat( waves[i]["WindSpeed (m/s)"] ) ) ? parseFloat( waves[i]["WindSpeed (m/s)"] ) : maxWindspeed;
-				// maxWinddirec = ( maxWinddirec < parseFloat( waves[i]["WindDirec (deg)"] ) ) ? parseFloat( waves[i]["WindDirec (deg)"] ) : maxWinddirec;
-				// maxCurrentMag = ( maxCurrentMag < parseFloat( waves[i]["CurrmentMag (m/s)"] ) ) ? parseFloat( waves[i]["CurrmentMag (m/s)"] ) : maxCurrentMag;
-				// maxCurrentDir = ( maxCurrentDir < parseFloat( waves[i]["CurrentDir (deg) "] ) ) ? parseFloat( waves[i]["CurrentDir (deg) "] ) : maxCurrentDir;
 			}
-
-			// Chart Info
-			// let maxHsig = dataPoints.hsig.map( point => point.y );
-			
-			// let info = [];
-			// if( maxHsig > 0 ) {
-			// 	info.push( { title: 'Max Wave Height', value: maxHsig } );
-			// }
-			// if( maxWindspeed > 0 ) {
-			// 	info.push( { title: 'Max Wind Speed', value: maxWindspeed } );
-			// }
-			// if( maxWinddirec > 0 ) {
-			// 	info.push( { title: 'Max Wind Direction', value: maxWinddirec } );
-			// }
-			// if( maxCurrentMag > 0 ) {
-			// 	info.push( { title: 'Max Current Mag', value: maxCurrentMag } );
-			// }
-			// if( maxCurrentDir > 0 ) {
-			// 	info.push( { title: 'Max Current Direction', value: maxCurrentDir } );
-			// }
 			
 			let buoyInfoHtml = "";
 			for( const [key, value] of Object.entries( dataPoints ) ) {
@@ -110,17 +78,19 @@ export function wadDrawChart( buoyId, waves ) {
 				max = ( max > 0 ) ? max : "-";
 				buoyInfoHtml += "<dt>" + value.description + "</dt>" +
 					"<dd>" + max + "</dd>";
-
 			}
-			// info.forEach( ( i ) => { 
-			// 	buoyInfoHtml += "<dt>" + i.title + "</dt>" +
-			// 		"<dd>" + i.value + "</dd>";
-			// } );
+			
 			const buoyWrapper = document.getElementById( 'buoy-' + buoyId );
-			// if( buoyWrapper.getElementsByClassName("chart-info").length > 0 ) {
+			// Clear it
+			buoyWrapper.getElementsByClassName("chart-info")[0].innerHTML = "";
 			buoyWrapper.getElementsByClassName("chart-info")[0]
 				.insertAdjacentHTML( 'afterbegin', "<dl>" + buoyInfoHtml + "</dl>" );
-			// }
+			
+			let s = new Date();
+			s.setTime( startTime );
+			let e = new Date();
+			e.setTime( endTime );
+			const scaleLabel = s.toDateString() + " - " + e.toDateString();
 
 			// Data
 			var data = {
@@ -180,7 +150,7 @@ export function wadDrawChart( buoyId, waves ) {
 				data: data,
 				options: {
 					responsive: true,
-					aspectRatio: 2.5,
+					aspectRatio: 3,
 					hoverMode: 'index',
 					stacked: false,
 					title: {
@@ -214,7 +184,7 @@ export function wadDrawChart( buoyId, waves ) {
 							},
 							scaleLabel: {
 								display: true,
-								labelString: 'Date: ' + startTime + ' - ' + endTime, // 'Date: ' + startTime.format( 'YYYY-MM-DD HH:mmZ' ) + ' - ' + endTime.format( 'YYYY-MM-DD HH:mmZ' ),
+								labelString: scaleLabel
 							}
 						}],
 						yAxes: [{
