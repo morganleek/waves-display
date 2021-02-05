@@ -11,6 +11,29 @@ $fa-font-path: '../dist/fonts/font-awesome/fonts';
     margin: 0 -40px;
   }
 }
+.chart-info {
+  dl {
+    display: grid;
+    font-size: 1.2rem;
+    grid-template-columns: 1fr 1fr;
+    border-top: 1px solid #f0f0f0;
+    border-bottom: 1px solid #f0f0f0;
+    @media (min-width: 768px) {
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+    }
+    dt, dd {
+      border-right: 1px solid #f0f0f0;
+      padding: 0.2em 0.5em;
+    }
+    dt {
+      font-weight: 400;
+    }
+    dd {
+      border-left: 1px solid #f0f0f0;
+      font-weight: 300;
+    }
+  }
+}
 
 // .chart-js-layout {
   .chart-js-menu {

@@ -8,22 +8,24 @@ export function wadDrawChart( buoyId, waves ) {
 	let arrowPointers = [];
 	let chartLabels = [];
 	
-	let hsig = []; // Hsig (m) –Significant Wave Height
-	let tp = []; // Tp (s) – Peak wave period
-	let tm = []; // Tm (s) – mean wave period
-	let dp = []; // Dp (deg) – Peak wave direction
-	let dpspr = []; // DpSpr (deg) – peak wave directional spreading
-	let dm = []; // Dm (deg) – mean wave direction
-	let dmspr = []; // DmSpr (deg) – mean wave directional spreading
-	let sst = []; // SST (degC) – sea surface temperature
-	let bottomTemp = []; // Bottom Temp (degC) – bottom temperature
-	let windspeed = []; // Wind Speed
-	let winddirec = []; // Wind Direction
-	let currentMag = []; // Current Mag (m/s) – current speed
-	let currentDir = []; 
-	// let qfWaves = []; // QF_waves  - quality flag for wave variables
-	// let qfSst = [];  // QF_sst  – quality flag for sea surface temperature
-	// let qfBottTemp = []; // QF_bott_temp – quality flag for bottom temperature
+	let dataPoints = {
+		hsig: { data: [], description: "Significant Wave Height (m)" }, // let hsig = []; // 
+		tp: { data: [], description: "Peak Wave Period (s)" }, // let tp = []; // 
+		tm: { data: [], description: "Mean Wave Period (s)" }, // let tm = []; // 
+		dp: { data: [], description: "Peak Wave Direction (deg)" }, // let dp = []; // 
+		dpspr: { data: [], description: "Peak Wave Directional Spreading (deg)" }, // let dpspr = []; // 
+		dm: { data: [], description: "Mean Wave Direction (deg)" }, // let dm = []; // 
+		dmspr: { data: [], description: "Mean Wave Directional Spreading (deg)" }, // let dmspr = []; // 
+		sst: { data: [], description: "Sea Surface Temperature (degC)" }, // let sst = []; // 
+		bottomTemp: { data: [], description: "Sea Bottom Temperature (degC)" }, // let bottomTemp = []; // 
+		windspeed: { data: [], description: "Wind Speed (m/s)" }, // let windspeed = []; // 
+		winddirec: { data: [], description: "Wind Direction (deg)" }, // let winddirec = []; // 
+		currentMag: { data: [], description: "Current Mag (m/s)" }, // let currentMag = []; // 
+		currentDir: { data: [], description: "Current Direction (deg)" }, // let currentDir = []; 
+		// qfWaves: { data: [], description: "" }, // let qfWaves = []; // QF_waves  - quality flag for wave variables
+		// qfSst: [], // let qfSst = [];  // QF_sst  – quality flag for sea surface temperature
+		// qfBottTemp: [], // let qfBottTemp = []; // QF_bott_temp – quality flag for bottom temperature
+	};
 
 	let arrowImageOrange = new Image( 28, 28 );
 	arrowImageOrange.src = wad.plugin + "/dist/images/arrow-orange-g@2x.png";
@@ -37,10 +39,10 @@ export function wadDrawChart( buoyId, waves ) {
 			const startTime = parseInt( waves[0]['Time (UTC)'] ) * 1000; // moment.unix( parseInt( waves[0].time ) ); // .utcOffset( buoyOffset );
 			const endTime = parseInt( waves[waves.length - 1]['Time (UTC)'] ) * 1000; // moment.unix( parseInt( waves[waves.length - 1].time ) ); // .utcOffset( buoyOffset );
 
-			let maxHsig = parseFloat( waves[0]["Hsig (m)"] );
-			let maxWindspeed = parseFloat( waves[0]["WindSpeed (m/s)"] );
+			// let maxHsig = parseFloat( waves[0]["Hsig (m)"] );
+			// let maxWindspeed = parseFloat( waves[0]["WindSpeed (m/s)"] );
 			// let maxWinddirec = parseFloat( waves[0]["WindDirec (deg)"] );
-			let maxCurrentMag = parseFloat( waves[0]["CurrmentMag (m/s)"] );
+			// let maxCurrentMag = parseFloat( waves[0]["CurrmentMag (m/s)"] );
 			// let maxCurrentDir = parseFloat( waves[0]["CurrentDir (deg) "] );
 			
 			// Loop
@@ -52,52 +54,73 @@ export function wadDrawChart( buoyId, waves ) {
 				if( waves[i]["QF_waves"] == "1" ) {
 					hasWaves = true; // Needs to be here incase there are no valid waves
 					// Values
-					hsig.push( { x: time, y: waves[i]["Hsig (m)"] } );
-					tp.push( { x: time, y: waves[i]["Tp (s)"] } );
-					tm.push( { x: time, y: waves[i]["Tm (s)"] } );
-					dpspr.push( { x: time, y: waves[i]["DpSpr (deg)"] } );
-					dmspr.push( { x: time, y: waves[i]["DmSpr (deg)"] } );
+					dataPoints.hsig.data.push( { x: time, y: parseFloat( waves[i]["Hsig (m)"] ) } );
+					dataPoints.tp.data.push( { x: time, y: parseFloat( waves[i]["Tp (s)"] ) } );
+					dataPoints.tm.data.push( { x: time, y: parseFloat( waves[i]["Tm (s)"] ) } );
+					dataPoints.dpspr.data.push( { x: time, y: parseFloat( waves[i]["DpSpr (deg)"] ) } );
+					dataPoints.dmspr.data.push( { x: time, y: parseFloat( waves[i]["DmSpr (deg)"] ) } );
 					// Rotation
-					dm.push( Math.abs( parseInt( waves[i]["Dm (deg)"] ) - 180 ) );
-					dp.push( Math.abs( parseInt( waves[i]["Dp (deg)"] ) - 180 ) ); // Math.abs( waves[i]["Dp (deg)"] - 180 ) // Pointing the oppsite direction
+					dataPoints.dm.data.push( Math.abs( parseInt( waves[i]["Dm (deg)"] ) - 180 ) );
+					dataPoints.dp.data.push( Math.abs( parseInt( waves[i]["Dp (deg)"] ) - 180 ) ); // Math.abs( waves[i]["Dp (deg)"] - 180 ) // Pointing the oppsite direction
 				}
 				if( waves[i]["QF_sst"] == "1" ) {
-					sst.push( { x: time, y: waves[i]["SST (degC)"] } );
+					dataPoints.sst.data.push( { x: time, y: parseFloat( waves[i]["SST (degC)"] ) } );
 				}
 				if( waves[i]["QF_bott_temp"] == "1") {
-					bottomTemp.push( { x: time, y: waves[i]["Bottom Temp (degC)"] } );
+					dataPoints.bottomTemp.data.push( { x: time, y: waves[i]["Bottom Temp (degC)"] } );
 				}
-				windspeed.push( { x: time, y: parseFloat( waves[i]["WindSpeed (m/s)"] ) } );
-				winddirec.push( { x: time, y: parseFloat( waves[i]["WindDirec (deg)"] ) } );
-				currentMag.push( { x: time, y: parseFloat( waves[i]["CurrmentMag (m/s)"] ) } );
-				currentDir.push( { x: time, y: parseFloat( waves[i]["CurrentDir (deg) "] ) } );
+				dataPoints.windspeed.data.push( { x: time, y: parseFloat( waves[i]["WindSpeed (m/s)"] ) } );
+				dataPoints.winddirec.data.push( { x: time, y: parseFloat( waves[i]["WindDirec (deg)"] ) } );
+				// Only want last value
+				dataPoints.currentMag.data = [{ x: time, y: parseFloat( waves[i]["CurrmentMag (m/s)"] ) }];
+				dataPoints.currentDir.data = [{ x: time, y: parseFloat( waves[i]["CurrentDir (deg) "] ) }];
 
-				maxHsig = ( maxHsig < parseFloat( waves[i]["Hsig (m)"] ) ) ? parseFloat( waves[i]["Hsig (m)"] ) : maxHsig;
-				maxWindspeed = ( maxWindspeed < parseFloat( waves[i]["WindSpeed (m/s)"] ) ) ? parseFloat( waves[i]["WindSpeed (m/s)"] ) : maxWindspeed;
+				// maxHsig = ( maxHsig < parseFloat( waves[i]["Hsig (m)"] ) ) ? parseFloat( waves[i]["Hsig (m)"] ) : maxHsig;
+				// maxWindspeed = ( maxWindspeed < parseFloat( waves[i]["WindSpeed (m/s)"] ) ) ? parseFloat( waves[i]["WindSpeed (m/s)"] ) : maxWindspeed;
 				// maxWinddirec = ( maxWinddirec < parseFloat( waves[i]["WindDirec (deg)"] ) ) ? parseFloat( waves[i]["WindDirec (deg)"] ) : maxWinddirec;
-				maxCurrentMag = ( maxCurrentMag < parseFloat( waves[i]["CurrmentMag (m/s)"] ) ) ? parseFloat( waves[i]["CurrmentMag (m/s)"] ) : maxCurrentMag;
+				// maxCurrentMag = ( maxCurrentMag < parseFloat( waves[i]["CurrmentMag (m/s)"] ) ) ? parseFloat( waves[i]["CurrmentMag (m/s)"] ) : maxCurrentMag;
 				// maxCurrentDir = ( maxCurrentDir < parseFloat( waves[i]["CurrentDir (deg) "] ) ) ? parseFloat( waves[i]["CurrentDir (deg) "] ) : maxCurrentDir;
 			}
 
 			// Chart Info
-			let info = [];
-			if( maxHsig > 0 ) {
-				info.push( { title: 'Max Wave Height', value: maxHsig } );
-			}
-			if( maxWindspeed > 0 ) {
-				info.push( { title: 'Max Wind Speed', value: maxWindspeed } );
-			}
+			// let maxHsig = dataPoints.hsig.map( point => point.y );
+			
+			// let info = [];
+			// if( maxHsig > 0 ) {
+			// 	info.push( { title: 'Max Wave Height', value: maxHsig } );
+			// }
+			// if( maxWindspeed > 0 ) {
+			// 	info.push( { title: 'Max Wind Speed', value: maxWindspeed } );
+			// }
 			// if( maxWinddirec > 0 ) {
 			// 	info.push( { title: 'Max Wind Direction', value: maxWinddirec } );
 			// }
-			if( maxCurrentMag > 0 ) {
-				info.push( { title: 'Max Current Mag', value: maxCurrentMag } );
-			}
+			// if( maxCurrentMag > 0 ) {
+			// 	info.push( { title: 'Max Current Mag', value: maxCurrentMag } );
+			// }
 			// if( maxCurrentDir > 0 ) {
 			// 	info.push( { title: 'Max Current Direction', value: maxCurrentDir } );
 			// }
 			
-			console.log( info );
+			let buoyInfoHtml = "";
+			for( const [key, value] of Object.entries( dataPoints ) ) {
+				// Max value
+				const max = Math.max( ...value.data.map( point => point.y ) );
+				// Append to table
+				max = ( max > 0 ) ? max : "-";
+				buoyInfoHtml += "<dt>" + value.description + "</dt>" +
+					"<dd>" + max + "</dd>";
+
+			}
+			// info.forEach( ( i ) => { 
+			// 	buoyInfoHtml += "<dt>" + i.title + "</dt>" +
+			// 		"<dd>" + i.value + "</dd>";
+			// } );
+			const buoyWrapper = document.getElementById( 'buoy-' + buoyId );
+			// if( buoyWrapper.getElementsByClassName("chart-info").length > 0 ) {
+			buoyWrapper.getElementsByClassName("chart-info")[0]
+				.insertAdjacentHTML( 'afterbegin', "<dl>" + buoyInfoHtml + "</dl>" );
+			// }
 
 			// Data
 			var data = {
@@ -111,7 +134,7 @@ export function wadDrawChart( buoyId, waves ) {
 						lineTension: 0,
 						pointRadius: 0,
 						fill: true,
-						data: hsig,
+						data: dataPoints.hsig.data,
 						yAxisID: 'y-axis-1',
 					}, {					
 						label: 'Peak Wave Period & Direction (s)', // Peak Period (s)
@@ -121,9 +144,9 @@ export function wadDrawChart( buoyId, waves ) {
 						lineTension: 0,
 						pointRadius: 35,
 						pointStyle: arrowImageOrange,
-						rotation: dp,
+						rotation: dataPoints.dp.data,
 						fill: false,
-						data: tp,
+						data: dataPoints.tp.data,
 						yAxisID: 'y-axis-2',
 					}, {					
 						label: 'Mean Wave Period & Direction (s)', // Peak Period (s)
@@ -133,9 +156,9 @@ export function wadDrawChart( buoyId, waves ) {
 						lineTension: 0,
 						pointRadius: 35,
 						pointStyle: arrowImageBlue,
-						rotation: dm,
+						rotation: dataPoints.dm.data,
 						fill: false,
-						data: tm,
+						data: dataPoints.tm.data,
 						yAxisID: 'y-axis-2',
 					}, {					
 						label: 'Sea Surface Temperature (Deg C)', 
@@ -145,7 +168,7 @@ export function wadDrawChart( buoyId, waves ) {
 						lineTension: 0,
 						pointRadius: 5,
 						fill: true,
-						data: sst,
+						data: dataPoints.sst.data,
 						yAxisID: 'y-axis-3',
 					}
 				]
@@ -256,7 +279,6 @@ export function wadDrawChart( buoyId, waves ) {
 				window.myCharts['buoy' + buoyId].destroy();
 			}
 			// Load new chart
-			const buoyWrapper = document.getElementById( 'buoy-' + buoyId );
 			if( buoyWrapper.getElementsByTagName( 'canvas' ).length > 0 ) {
 				const canvasContext = buoyWrapper.getElementsByTagName( 'canvas' )[0].getContext( '2d' );
 				

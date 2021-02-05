@@ -6,7 +6,7 @@
 			$options = get_option('wad_options');
 
 			wp_register_style(
-				'wad-style', WAD__PLUGIN_URL . 'dist/css/bundle.css', array(), WAD_VERSION, 'screen'
+				'wad-style', WAD__PLUGIN_URL . 'dist/css/bundle.css', array(), WAD__VERSION, 'screen'
 			);
 			wp_enqueue_style( 'wad-style' );
 

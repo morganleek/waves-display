@@ -10,10 +10,10 @@ const panelWrapper = "<div class='panel panel-primary'>" +
       "<button class='maps-trigger' data-buoy-lat='{{ buoyLat }}' data-buoy-lng='{{ buoyLng }}'>Map</button>" +
       "<button class='calendars-trigger' data-buoy-id='{{ buoyId }}'>Date</button>" +
     "</div>" +
-    "<div class='chart-info'></div>" +
     "<p class='loading'><em>Loading&hellip;</em></p>" +
+    "<canvas></canvas>" +
+    "<div class='chart-info'></div>" +
   "</div>" +
-  "<canvas></canvas>" +
 "</div>";
 
 export function wadProcessBuoys( response ) {
@@ -33,6 +33,7 @@ export function wadProcessBuoys( response ) {
       // Setup buttons
       wadDatePicker( newBuoyWrapper.getElementsByClassName( "calendars-trigger" )[0] );
       wadMapLocator( newBuoyWrapper.getElementsByClassName( "maps-trigger" )[0] );
+      
       // Attach
       buoysWrapper.appendChild( newBuoyWrapper );
 
