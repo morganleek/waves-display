@@ -44,6 +44,19 @@ export const copy = () => {
   return src(['src/**/*','!src/{images,js,scss}','!src/{images,js,scss}/**/*'])
   .pipe(dest('dist'));
 }
+export const wpPlugin = () => {
+  
+  return src(['waves-display.php'])
+    .pipe( replace( /(Version:\s+[0-9]+.[0-9]+.)([0-9]+)/g, function( match, p1, p2 ) {
+      // console.log( match );
+      // console.log( p1 );
+      // console.log( p2 );
+      let inc = parseInt( p2 ) + 1;
+      console.log( p1 + inc.toString() );
+      return p1 + inc.toString();
+    } ) )
+    .pipe(gulp.dest(''));
+}
 export const scripts = () => {
   return src(['src/js/bundle.js','src/js/admin.js'])
   .pipe(named())
@@ -72,6 +85,7 @@ export const scripts = () => {
   }))
   .pipe(dest('dist/js'));
 }
+// .pipe( replace( /(Version:\s+[0-9]+.[0-9]+.)([0-9]+)/g, ( p1, p2, p3 ) => p2 + ( parseInt( p3 ) + 1 )  ))
 export const themeify = () => {
   return src([
     "**/*",
@@ -89,8 +103,8 @@ export const themeify = () => {
   ])
   .pipe(replace("_themename", info.theme_name))
   .pipe(replace("_themedescription", info.description))
-  .pipe(replace("Version: 1.0.0", "Version: 1.0." + Date.now()))
-  .pipe(replace("1.0.0", "1.0." + Date.now()))
+  // .pipe(replace("Version: 1.0.0", "Version: 1.0." + Date.now()))
+  // .pipe(replace("1.0.0", "1.0." + Date.now()))
   .pipe(dest(`../${info.name.replace(/_/g, '-')}/`));
 };
 // export const pot = () => {
@@ -104,10 +118,10 @@ export const themeify = () => {
 //   .pipe(dest(`languages/${info.name}.pot`));
 // };
 export const watchForChanges = () => {
-  watch('src/scss/**/*.scss', styles);
+  watch('src/scss/**/*.scss', wpPlugin, styles);
   watch('src/images/**/*.{jpg,jpeg,png,svg,gif,ico}', series(images, reload));
   watch(['src/**/*','!src/{images,js,scss}','!src/{images,js,scss}/**/*'], series(copy, reload));
-  watch('src/js/**/*.js', series(scripts, reload));
+  watch('src/js/**/*.js', series(scripts, wpPlugin, reload));
   watch("**/*.php", reload);
 } 
 export const dev = series(clean, parallel(styles, images, copy, scripts), serve, watchForChanges);

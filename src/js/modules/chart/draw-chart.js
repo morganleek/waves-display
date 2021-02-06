@@ -150,7 +150,7 @@ export function wadDrawChart( buoyId, waves ) {
 				data: data,
 				options: {
 					responsive: true,
-					aspectRatio: 3,
+					aspectRatio: 2,
 					hoverMode: 'index',
 					stacked: false,
 					title: {
@@ -273,8 +273,8 @@ export function wadDrawChart( buoyId, waves ) {
 		}
 	}
 }
-
-
+ 
+// Charts for spread
 // Chart.defaults.stripe = Chart.helpers.clone(Chart.defaults.line);
 // Chart.controllers.stripe = Chart.controllers.line.extend({
 //   draw: function(ease) {
