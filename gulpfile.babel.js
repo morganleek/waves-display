@@ -55,7 +55,7 @@ export const wpPlugin = () => {
       console.log( p1 + inc.toString() );
       return p1 + inc.toString();
     } ) )
-    .pipe(gulp.dest(''));
+    .pipe(dest(''));
 }
 export const scripts = () => {
   return src(['src/js/bundle.js','src/js/admin.js'])

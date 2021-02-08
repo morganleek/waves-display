@@ -274,7 +274,7 @@ export function wadDrawChart( buoyId, waves ) {
 	}
 }
  
-// Charts for spread
+// Charts for spread chart extends
 // Chart.defaults.stripe = Chart.helpers.clone(Chart.defaults.line);
 // Chart.controllers.stripe = Chart.controllers.line.extend({
 //   draw: function(ease) {
