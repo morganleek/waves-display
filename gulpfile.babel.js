@@ -44,19 +44,19 @@ export const copy = () => {
   return src(['src/**/*','!src/{images,js,scss}','!src/{images,js,scss}/**/*'])
   .pipe(dest('dist'));
 }
-export const wpPlugin = () => {
+// export const wpPlugin = () => {
   
-  return src(['waves-display.php'])
-    .pipe( replace( /(Version:\s+[0-9]+.[0-9]+.)([0-9]+)/g, function( match, p1, p2 ) {
-      // console.log( match );
-      // console.log( p1 );
-      // console.log( p2 );
-      let inc = parseInt( p2 ) + 1;
-      console.log( p1 + inc.toString() );
-      return p1 + inc.toString();
-    } ) )
-    .pipe(dest(''));
-}
+//   return src(['waves-display.php'])
+//     .pipe( replace( /(Version:\s+[0-9]+.[0-9]+.)([0-9]+)/g, function( match, p1, p2 ) {
+//       // console.log( match );
+//       // console.log( p1 );
+//       // console.log( p2 );
+//       let inc = parseInt( p2 ) + 1;
+//       console.log( p1 + inc.toString() );
+//       return p1 + inc.toString();
+//     } ) )
+//     .pipe(dest(''));
+// }
 export const scripts = () => {
   return src(['src/js/bundle.js','src/js/admin.js'])
   .pipe(named())
@@ -118,10 +118,10 @@ export const themeify = () => {
 //   .pipe(dest(`languages/${info.name}.pot`));
 // };
 export const watchForChanges = () => {
-  watch('src/scss/**/*.scss', wpPlugin, styles);
+  watch('src/scss/**/*.scss', styles);
   watch('src/images/**/*.{jpg,jpeg,png,svg,gif,ico}', series(images, reload));
   watch(['src/**/*','!src/{images,js,scss}','!src/{images,js,scss}/**/*'], series(copy, reload));
-  watch('src/js/**/*.js', series(scripts, wpPlugin, reload));
+  watch('src/js/**/*.js', series(scripts, reload));
   watch("**/*.php", reload);
 } 
 export const dev = series(clean, parallel(styles, images, copy, scripts), serve, watchForChanges);

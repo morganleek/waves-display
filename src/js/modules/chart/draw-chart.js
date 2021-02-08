@@ -1,5 +1,6 @@
 // import $ from 'jquery';
 import Chart from 'chart.js';
+import { wadToggleChart } from './controls-buoy';
 // import { uwaGenerateBuoyDateString } from './time';
 
 export function wadDrawChart( buoyId, waves ) {
@@ -7,6 +8,12 @@ export function wadDrawChart( buoyId, waves ) {
 
 	let arrowPointers = [];
 	let chartLabels = [];
+
+	if( typeof( window.myChartData ) == "undefined" ) {
+		window.myChartData = [];
+	}
+
+	window.myChartData['buoy-' + buoyId] = waves;
 	
 	let dataPoints = {
 		hsig: { data: [], description: "Significant Wave Height (m)" }, // let hsig = []; // 
@@ -82,9 +89,10 @@ export function wadDrawChart( buoyId, waves ) {
 			
 			const buoyWrapper = document.getElementById( 'buoy-' + buoyId );
 			// Clear it
-			buoyWrapper.getElementsByClassName("chart-info")[0].innerHTML = "";
-			buoyWrapper.getElementsByClassName("chart-info")[0]
-				.insertAdjacentHTML( 'afterbegin', "<dl>" + buoyInfoHtml + "</dl>" );
+			const chartInfo = buoyWrapper.getElementsByClassName("chart-info")[0]
+			chartInfo.innerHTML = "";
+			chartInfo.insertAdjacentHTML( 'afterbegin', "<dl>" + buoyInfoHtml + "</dl>" );
+			chartInfo.addEventListener( 'click', wadToggleChart );
 			
 			let s = new Date();
 			s.setTime( startTime );
@@ -95,54 +103,65 @@ export function wadDrawChart( buoyId, waves ) {
 			// Data
 			var data = {
 				labels: chartLabels,
-				datasets: [
-					{
-						label: 'Significant Wave Height', // Wave Height (m)
-						backgroundColor: 'rgba(75, 192, 192, 1)',
-						borderColor: 'rgba(75, 192, 192, 1)',
-						borderWidth: 0,
-						lineTension: 0,
-						pointRadius: 0,
-						fill: true,
-						data: dataPoints.hsig.data,
-						yAxisID: 'y-axis-1',
-					}, {					
-						label: 'Peak Wave Period & Direction (s)', // Peak Period (s)
-						backgroundColor: '#0f0f0f',
-						borderColor: 'rgba(235, 127, 74, 0.5)',
-						borderWidth: 0,
-						lineTension: 0,
-						pointRadius: 35,
-						pointStyle: arrowImageOrange,
-						rotation: dataPoints.dp.data,
-						fill: false,
-						data: dataPoints.tp.data,
-						yAxisID: 'y-axis-2',
-					}, {					
-						label: 'Mean Wave Period & Direction (s)', // Peak Period (s)
-						backgroundColor: 'rgba(77, 168, 248, 0.7)',
-						borderColor: 'rgba(77, 168, 248, 0.5)',
-						borderWidth: 0,
-						lineTension: 0,
-						pointRadius: 35,
-						pointStyle: arrowImageBlue,
-						rotation: dataPoints.dm.data,
-						fill: false,
-						data: dataPoints.tm.data,
-						yAxisID: 'y-axis-2',
-					}, {					
-						label: 'Sea Surface Temperature (Deg C)', 
-						backgroundColor: 'rgba(255, 206, 87, 0.5)',
-						borderColor: 'rgba(255, 206, 87, 1)',
-						borderWidth: 0,
-						lineTension: 0,
-						pointRadius: 5,
-						fill: true,
-						data: dataPoints.sst.data,
-						yAxisID: 'y-axis-3',
-					}
-				]
+				datasets: []
 			};
+			
+			if( dataPoints.hsig.data.length > 0 ) {
+				data.datasets.push({
+					label: 'Significant Wave Height', // Wave Height (m)
+					backgroundColor: 'rgba(75, 192, 192, 1)',
+					borderColor: 'rgba(75, 192, 192, 1)',
+					borderWidth: 0,
+					lineTension: 0,
+					pointRadius: 0,
+					fill: true,
+					data: dataPoints.hsig.data,
+					yAxisID: 'y-axis-1',
+				});	
+			}
+			if( dataPoints.tp.data.length > 0 ) {
+				data.datasets.push({					
+					label: 'Peak Wave Period & Direction (s)', // Peak Period (s)
+					backgroundColor: '#0f0f0f',
+					borderColor: 'rgba(235, 127, 74, 0.5)',
+					borderWidth: 0,
+					lineTension: 0,
+					pointRadius: 35,
+					pointStyle: arrowImageOrange,
+					rotation: dataPoints.dp.data,
+					fill: false,
+					data: dataPoints.tp.data,
+					yAxisID: 'y-axis-2',
+				});
+			}
+			if( dataPoints.tm.data.length > 0 ) {
+				data.datasets.push({					
+					label: 'Mean Wave Period & Direction (s)', // Peak Period (s)
+					backgroundColor: 'rgba(77, 168, 248, 0.7)',
+					borderColor: 'rgba(77, 168, 248, 0.5)',
+					borderWidth: 0,
+					lineTension: 0,
+					pointRadius: 35,
+					pointStyle: arrowImageBlue,
+					rotation: dataPoints.dm.data,
+					fill: false,
+					data: dataPoints.tm.data,
+					yAxisID: 'y-axis-2',
+				});
+			}
+			if( dataPoints.sst.data.length > 0 ) {
+				data.datasets.push({					
+					label: 'Sea Surface Temperature (Deg C)', 
+					backgroundColor: 'rgba(255, 206, 87, 0.5)',
+					borderColor: 'rgba(255, 206, 87, 1)',
+					borderWidth: 0,
+					lineTension: 0,
+					pointRadius: 5,
+					fill: true,
+					data: dataPoints.sst.data,
+					yAxisID: 'y-axis-3',
+				});
+			}
 			
 			// Draw Chart
 			var config = {
@@ -263,6 +282,9 @@ export function wadDrawChart( buoyId, waves ) {
 			else {
 				console.log( 'No canvas' );
 			}
+		}
+		else {
+			console.log( 'buoyId' );
 		}
 	}
 	// Check for no data

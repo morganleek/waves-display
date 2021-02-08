@@ -2,13 +2,21 @@ import { wadDrawChart } from './draw-chart';
 
 // Create Divs for each Buoy
 export function wadProcessBuoyData( response ) {
-  if( response.length > 0 ) {
-    const buoyId = response[0].buoy_id;
-    if( document.getElementById( 'buoy-' + buoyId ) != null ) {
-      const buoyDiv = document.getElementById( 'buoy-' + buoyId );
-      // Convert to useful chart data
-      const processed = wadRawDataToChartData( response );
-      wadDrawChart( buoyId, processed );
+  if( response ) {
+    if( response.success == "1" ) {
+      if( document.getElementById( 'buoy-' + response.buoy_id ) != null ) {
+        const buoyDiv = document.getElementById( 'buoy-' + response.buoy_id );
+        // Convert to useful chart data
+        const processed = wadRawDataToChartData( response.data );
+        wadDrawChart( response.buoy_id, processed );
+      }
+    }
+    else {
+      const failedBuoy = document.getElementById( 'buoy-' + response.buoy_id );
+      failedBuoy.getElementsByClassName( 'loading' )[0].innerHTML = "No results found";
+      failedBuoy.getElementsByTagName( 'canvas' )[0].remove();
+      failedBuoy.getElementsByClassName( 'chart-js-menu' )[0].remove();
+      failedBuoy.getElementsByClassName( 'chart-info' )[0].remove();
     }
   }
 }

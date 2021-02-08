@@ -2,6 +2,15 @@ import $ from 'jquery';
 import Litepicker from 'litepicker';
 import { wadProcessBuoyData } from './fetch-buoy';
 
+// import stringify from 'csv-stringify';
+// const stringify = require('csv-stringify');
+
+export function wadToggleChart( e ) {
+	if( !e.target.classList.contains( 'expanded' ) ) {
+		e.target.classList.add( 'expanded' );
+	}
+}
+
 export function wadDatePicker( trigger ) {
 	if( trigger !== 'undefined' ) {
 		let picker = new Litepicker( { 
@@ -20,6 +29,8 @@ export function wadDatePicker( trigger ) {
 				const buoyId = this.options.element.dataset.buoyId;
 				const start = date1.getTime() / 1000; // moment(date1).format('YYYY-MM-DD+00:00:00');
 				const end = date2.getTime() / 1000; // moment(date2).format('YYYY-MM-DD+23:59:59');
+				this.options.element.dataset['start'] = start;
+				this.options.element.dataset['end'] = end;
 
 				$.ajax({
 					type: 'POST',
@@ -37,3 +48,31 @@ export function wadDatePicker( trigger ) {
 		} );
 	}
 }
+
+export function wadCSVDownload( trigger ) {
+	if( trigger != "undefined" ) {
+		trigger.addEventListener( 'click', ( e ) => {
+			console.log( e.target.dataset.buoyId );
+			const buoyWrapper = document.getElementById( "buoy-" + e.target.dataset.buoyId );
+			if( buoyWrapper.getElementsByClassName('calendars-trigger')[0] ) {
+				// let data = {
+				// 	action: 'waf_rest_list_buoy_datapoints_csv',
+				// 	id: e.target.dataset.buoyId
+				// };
+				let path = "?action=waf_rest_list_buoy_datapoints_csv&id=" + e.target.dataset.buoyId;
+				
+				const trigger = buoyWrapper.getElementsByClassName('calendars-trigger')[0];
+				if( trigger.dataset.hasOwnProperty( 'start' ) ) {
+					path += "start=" + trigger.dataset.start;
+				}
+				if( trigger.dataset.hasOwnProperty( 'end' ) ) {
+					path += "start=" + trigger.dataset.end;
+				}
+
+				console.log( wad.ajax + path );
+			}
+		} );
+	}
+}
+
+
