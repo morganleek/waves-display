@@ -32,6 +32,12 @@ export function wadDatePicker( trigger ) {
 				this.options.element.dataset['start'] = start;
 				this.options.element.dataset['end'] = end;
 
+				if( document.getElementById( "buoy-" + buoyId ) ) {
+					if( document.getElementById( "buoy-" + buoyId ).getElementsByClassName( 'canvas-wrapper' ).length > 0 ) {
+						document.getElementById( "buoy-" + buoyId ).getElementsByClassName( 'canvas-wrapper' )[0].classList.add( 'loading' );
+					}
+				}
+
 				$.ajax({
 					type: 'POST',
 					url: wad.ajax,
@@ -61,7 +67,7 @@ export function wadCSVDownload( trigger ) {
 				// };
 				let path = "?action=waf_rest_list_buoy_datapoints_csv&id=" + e.target.dataset.buoyId;
 				
-				const trigger = buoyWrapper.getElementsByClassName('calendars-trigger')[0];
+				const trigger = buoyWrapper.getElementsByClassName( 'calendars-trigger' )[0];
 				if( trigger.dataset.hasOwnProperty( 'start' ) ) {
 					path += "start=" + trigger.dataset.start;
 				}

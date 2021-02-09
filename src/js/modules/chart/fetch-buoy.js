@@ -14,7 +14,7 @@ export function wadProcessBuoyData( response ) {
     else {
       const failedBuoy = document.getElementById( 'buoy-' + response.buoy_id );
       failedBuoy.getElementsByClassName( 'loading' )[0].innerHTML = "No results found";
-      failedBuoy.getElementsByTagName( 'canvas' )[0].remove();
+      failedBuoy.getElementsByClassName( 'canvas-wrapper' )[0].remove();
       failedBuoy.getElementsByClassName( 'chart-js-menu' )[0].remove();
       failedBuoy.getElementsByClassName( 'chart-info' )[0].remove();
     }

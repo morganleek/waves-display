@@ -272,8 +272,8 @@ export function wadDrawChart( buoyId, waves ) {
 				const canvasContext = buoyWrapper.getElementsByTagName( 'canvas' )[0].getContext( '2d' );
 				
 				// Hide loading message
-				if( buoyWrapper.getElementsByClassName( 'loading').length > 0 ) {
-					buoyWrapper.getElementsByClassName( 'loading')[0].setAttribute( 'style', 'display: none');
+				if( buoyWrapper.getElementsByClassName( 'canvas-wrapper' ).length > 0 ) {
+					buoyWrapper.getElementsByClassName( 'canvas-wrapper' )[0].classList.remove( 'loading' );
 				}
 				
 				// Load chart
@@ -290,8 +290,8 @@ export function wadDrawChart( buoyId, waves ) {
 	// Check for no data
 	if( !hasWaves ) {
 		// Hide loading message
-		if( buoyWrapper.getElementsByClassName( 'loading' ).length > 0 ) {
-			buoyWrapper.getElementsByClassName( 'loading' )[0].innerHTML = "No content available";
+		if( buoyWrapper.getElementsByClassName( 'canvas-wrapper' ).length > 0 ) {
+			buoyWrapper.getElementsByClassName( 'canvas-wrapper' )[0].classList.remove( 'loading' );
 		}
 	}
 }
