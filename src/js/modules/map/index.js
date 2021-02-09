@@ -40,9 +40,17 @@ export function wadDrawMap( buoys ) {
 						title: buoys[i].label,
 						labelContent: buoys[i].web_display_name,
 						labelAnchor: new googleMaps.Point(0, -2),
-						labelClass: "maps-label", // the CSS class for the label
+						labelClass: "buoy-" + buoys[i].id,
 						labelStyle: { opacity: 0.9 }
 					});
+
+					googleMaps.event.addListener( point, "click", function (e) { 
+						const buoy = this.labelClass;
+						if( document.getElementById( buoy ) ) {
+							document.getElementById( buoy )
+								.scrollIntoView({ behavior: 'smooth' });
+						}
+					} );
 				}
 			}).catch( (e) => {
 				console.error(e);
