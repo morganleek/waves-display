@@ -17,7 +17,8 @@ const PRODUCTION = yargs.argv.prod;
 const server = browserSync.create();
 export const serve = done => {
   server.init({
-    proxy: "wpw.scooter"
+    proxy: "wpw.scooter",
+    https: true
   });
   done();
 };

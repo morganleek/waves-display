@@ -35,11 +35,11 @@ export function wadDrawChart( buoyId, waves ) {
 	};
 
 	let arrowImageOrange = new Image( 28, 28 );
-	arrowImageOrange.src = wad.plugin + "/dist/images/arrow-orange-g@2x.png";
+	arrowImageOrange.src = wad.plugin + "dist/images/arrow-orange-g@2x.png";
 	let arrowImageBlue = new Image( 28, 28 );
-	arrowImageBlue.src = wad.plugin + "/dist/images/arrow-blue-g@2x.png";
+	arrowImageBlue.src = wad.plugin + "dist/images/arrow-blue-g@2x.png";
 	let arrowImagePink = new Image( 28, 28 );
-	arrowImagePink.src = wad.plugin + "/dist/images/arrow-pink-g@2x.png";
+	arrowImagePink.src = wad.plugin + "dist/images/arrow-pink-g@2x.png";
 
 	if( typeof( waves ) != "undefined" ) {
 		if( waves.length > 0 ) {

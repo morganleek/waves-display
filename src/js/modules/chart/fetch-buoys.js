@@ -26,7 +26,7 @@ export function wadProcessBuoys( response ) {
       const newBuoyWrapper = document.createElement( "div" );
       newBuoyWrapper.id = "buoy-" + response[i].id;
       // Internals
-      const newPanelWrapper = panelWrapper.replaceAll( '{{ buoyLabel }}', response[i].label )
+      const newPanelWrapper = panelWrapper.replaceAll( '{{ buoyLabel }}', response[i].web_display_name )
         .replaceAll( '{{ buoyId }}', response[i].id )
         .replaceAll( '{{ buoyLat }}', response[i].lat )
         .replaceAll( '{{ buoyLng }}', response[i].lng );
