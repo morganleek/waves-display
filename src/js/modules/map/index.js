@@ -24,7 +24,7 @@ export function wadDrawMap( buoys ) {
 					document.getElementById( 'map' ), {
 						center: latLng,
 						zoom: zoom,
-						// styles: mapStyle,
+						styles: mapStyles,
 						disableDefaultUI: true,
 					}
 				);
@@ -38,7 +38,7 @@ export function wadDrawMap( buoys ) {
 						},
 						map: map,
 						title: buoys[i].label,
-						labelContent: buoys[i].type,
+						labelContent: buoys[i].web_display_name,
 						labelAnchor: new googleMaps.Point(0, -2),
 						labelClass: "maps-label", // the CSS class for the label
 						labelStyle: { opacity: 0.9 }
@@ -83,3 +83,86 @@ export function wadMapLocator ( trigger ) {
 	}
 }
 
+const mapStyles = [
+	{
+		"featureType": "all",
+		"elementType": "labels.text",
+		"stylers": [
+			{
+				"visibility": "off"
+			}
+		]
+	},
+	{
+		"featureType": "all",
+		"elementType": "labels.icon",
+		"stylers": [
+			{
+				"visibility": "off"
+			}
+		]
+	},
+	{
+		"featureType": "landscape",
+		"elementType": "geometry.fill",
+		"stylers": [
+			{
+				"color": "#f1efe8"
+			}
+		]
+	},
+	{
+		"featureType": "landscape.man_made",
+		"elementType": "geometry.fill",
+		"stylers": [
+			{
+				"visibility": "on"
+			},
+			{
+				"gamma": "1.19"
+			}
+		]
+	},
+	{
+		"featureType": "landscape.man_made",
+		"elementType": "geometry.stroke",
+		"stylers": [
+			{
+				"visibility": "on"
+			},
+			{
+				"gamma": "0.00"
+			},
+			{
+				"weight": "2.07"
+			}
+		]
+	},
+	{
+		"featureType": "road.highway",
+		"elementType": "geometry.fill",
+		"stylers": [
+			{
+				"color": "#b2ac83"
+			}
+		]
+	},
+	{
+		"featureType": "road.highway",
+		"elementType": "geometry.stroke",
+		"stylers": [
+			{
+				"color": "#b2ac83"
+			}
+		]
+	},
+	{
+		"featureType": "water",
+		"elementType": "geometry.fill",
+		"stylers": [
+			{
+				"color": "#bde0e2"
+			}
+		]
+	}
+	];
