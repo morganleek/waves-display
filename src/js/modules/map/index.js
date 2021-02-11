@@ -28,6 +28,9 @@ export function wadDrawMap( buoys ) {
 						disableDefaultUI: true,
 					}
 				);
+
+				// map.addListener( "click", ( e ) => { console.log( e.latLng.lat() ); console.log( e.latLng.lng() ); } );
+				// { -23.001983515270528, 122.07808387499998 }
 	
 				// Set markers
 				for(var i = 0; i < buoys.length; i++) {
@@ -169,7 +172,7 @@ const mapStyles = [
 		"elementType": "geometry.fill",
 		"stylers": [
 			{
-				"color": "#bde0e2"
+				"color": "#588da8"
 			}
 		]
 	}

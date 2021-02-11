@@ -114,7 +114,12 @@
 // }
 
 .panel {
-  // .panel-heading {}
+  &.panel-primary {
+    .panel-heading {
+      background: $header;
+      border-color: $header;
+    }
+  }
   .panel-body {
     .canvas-wrapper {
       position: relative;
