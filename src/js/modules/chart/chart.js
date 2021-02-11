@@ -212,7 +212,6 @@ export function wadFillChart( buoyId, waves ) {
 					yAxisID: 'y-axis-3',
 				});
 			}
-			
 			if( dataPoints.bottomTemp.data.length > 0 ) {
 				data.datasets.push({					
 					label: 'Bottom Temperature (Deg C)', 
