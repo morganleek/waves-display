@@ -213,6 +213,20 @@ export function wadFillChart( buoyId, waves ) {
 				});
 			}
 			
+			if( dataPoints.bottomTemp.data.length > 0 ) {
+				data.datasets.push({					
+					label: 'Bottom Temperature (Deg C)', 
+					backgroundColor: 'rgb(255, 159, 64, 0.5)',
+					borderColor: 'rgb(255, 159, 64, 1)',
+					borderWidth: 0,
+					lineTension: 0,
+					pointRadius: 5,
+					fill: true,
+					data: dataPoints.bottomTemp.data,
+					yAxisID: 'y-axis-3',
+				});
+			}
+			
 			// Draw Chart
 			var config = {
 				type: 'line',
