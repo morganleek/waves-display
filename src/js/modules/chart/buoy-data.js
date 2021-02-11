@@ -1,4 +1,30 @@
-import { wadDrawChart } from './draw-chart';
+import $ from 'jquery';
+
+import { wadDrawMap } from '../map';
+import { wadFillChart, wadInitCharts } from './chart';
+
+export function wadFetchBuoys() {
+  // Fetch all buoys
+  $.ajax({
+    type: 'POST',
+    url: wad.ajax,
+    data: { action: 'waf_rest_list_buoys' },
+    success: wadProcessBuoys, // Process list received
+    dataType: 'json'
+  });
+}
+
+export function wadProcessBuoys( response ) {
+  // Draw charts
+  if( document.getElementById( 'buoys' ) != null ) {
+    wadInitCharts( response );
+  }
+
+  // Draw map
+  if( document.getElementById( 'map' ) ) {
+    wadDrawMap( response );
+  }
+}
 
 // Create Divs for each Buoy
 export function wadProcessBuoyData( response ) {
@@ -8,20 +34,21 @@ export function wadProcessBuoyData( response ) {
         const buoyDiv = document.getElementById( 'buoy-' + response.buoy_id );
         // Convert to useful chart data
         const processed = wadRawDataToChartData( response.data );
-        wadDrawChart( response.buoy_id, processed );
+        wadFillChart( response.buoy_id, processed );
       }
     }
     else {
+      // No data returned
       const failedBuoy = document.getElementById( 'buoy-' + response.buoy_id );
       failedBuoy.getElementsByClassName( 'loading' )[0].innerHTML = "No results found";
-      failedBuoy.getElementsByClassName( 'canvas-wrapper' )[0].remove();
       failedBuoy.getElementsByClassName( 'chart-js-menu' )[0].remove();
       failedBuoy.getElementsByClassName( 'chart-info' )[0].remove();
+      // failedBuoy.getElementsByClassName( 'canvas-wrapper' )[0].remove();
     }
   }
 }
 
-function wadRawDataToChartData ( data ) {
+function wadRawDataToChartData( data ) {
   let processed = [];
   if( data.length > 0 ) {
     for( let i = 0; i < data.length; i++ ) {

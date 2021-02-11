@@ -1,6 +1,6 @@
 import $ from 'jquery';
 import Litepicker from 'litepicker';
-import { wadProcessBuoyData } from './fetch-buoy';
+import { wadProcessBuoyData } from './buoy-data';
 
 // import stringify from 'csv-stringify';
 // const stringify = require('csv-stringify');
@@ -11,7 +11,7 @@ export function wadToggleChart( e ) {
 	}
 }
 
-export function wadDatePicker( trigger ) {
+export function wadDatePicker( trigger, startDate = 'Sun Dec 01 2019' ) {
 	if( trigger !== 'undefined' ) {
 		let picker = new Litepicker( { 
 			element: trigger,

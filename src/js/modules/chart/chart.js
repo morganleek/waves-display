@@ -1,9 +1,59 @@
-// import $ from 'jquery';
+import $ from 'jquery';
 import Chart from 'chart.js';
-import { wadToggleChart } from './controls-buoy';
-// import { uwaGenerateBuoyDateString } from './time';
+import { wadToggleChart, wadDatePicker, wadCSVDownload } from './chart-events';
+import { wadProcessBuoyData } from './buoy-data';
+import { wadMapLocator } from '../map';
 
-export function wadDrawChart( buoyId, waves ) {
+const panelWrapper = "<div class='panel panel-primary'>" +
+  "<div class='panel-heading clearfix'><h5>{{ buoyLabel }}</h5></div>" + 
+  "<div class='panel-body'>" + 
+    "<div class='chart-js-menu'>" + 
+      "<button class='download-trigger' data-buoy-id='{{ buoyId }}'></button>" +
+      "<button class='maps-trigger' data-buoy-lat='{{ buoyLat }}' data-buoy-lng='{{ buoyLng }}'></button>" +
+      "<button class='calendars-trigger' data-buoy-id='{{ buoyId }}'></button>" +
+    "</div>" +
+    "<div class='canvas-wrapper loading'>" +
+      "<canvas></canvas>" +
+    "</div>" +
+    "<div class='chart-info'></div>" +
+  "</div>" +
+"</div>";
+
+export function wadInitCharts( response ) {
+	const buoysWrapper = document.getElementById( 'buoys' );
+	// Setup boxes
+	for( let i = 0; i < response.length; i++ ) {
+		const newBuoyWrapper = document.createElement( "div" );
+		newBuoyWrapper.id = "buoy-" + response[i].id;
+		// Internals
+		const newPanelWrapper = panelWrapper.replaceAll( '{{ buoyLabel }}', response[i].web_display_name )
+			.replaceAll( '{{ buoyId }}', response[i].id )
+			.replaceAll( '{{ buoyLat }}', response[i].lat )
+			.replaceAll( '{{ buoyLng }}', response[i].lng );
+		newBuoyWrapper.insertAdjacentHTML( 'afterbegin', newPanelWrapper );
+		// Setup buttons
+		wadDatePicker( newBuoyWrapper.getElementsByClassName( "calendars-trigger" )[0] );
+		wadMapLocator( newBuoyWrapper.getElementsByClassName( "maps-trigger" )[0] );
+		wadCSVDownload( newBuoyWrapper.getElementsByClassName( "download-trigger" )[0] );
+		
+		// Attach
+		buoysWrapper.appendChild( newBuoyWrapper );
+
+		// Fetch data
+		$.ajax({
+			type: 'POST',
+			url: wad.ajax,
+			data: { 
+				action: 'waf_rest_list_buoy_datapoints',
+				id: response[i].id
+			},
+			success: wadProcessBuoyData,
+			dataType: 'json'
+		});
+	}
+}
+
+export function wadFillChart( buoyId, waves ) {
 	let hasWaves = false;
 
 	let arrowPointers = [];
@@ -43,8 +93,8 @@ export function wadDrawChart( buoyId, waves ) {
 
 	if( typeof( waves ) != "undefined" ) {
 		if( waves.length > 0 ) {
-			const startTime = parseInt( waves[0]['Time (UTC)'] ) * 1000; // moment.unix( parseInt( waves[0].time ) ); // .utcOffset( buoyOffset );
-			const endTime = parseInt( waves[waves.length - 1]['Time (UTC)'] ) * 1000; // moment.unix( parseInt( waves[waves.length - 1].time ) ); // .utcOffset( buoyOffset );
+			const startTime = Math.min(...waves.map( ( wave ) => wave['Time (UTC)'] ) ) * 1000;
+			const endTime = Math.max(...waves.map( ( wave ) => wave['Time (UTC)'] ) ) * 1000;
 
 			// Loop
 			for( let i = 0; i < waves.length; i++ ) {
@@ -105,7 +155,7 @@ export function wadDrawChart( buoyId, waves ) {
 				labels: chartLabels,
 				datasets: []
 			};
-			
+
 			if( dataPoints.hsig.data.length > 0 ) {
 				data.datasets.push({
 					label: 'Significant Wave Height', // Wave Height (m)
@@ -169,7 +219,7 @@ export function wadDrawChart( buoyId, waves ) {
 				data: data,
 				options: {
 					responsive: true,
-					aspectRatio: 2,
+					aspectRatio: 2.5,
 					hoverMode: 'index',
 					stacked: false,
 					title: {
@@ -180,23 +230,15 @@ export function wadDrawChart( buoyId, waves ) {
 						xAxes: [{
 							type: 'time',
 							distribution: 'series',
-							// time: {
-							// 	displayFormats: {
-							// 		hour: 'ha',
-							// 	},
-							// 	parser: function ( utcMoment ) {
-							// 		return moment( utcMoment ).utcOffset( buoyOffset );
-							// 	},
-							// },
 							ticks: {
 								min: startTime,
 								max: endTime, 
 							},
 							time: {
 								unit: 'hour',
-								displayFormats: {
-									hour: 'HH:mm'
-								},
+								// displayFormats: {
+								// 	hour: 'HH:mm'
+								// },
 								// parser: function ( utcMoment ) {
 								// 	return utcMoment.utcOffset( buoyOffset );
 								// }

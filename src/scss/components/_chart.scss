@@ -1,10 +1,6 @@
 // Charts.js
 @import '../../node_modules/chart.js/dist/Chart';
 
-// Font Awesome
-$fa-font-path: '../dist/fonts/font-awesome/fonts';
-@import '../../fonts/font-awesome/scss/font-awesome';
-
 .chart-surround {
   margin: 0 -25px;
   @media (min-width: 768px) { 
@@ -79,6 +75,7 @@ $fa-font-path: '../dist/fonts/font-awesome/fonts';
 .chart-js-menu {
   display: flex;
   justify-content: flex-end;
+  margin-bottom: 0.7em;
   button {
     min-width: 32px;
     margin-left: 4px;
@@ -89,23 +86,30 @@ $fa-font-path: '../dist/fonts/font-awesome/fonts';
     &:before {
       font-family: 'FontAwesome';
       font-weight: 200;
+      -webkit-font-smoothing: antialiased;
+    }
+    &.calendars-trigger {
+      &:before {
+        content: '\f073';
+      }
+    }
+    &.show-chart {
+      &:before {
+        content: '\f140';
+      }
+    }
+    &.maps-trigger {
+      &:before {
+        content: '\f041';
+      }
+    }
+    &.download-trigger {
+      &:before {
+        content: '\f0c7';
+      }
     }
   }
-  .calendar-trigger {
-    &:before {
-      content: '\f073';
-    }
-  }
-  .show-chart {
-    &:before {
-      content: '\f140';
-    }
-  }
-  .map-focus {
-    &:before {
-      content: '\f041';
-    }
-  }
+  
 }
 // }
 
