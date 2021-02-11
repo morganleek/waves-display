@@ -119,6 +119,7 @@
     .canvas-wrapper {
       position: relative;
       transition: opacity 0.5s;
+      &.no-results,
       &.loading {
         &:after {
           content: 'Loading';
@@ -134,6 +135,16 @@
           width: 100%;
           height: 0;
           padding-bottom: 40%;
+        }
+      }
+      &.no-results {
+        &:after {
+          content: 'No results found';
+          color: #c0c0c0;
+        }
+        canvas {
+          // padding-bottom: 0;
+          padding-bottom: 10%;
         }
       }
     }

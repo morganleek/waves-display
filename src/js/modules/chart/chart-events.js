@@ -72,10 +72,10 @@ export function wadCSVDownload( trigger ) {
 					path += "start=" + trigger.dataset.start;
 				}
 				if( trigger.dataset.hasOwnProperty( 'end' ) ) {
-					path += "start=" + trigger.dataset.end;
+					path += "end=" + trigger.dataset.end;
 				}
 
-				console.log( wad.ajax + path );
+				window.location = wad.ajax + path;
 			}
 		} );
 	}

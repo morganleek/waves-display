@@ -40,7 +40,9 @@ export function wadProcessBuoyData( response ) {
     else {
       // No data returned
       const failedBuoy = document.getElementById( 'buoy-' + response.buoy_id );
-      failedBuoy.getElementsByClassName( 'loading' )[0].innerHTML = "No results found";
+      const canvasWrapper = failedBuoy.getElementsByClassName( 'canvas-wrapper' )[0]; // .innerHTML = "No results found";
+      canvasWrapper.classList.remove( 'loading' );
+      canvasWrapper.classList.add( 'no-results' );
       failedBuoy.getElementsByClassName( 'chart-js-menu' )[0].remove();
       failedBuoy.getElementsByClassName( 'chart-info' )[0].remove();
       // failedBuoy.getElementsByClassName( 'canvas-wrapper' )[0].remove();
