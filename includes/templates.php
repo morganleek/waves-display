@@ -68,6 +68,7 @@
 			// Add your templates to this array.
 			$this->templates = array(
 				'../templates/wave-display-list.php' => 'Map and Wave Data List',
+				'../templates/wave-overlay-test.php' => 'Wave Overlay Test'
 			);
 				
 		} 

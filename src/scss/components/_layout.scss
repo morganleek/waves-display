@@ -1,6 +1,7 @@
 body {
 	--headers-height: 80px;
-	&.page-template---templateswave-display-list-php {
+	&.page-template---templateswave-display-list-php,
+	&.page-template---templateswave-overlay-test-php {
 		min-height: calc(100vh - var(--headers-height));
 		main {
 			margin: 0;
@@ -21,6 +22,13 @@ body {
 		}
 		&.admin-bar {
 			--headers-height: 112px;
+		}
+	}
+	&.page-template---templateswave-overlay-test-php {
+		main {
+			article {
+				grid-template-columns: 1fr;
+			}
 		}
 	}
 }

@@ -1,7 +1,7 @@
 // import $ from 'jquery';
 // Google Maps
 const loadGoogleMapsApi = require('load-google-maps-api');
-let map;
+// let map;
 
 // $(function() {
 export function wadDrawMap( buoys ) {
@@ -12,6 +12,8 @@ export function wadDrawMap( buoys ) {
 			loadGoogleMapsApi( {
 				key: wad.googleApiKey
 			} ).then( ( googleMaps ) => {
+				// For later 
+				window.myGoogleMaps = googleMaps;
 				// Labels
 				const MarkerWithLabel = require( 'markerwithlabel' )( googleMaps );
 
@@ -20,7 +22,7 @@ export function wadDrawMap( buoys ) {
 				const zoom = ( window.innerWidth < 1200 ) ? 4 : 5;
 				const latLng = { lat: lat, lng: lng };
 	
-				map = new googleMaps.Map(
+				window.myMap = new googleMaps.Map(
 					document.getElementById( 'map' ), {
 						center: latLng,
 						zoom: zoom,
@@ -39,7 +41,7 @@ export function wadDrawMap( buoys ) {
 							lat: parseFloat(buoys[i].lat), 
 							lng: parseFloat(buoys[i].lng)
 						},
-						map: map,
+						map: window.myMap,
 						title: buoys[i].label,
 						labelContent: buoys[i].web_display_name,
 						labelAnchor: new googleMaps.Point(0, -2),
@@ -70,8 +72,8 @@ export function wadDrawMap( buoys ) {
 		// 			lng = parseFloat(global_points_object[i].lng);
 					
 		// 			// Set Centre and Zoom
-		// 			map.setCenter({lat, lng});
-		// 			map.setZoom(12);
+		// 			window.myMap.setCenter({lat, lng});
+		// 			window.myMap.setZoom(12);
 
 		// 			break;
 		// 		}
@@ -88,7 +90,7 @@ export function wadMapLocator ( trigger ) {
 				lng: parseFloat( e.target.dataset.buoyLng )
 			};
 
-			map.panTo( center );
+			window.myMap.panTo( center );
 			// map.setZoom( 11 );
 		} );
 	}
