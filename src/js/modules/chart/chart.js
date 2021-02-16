@@ -40,7 +40,7 @@ export function wadInitCharts( response ) {
 		
 		// Attach
 		buoysWrapper.appendChild( newBuoyWrapper );
-
+		
 		// Fetch data
 		$.ajax({
 			type: 'POST',
@@ -160,12 +160,12 @@ export function wadFillChart( buoyId, waves ) {
 
 			if( dataPoints.hsig.data.length > 0 ) {
 				data.datasets.push({
-					label: 'Significant Wave Height', // Wave Height (m)
-					backgroundColor: 'rgba(75, 192, 192, 1)',
+					label: window.innerWidth >= 768 ? 'Significant Wave Height' : 'Sig Wave (s)', // Wave Height (m)
+					backgroundColor: 'rgba(75, 192, 192, 0.5)',
 					borderColor: 'rgba(75, 192, 192, 1)',
 					borderWidth: 0,
 					lineTension: 0,
-					pointRadius: 0,
+					pointRadius: 2,
 					fill: true,
 					data: dataPoints.hsig.data,
 					yAxisID: 'y-axis-1',
@@ -173,7 +173,7 @@ export function wadFillChart( buoyId, waves ) {
 			}
 			if( dataPoints.tp.data.length > 0 ) {
 				data.datasets.push({					
-					label: 'Peak Wave Period & Direction (s)', // Peak Period (s)
+					label: window.innerWidth >= 768 ? 'Peak Wave Period & Direction (s)' : 'Peak Wave/Dir (s)', // Peak Period (s)
 					backgroundColor: '#0f0f0f',
 					borderColor: 'rgba(235, 127, 74, 0.5)',
 					borderWidth: 0,
@@ -188,7 +188,7 @@ export function wadFillChart( buoyId, waves ) {
 			}
 			if( dataPoints.tm.data.length > 0 ) {
 				data.datasets.push({					
-					label: 'Mean Wave Period & Direction (s)', // Peak Period (s)
+					label: window.innerWidth >= 768 ? 'Mean Wave Period & Direction (s)' : 'Mean Wave/Dir (s)', // Peak Period (s)
 					backgroundColor: 'rgba(77, 168, 248, 0.7)',
 					borderColor: 'rgba(77, 168, 248, 0.5)',
 					borderWidth: 0,
@@ -203,12 +203,12 @@ export function wadFillChart( buoyId, waves ) {
 			}
 			if( dataPoints.sst.data.length > 0 ) {
 				data.datasets.push({					
-					label: 'Sea Surface Temperature (Deg C)', 
+					label: window.innerWidth >= 768 ? 'Sea Surface Temperature (Deg C)' : 'Sea Surf (Deg C)', 
 					backgroundColor: 'rgba(255, 206, 87, 0.5)',
 					borderColor: 'rgba(255, 206, 87, 1)',
 					borderWidth: 0,
 					lineTension: 0,
-					pointRadius: 5,
+					pointRadius: 2,
 					fill: true,
 					data: dataPoints.sst.data,
 					yAxisID: 'y-axis-3',
@@ -216,12 +216,12 @@ export function wadFillChart( buoyId, waves ) {
 			}
 			if( dataPoints.bottomTemp.data.length > 0 ) {
 				data.datasets.push({					
-					label: 'Bottom Temperature (Deg C)', 
+					label: window.innerWidth ? 'Bottom Temperature (Deg C)' : 'Bot Temp (Deg C)',
 					backgroundColor: 'rgb(255, 159, 64, 0.5)',
 					borderColor: 'rgb(255, 159, 64, 1)',
 					borderWidth: 0,
 					lineTension: 0,
-					pointRadius: 5,
+					pointRadius: 2,
 					fill: true,
 					data: dataPoints.bottomTemp.data,
 					yAxisID: 'y-axis-3',
@@ -234,7 +234,7 @@ export function wadFillChart( buoyId, waves ) {
 				data: data,
 				options: {
 					responsive: true,
-					aspectRatio: 2.5,
+					aspectRatio: window.innerWidth >= 768 ? 2.25 : 1.25, // ( window.innerWidth < 768 ) ? 15 : 
 					hoverMode: 'index',
 					stacked: false,
 					title: {
@@ -282,7 +282,7 @@ export function wadFillChart( buoyId, waves ) {
 								max: 8
 							},
 							scaleLabel: {
-								display: true,
+								display: ( window.innerWidth < 768 ) ? false : true,
 								labelString: 'Height (m)',
 							},
 						}, {
@@ -299,7 +299,7 @@ export function wadFillChart( buoyId, waves ) {
 								max: 20
 							},
 							scaleLabel: {
-								display: true,
+								display: ( window.innerWidth < 768 ) ? false : true,
 								labelString: 'Period (s)',
 							},
 						}, {
@@ -316,7 +316,7 @@ export function wadFillChart( buoyId, waves ) {
 								max: 40
 							},
 							scaleLabel: {
-								display: true,
+								display: ( window.innerWidth < 768 ) ? false : true,
 								labelString: 'Temp (Deg C)',
 							},
 						}],

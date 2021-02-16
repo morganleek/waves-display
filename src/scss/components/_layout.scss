@@ -8,11 +8,21 @@ body {
 			padding: 0;
 			article {
 				max-width: 100%;
-				display: grid;
-				grid-template-columns: 1fr 1fr;
-				height: calc(100vh - var(--headers-height));
-				#map, #buoys {
+				@media (min-width: 768px) { 
+					display: grid;
+					grid-template-columns: 1fr 1fr;
 					height: calc(100vh - var(--headers-height));
+				}
+				#map {
+					min-height: 50vh;
+					@media (min-width: 768px) { 
+						min-height: none;
+					}
+				}
+				#map, #buoys {
+					@media (min-width: 768px) { 
+						height: calc(100vh - var(--headers-height));
+					}
 				}
 				#buoys {
 					overflow: scroll;
@@ -27,7 +37,9 @@ body {
 	&.page-template---templateswave-overlay-test-php {
 		main {
 			article {
-				grid-template-columns: 1fr;
+				@media (min-width: 768px) { 
+					grid-template-columns: 1fr;
+				}
 			}
 		}
 	}
