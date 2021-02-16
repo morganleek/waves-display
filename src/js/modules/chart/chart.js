@@ -66,17 +66,17 @@ export function wadFillChart( buoyId, waves ) {
 	window.myChartData['buoy-' + buoyId] = waves;
 	
 	let dataPoints = {
-		hsig: { data: [], description: "Significant Wave Height (m)" }, // let hsig = []; // 
-		tp: { data: [], description: "Peak Wave Period (s)" }, // let tp = []; // 
-		tm: { data: [], description: "Mean Wave Period (s)" }, // let tm = []; // 
-		dp: { data: [], description: "Peak Wave Direction (deg)" }, // let dp = []; // 
-		dpspr: { data: [], description: "Peak Wave Directional Spreading (deg)" }, // let dpspr = []; // 
-		dm: { data: [], description: "Mean Wave Direction (deg)" }, // let dm = []; // 
-		dmspr: { data: [], description: "Mean Wave Directional Spreading (deg)" }, // let dmspr = []; // 
-		sst: { data: [], description: "Sea Surface Temperature (degC)" }, // let sst = []; // 
-		bottomTemp: { data: [], description: "Sea Bottom Temperature (degC)" }, // let bottomTemp = []; // 
-		windspeed: { data: [], description: "Wind Speed (m/s)" }, // let windspeed = []; // 
-		winddirec: { data: [], description: "Wind Direction (deg)" }, // let winddirec = []; // 
+		hsig: { data: [], description: "Max Significant Wave Height (m)" }, // let hsig = []; // 
+		tp: { data: [], description: "Max Peak Wave Period (s)" }, // let tp = []; // 
+		tm: { data: [], description: "Max Mean Wave Period (s)" }, // let tm = []; // 
+		dp: { data: [], description: "Max Peak Wave Direction (deg)" }, // let dp = []; // 
+		dpspr: { data: [], description: "Max Peak Wave Directional Spreading (deg)" }, // let dpspr = []; // 
+		dm: { data: [], description: "Max Mean Wave Direction (deg)" }, // let dm = []; // 
+		dmspr: { data: [], description: "Max Mean Wave Directional Spreading (deg)" }, // let dmspr = []; // 
+		sst: { data: [], description: "Max Sea Surface Temperature (degC)" }, // let sst = []; // 
+		bottomTemp: { data: [], description: "Max Sea Bottom Temperature (degC)" }, // let bottomTemp = []; // 
+		windspeed: { data: [], description: "Max Wind Speed (m/s)" }, // let windspeed = []; // 
+		winddirec: { data: [], description: "Max Wind Direction (deg)" }, // let winddirec = []; // 
 		currentMag: { data: [], description: "Current Mag (m/s)" }, // let currentMag = []; // 
 		currentDir: { data: [], description: "Current Direction (deg)" }, // let currentDir = []; 
 		// qfWaves: { data: [], description: "" }, // let qfWaves = []; // QF_waves  - quality flag for wave variables
@@ -241,19 +241,27 @@ export function wadFillChart( buoyId, waves ) {
 					},
 					scales: {
 						xAxes: [{
-							type: 'time',
 							distribution: 'series',
 							ticks: {
 								min: startTime,
 								max: endTime, 
 							},
+							type: 'time',
 							time: {
-								unit: 'hour',
-								// displayFormats: {
-								// 	hour: 'HH:mm'
-								// },
+								// time: {
+								// 	displayFormats: {
+								// 		quarter: 'MMM YYYY'
+								// 	}
+								// }
+								// unit: 'hour',
+								displayFormats: {
+									minute: 'HH:mm',
+									// day: 'MMM D'
+								},
 								// parser: function ( utcMoment ) {
-								// 	return utcMoment.utcOffset( buoyOffset );
+								// 	if( utcMoment % 8640000 == 0 )
+								// 		console.log( 'New' );
+								// 	return utcMoment;
 								// }
 							},
 							scaleLabel: {
