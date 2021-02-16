@@ -41,11 +41,21 @@ export function wadProcessBuoyData( response ) {
       // No data returned
       const failedBuoy = document.getElementById( 'buoy-' + response.buoy_id );
       const canvasWrapper = failedBuoy.getElementsByClassName( 'canvas-wrapper' )[0]; // .innerHTML = "No results found";
+      const chartInfo = failedBuoy.getElementsByClassName( 'chart-info' )[0];
       canvasWrapper.classList.remove( 'loading' );
       canvasWrapper.classList.add( 'no-results' );
-      failedBuoy.getElementsByClassName( 'chart-js-menu' )[0].remove();
-      failedBuoy.getElementsByClassName( 'chart-info' )[0].remove();
-      // failedBuoy.getElementsByClassName( 'canvas-wrapper' )[0].remove();
+      // Destroy Chart if it exists
+      if( typeof( window.myCharts['buoy' + response.buoy_id] ) != "undefined" ) {
+        window.myCharts['buoy' + response.buoy_id].destroy();
+        // Remove chart data
+        chartInfo.classList.add( 'no-results' );
+        chartInfo.innerHTML = "";
+      }
+      else {
+        // Remove inner elements only for initial loads
+        failedBuoy.getElementsByClassName( 'chart-js-menu' )[0].remove();
+        chartInfo.remove();
+      }
     }
   }
 }

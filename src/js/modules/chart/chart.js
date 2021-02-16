@@ -10,7 +10,7 @@ const panelWrapper = "<div class='panel panel-primary'>" +
     "<div class='chart-js-menu'>" + 
       "<button class='download-trigger' data-buoy-id='{{ buoyId }}'></button>" +
       "<button class='maps-trigger' data-buoy-lat='{{ buoyLat }}' data-buoy-lng='{{ buoyLng }}'></button>" +
-      "<button class='calendars-trigger' data-buoy-id='{{ buoyId }}'></button>" +
+      "<button class='calendars-trigger' data-buoy-id='{{ buoyId }}' data-buoy-start='{{ buoyStartTime }}' data-buoy-end='{{ buoyEndTime }}'></button>" +
     "</div>" +
     "<div class='canvas-wrapper loading'>" +
       "<canvas></canvas>" +
@@ -29,7 +29,9 @@ export function wadInitCharts( response ) {
 		const newPanelWrapper = panelWrapper.replaceAll( '{{ buoyLabel }}', response[i].web_display_name )
 			.replaceAll( '{{ buoyId }}', response[i].id )
 			.replaceAll( '{{ buoyLat }}', response[i].lat )
-			.replaceAll( '{{ buoyLng }}', response[i].lng );
+			.replaceAll( '{{ buoyLng }}', response[i].lng )
+			.replaceAll( '{{ buoyStartTime }}', response[i].start_date )
+			.replaceAll( '{{ buoyEndTime }}', response[i].end_date );
 		newBuoyWrapper.insertAdjacentHTML( 'afterbegin', newPanelWrapper );
 		// Setup buttons
 		wadDatePicker( newBuoyWrapper.getElementsByClassName( "calendars-trigger" )[0] );

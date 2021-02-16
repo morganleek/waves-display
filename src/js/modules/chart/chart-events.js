@@ -13,14 +13,20 @@ export function wadToggleChart( e ) {
 
 export function wadDatePicker( trigger, startDate = 'Sun Dec 01 2019' ) {
 	if( trigger !== 'undefined' ) {
+		// Add a day either side +-86400
+		const start = ( trigger.dataset.hasOwnProperty( 'buoyStart' ) ) ? new Date( ( parseInt( trigger.dataset['buoyStart'] ) - 86400 ) * 1000 ) : new Date();
+		const end = ( trigger.dataset.hasOwnProperty( 'buoyEnd' ) && parseInt( trigger.dataset['buoyEnd'] ) != 0 ) ? new Date( ( parseInt( trigger.dataset['buoyEnd'] ) + 86400 ) * 1000 ) : new Date();
+		// console.log( start );
+		console.log( start );
+		// console.log( trigger.dataset.hasOwnProperty( 'buoyEnd' ) && parseInt( trigger.dataset['buoyStart'] ) );
 		let picker = new Litepicker( { 
 			element: trigger,
 			firstDay: 1,
 			format: 'YYYY-MM-DD',
 			numberOfMonths: 2,
 			numberOfColumns: 2,
-			minDate: 'Sun Dec 01 2019',
-			maxDate: new Date(),
+			minDate: start,
+			maxDate: end,
 			selectForward: true,
 			autoApply: true,
 			mobileFriendly: true,
