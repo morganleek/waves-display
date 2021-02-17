@@ -88,9 +88,6 @@ export function wadGenerateChartData( waves ) {
 		arrowImagePink.src = wad.plugin + "dist/images/arrow-pink-g@2x.png";
 
 	
-		const startTime = Math.min(...waves.map( ( wave ) => wave['Time (UTC)'] ) ) * 1000;
-		const endTime = Math.max(...waves.map( ( wave ) => wave['Time (UTC)'] ) ) * 1000;
-
 		// Loop
 		for( let i = 0; i < waves.length; i++ ) {
 			// Time as moment object with offset
@@ -122,6 +119,9 @@ export function wadGenerateChartData( waves ) {
 			dataPoints.currentDir.data = [{ x: time, y: parseFloat( waves[i]["CurrentDir (deg) "] ) }];
 		}
 		
+		const startTime = Math.min(...waves.map( ( wave ) => wave['Time (UTC)'] ) ) * 1000;
+		const endTime = Math.max(...waves.map( ( wave ) => wave['Time (UTC)'] ) ) * 1000;
+
 		let s = new Date();
 		s.setTime( startTime );
 		let e = new Date();
