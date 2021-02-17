@@ -1,7 +1,7 @@
 import $ from 'jquery';
 
 import { wadDrawMap } from '../map';
-import { wadFillChart, wadInitCharts } from './chart';
+import { wadDrawTable, wadGenerateChartData, wadDrawChart, wadInitCharts } from './chart';
 
 export function wadFetchBuoys() {
   // Fetch all buoys
@@ -34,7 +34,17 @@ export function wadProcessBuoyData( response ) {
         const buoyDiv = document.getElementById( 'buoy-' + response.buoy_id );
         // Convert to useful chart data
         const processed = wadRawDataToChartData( response.data );
-        wadFillChart( response.buoy_id, processed );
+        // Store in Window
+        if( typeof( window.myChartData ) == "undefined" ) {
+          window.myChartData = [];
+        }
+        window.myChartData['buoy-' + response.buoy_id] = processed;
+        // Generate Chart.js data
+        const chartData = wadGenerateChartData( processed );
+        // Draw chart tables
+        wadDrawTable( response.buoy_id, chartData );
+        // Draw with chartData
+        wadDrawChart( response.buoy_id, chartData );
       }
     }
     else {
@@ -60,7 +70,7 @@ export function wadProcessBuoyData( response ) {
   }
 }
 
-function wadRawDataToChartData( data ) {
+export function wadRawDataToChartData( data ) {
   let processed = [];
   if( data.length > 0 ) {
     for( let i = 0; i < data.length; i++ ) {
