@@ -42,9 +42,9 @@ export function wadProcessBuoyData( response ) {
         // Generate Chart.js data
         const chartData = wadGenerateChartData( processed );
         // Draw chart tables
-        wadDrawTable( response.buoy_id, chartData );
+        wadDrawTable( response.buoy_id, chartData.dataPoints );
         // Draw with chartData
-        wadDrawChart( response.buoy_id, chartData );
+        wadDrawChart( response.buoy_id, chartData.config );
       }
     }
     else {

@@ -3,6 +3,7 @@ import Chart from 'chart.js';
 import { wadToggleChart, wadDatePicker, wadCSVDownload } from './chart-events';
 import { wadProcessBuoyData } from './buoy-data';
 import { wadMapLocator } from '../map';
+import moment from 'moment';
 
 const panelWrapper = "<div class='panel panel-primary'>" +
   "<div class='panel-heading clearfix'><h5>{{ buoyLabel }}</h5></div>" + 
@@ -121,12 +122,13 @@ export function wadGenerateChartData( waves ) {
 		
 		const startTime = Math.min(...waves.map( ( wave ) => wave['Time (UTC)'] ) ) * 1000;
 		const endTime = Math.max(...waves.map( ( wave ) => wave['Time (UTC)'] ) ) * 1000;
+		const startTimeRounded = Math.ceil( startTime / 3600000 ) * 3600000;
 
-		let s = new Date();
-		s.setTime( startTime );
-		let e = new Date();
-		e.setTime( endTime );
-		const scaleLabel = s.toDateString() + " - " + e.toDateString();
+		const mStart = moment( startTime );
+		const mEnd = moment( endTime );
+		const mBaseFormat = 'hh:mma D MMM YYYY';
+		const mStartFormat = ( endTime - startTime > 31536000000 ) ? mBaseFormat : 'h:mma D MMM';
+		const scaleLabel = mStart.format( mStartFormat ) + " - " + mEnd.format( mBaseFormat );
 
 		// Data
 		var data = {
@@ -219,33 +221,49 @@ export function wadGenerateChartData( waves ) {
 				},
 				scales: {
 					xAxes: [{
-						distribution: 'series',
+						distribution: 'linear',
 						ticks: {
-							min: startTime,
-							max: endTime, 
+								min: new Date( startTimeRounded ),
 						},
 						type: 'time',
 						time: {
-							// time: {
-							// 	displayFormats: {
-							// 		quarter: 'MMM YYYY'
-							// 	}
-							// }
-							// unit: 'hour',
-							displayFormats: {
-								minute: 'HH:mm',
-								// day: 'MMM D'
-							},
-							// parser: function ( utcMoment ) {
-							// 	if( utcMoment % 8640000 == 0 )
-							// 		console.log( 'New' );
-							// 	return utcMoment;
-							// }
+								stepSize: 120,
+								unit: 'minute',
+								displayFormats: {
+									minute: 'ha',
+								},
 						},
 						scaleLabel: {
-							display: true,
-							labelString: scaleLabel
-						}
+								display: true,
+								labelString: scaleLabel
+						}					
+						// distribution: 'series',
+						// ticks: {
+						// 	min: startTime,
+						// 	max: endTime, 
+						// },
+						// type: 'time',
+						// time: {
+						// 	// time: {
+						// 	// 	displayFormats: {
+						// 	// 		quarter: 'MMM YYYY'
+						// 	// 	}
+						// 	// }
+						// 	// unit: 'hour',
+						// 	displayFormats: {
+						// 		minute: 'HH:mm',
+						// 		// day: 'MMM D'
+						// 	},
+						// 	// parser: function ( utcMoment ) {
+						// 	// 	if( utcMoment % 8640000 == 0 )
+						// 	// 		console.log( 'New' );
+						// 	// 	return utcMoment;
+						// 	// }
+						// },
+						// scaleLabel: {
+						// 	display: true,
+						// 	labelString: scaleLabel
+						// }
 					}],
 					yAxes: [{
 						type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
@@ -299,32 +317,32 @@ export function wadGenerateChartData( waves ) {
 				}
 			}
 		};
-		return config;
+		return { config: config, dataPoints: dataPoints };
 	}
 	return false;
 } 
 
-export function wadDrawTable( buoyId, config ) {
+export function wadDrawTable( buoyId, dataPoints ) {
 	//
 	// Make work with new draw method
 	//
 	let buoyInfoHtml = "";
-	console.log( config );
-	// for( const [key, value] of Object.entries( dataPoints ) ) {
-	// 	// Max value
-	// 	const max = Math.max( ...value.data.map( point => point.y ) );
-	// 	// Append to table
-	// 	max = ( max > 0 ) ? max : "-";
-	// 	buoyInfoHtml += "<dt>" + value.description + "</dt>" +
-	// 		"<dd>" + max + "</dd>";
-	// }
 	
-	// const buoyWrapper = document.getElementById( 'buoy-' + buoyId );
-	// // Clear it
-	// const chartInfo = buoyWrapper.getElementsByClassName("chart-info")[0]
-	// chartInfo.innerHTML = "";
-	// chartInfo.insertAdjacentHTML( 'afterbegin', "<dl>" + buoyInfoHtml + "</dl>" );
-	// chartInfo.addEventListener( 'click', wadToggleChart );
+	for( const [key, value] of Object.entries( dataPoints ) ) {
+		// Max value
+		const max = Math.max( ...value.data.map( point => point.y ) );
+		// Append to table
+		max = ( max > 0 ) ? max : "-";
+		buoyInfoHtml += "<dt>" + value.description + "</dt>" +
+			"<dd>" + max + "</dd>";
+	}
+	
+	const buoyWrapper = document.getElementById( 'buoy-' + buoyId );
+	// Clear it
+	const chartInfo = buoyWrapper.getElementsByClassName("chart-info")[0]
+	chartInfo.innerHTML = "";
+	chartInfo.insertAdjacentHTML( 'afterbegin', "<dl>" + buoyInfoHtml + "</dl>" );
+	chartInfo.addEventListener( 'click', wadToggleChart );
 }
 
 export function wadDrawChart( buoyId, config ) {

@@ -151,5 +151,7 @@ function App() {
 
 
 document.addEventListener("DOMContentLoaded", function(event) { 
-  render( <App />, document.getElementById( "root" ) );
+  if( document.getElementsByClassName('page-template-wave-display-react').length ) {
+    render( <App />, document.getElementById( "root" ) );
+  }
 } );
