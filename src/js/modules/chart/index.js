@@ -14,9 +14,13 @@ $( function() {
 //
 // React
 //
-import React, { useState, Component } from "react";
+import React, { useState, Component, Fragment } from "react";
 import { render } from "react-dom";
 import { wadRawDataToChartData } from './buoy-data';
+import { wadGenerateChartData } from './chart';
+
+import { Line } from 'react-chartjs-2';
+
 
 const classNames = require('classnames');
 
@@ -29,11 +33,6 @@ function Map( props ) {
 }
 
 class Charts extends Component {
-  // On load
-  // getBuoys().then( json => {
-  //  console.log( json );
-  //  for each json into BuoyChart
-  // } );
   constructor( props ) {
     super( props );
     
@@ -55,7 +54,7 @@ class Charts extends Component {
     const { buoys } = this.state;
     let buoysList;
     if( buoys.length > 0 ) {
-      buoysList = <ChartsList buoyData={ buoys } />
+      buoysList = <ChartsLoop buoyData={ buoys } />
     }
 
     return (
@@ -65,9 +64,10 @@ class Charts extends Component {
     );
   }
 }
-const ChartsList = ( props ) => {
+
+const ChartsLoop = ( props ) => {
   // Interate through buoys
-  let chartsListRender = props.buoyData.map( ( row, index ) => {    
+  let chartsLoopRender = props.buoyData.map( ( row, index ) => {    
     return (
       <div className={ classNames( ['panel', 'panel-primary'] ) } key={ index }>
         <div className={ classNames( ['panel-heading', 'clearfix'] ) }>
@@ -76,13 +76,44 @@ const ChartsList = ( props ) => {
         <div className='panel-body'> 
           <div className='chart-js-menu'>Buttons</div>
           <Chart buoyId={ row.id } />
-          <div className='chart-info'>Chart Info</div>
         </div>
       </div>
     )
   } );
 
-  return <div>{ chartsListRender }</div>
+  return <div>{ chartsLoopRender }</div>
+}
+
+class LineTable extends Component {
+  constructor( props ) {
+    super( props );
+    
+    this.state = {
+      active: false
+    }
+  }
+
+  render( ) {
+    // Iterate through chart table items
+    let lineTableRender = [];
+    for( const [key, value] of Object.entries( this.props.dataPoints ) ) {
+      // Max value
+      const max = Math.max( ...value.data.map( point => point.y ) );
+      max = ( max > 0 ) ? max : "-";
+
+      lineTableRender.push( <Fragment key={ key }>
+        <dt>{ value.description }</dt>
+        <dd>{ max }</dd>
+      </Fragment> );
+    }
+
+    return (
+      <div className={ classNames( "chart-info", { "expanded": this.state.active } ) }
+        onClick={ () => this.setState( { active: !this.state.active } ) } >
+        <dl>{ lineTableRender }</dl>
+      </div>
+    );
+  }
 }
 
 class Chart extends Component {
@@ -90,7 +121,7 @@ class Chart extends Component {
     super( props );
     
     this.state = {
-      data: [],
+      data: []
     }
 
   }
@@ -99,16 +130,25 @@ class Chart extends Component {
     getBuoy( this.props.buoyId ).then( json => {
       if( json.success == 1 ) {
         this.setState( {
-          data: wadRawDataToChartData( json.data )
+          data: wadGenerateChartData( wadRawDataToChartData( json.data ) )
         } );
       }      
     } );
   }
   
   render() {
+    let lineChart = <p>Loading &hellip;</p>;
+    let lineTable;
+    const { data } = this.state;
+    if( Object.keys( data ).length > 0 ) {
+      lineChart = <Line data={ data.config.data } options={ data.config.options } />
+      lineTable = <LineTable dataPoints={ data.dataPoints } />
+    }
+
     return (
       <div className={ classNames( ['canvas-wrapper', 'loading'] ) }>
-        <canvas></canvas>
+        { lineChart }
+        { lineTable }
       </div>
     );
   }
