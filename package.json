@@ -22,6 +22,7 @@
   "homepage": "https://github.com/morganleek/wp-buoy#readme",
   "dependencies": {
     "@babel/register": "^7.12.10",
+    "@react-google-maps/api": "^2.1.1",
     "autoprefixer": "^9.8.6",
     "browser-sync": "^2.26.13",
     "chart.js": "^2.9.4",

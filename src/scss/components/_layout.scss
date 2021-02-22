@@ -43,4 +43,30 @@ body {
 			}
 		}
 	}
+	&.page-template-wave-display-react {
+		min-height: calc(100vh - var(--headers-height));
+		#root {
+			max-width: 100%;
+			@media (min-width: 768px) { 
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				height: calc(100vh - var(--headers-height));
+			}
+			.maps {
+				min-height: 50vh;
+				@media (min-width: 768px) { 
+					min-height: none;
+				}
+			}
+			.maps, .charts {
+				@media (min-width: 768px) { 
+					height: calc(100vh - var(--headers-height));
+				}
+			}
+			.charts {
+				overflow: scroll;
+				padding: 10px;
+			}
+		}
+	}
 }
