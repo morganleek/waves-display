@@ -1,7 +1,7 @@
 import $ from 'jquery';
 
 import { wadDrawMap } from '../map';
-import { wadDrawTable, wadGenerateChartData, wadDrawChart, wadInitCharts } from './chart';
+import { wadDrawLatestTable, wadGenerateChartData, wadDrawChart, wadInitCharts } from './chart';
 
 export function wadFetchBuoys() {
   // Fetch all buoys
@@ -42,7 +42,7 @@ export function wadProcessBuoyData( response ) {
         // Generate Chart.js data
         const chartData = wadGenerateChartData( processed );
         // Draw chart tables
-        wadDrawTable( response.buoy_id, chartData.dataPoints );
+        wadDrawLatestTable( response.buoy_id, chartData.dataPoints );
         // Draw with chartData
         wadDrawChart( response.buoy_id, chartData.config );
       }
