@@ -125,7 +125,7 @@
   }
   .panel-body {
     padding: 5px 5px;
-    h5 {
+    h5.latest-observations {
       text-align: center;
     }
     .canvas-wrapper {
@@ -152,6 +152,9 @@
               min-height: 0;
               padding-bottom: 40%;
             }
+          }
+          & + h5.latest-observations {
+            display: none;
           }
         }
         &.no-results {
