@@ -234,47 +234,20 @@ export function wadGenerateChartData( waves ) {
 					xAxes: [{
 						distribution: 'linear',
 						ticks: {
-								min: new Date( startTimeRounded ),
+							min: new Date( startTimeRounded ),
 						},
 						type: 'time',
 						time: {
-								stepSize: 120,
-								unit: 'minute',
-								displayFormats: {
-									minute: 'ha',
-								},
+							stepSize: 120,
+							unit: 'minute',
+							displayFormats: {
+								minute: 'ha',
+							},
 						},
 						scaleLabel: {
-								display: true,
-								labelString: scaleLabel
-						}					
-						// distribution: 'series',
-						// ticks: {
-						// 	min: startTime,
-						// 	max: endTime, 
-						// },
-						// type: 'time',
-						// time: {
-						// 	// time: {
-						// 	// 	displayFormats: {
-						// 	// 		quarter: 'MMM YYYY'
-						// 	// 	}
-						// 	// }
-						// 	// unit: 'hour',
-						// 	displayFormats: {
-						// 		minute: 'HH:mm',
-						// 		// day: 'MMM D'
-						// 	},
-						// 	// parser: function ( utcMoment ) {
-						// 	// 	if( utcMoment % 8640000 == 0 )
-						// 	// 		console.log( 'New' );
-						// 	// 	return utcMoment;
-						// 	// }
-						// },
-						// scaleLabel: {
-						// 	display: true,
-						// 	labelString: scaleLabel
-						// }
+							display: true,
+							labelString: scaleLabel
+						}
 					}],
 					yAxes: [{
 						type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
@@ -344,10 +317,12 @@ export function wadDrawLatestTable( buoyId, dataPoints ) {
 		// Max value
 		const recent = value.data.pop();
 		// Append to table
-		const recentText = ( typeof( recent ) != "undefined" && recent.hasOwnProperty( 'y' ) && recent.y > 0 ) ? recent.y : "-";
-		time = ( typeof( recent ) != "undefined" && recent.hasOwnProperty( 'x' ) && recent.x > 0 ) ? recent.x : time;
-		buoyInfoHtml += "<dt>" + value.description + "</dt>" +
-			"<dd>" + recentText + "</dd>";
+		if( typeof( recent ) != "undefined" && recent.hasOwnProperty( 'y' ) && recent.y > 0 ) {
+			const recentText = recent.y;
+			time = ( recent.hasOwnProperty( 'x' ) && recent.x > 0 ) ? recent.x : time;
+			buoyInfoHtml += "<dt>" + value.description + "</dt>" +
+				"<dd>" + recentText + "</dd>";
+		}
 	}
 	
 	const buoyWrapper = document.getElementById( 'buoy-' + buoyId );
