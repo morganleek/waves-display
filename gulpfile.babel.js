@@ -12,14 +12,15 @@ import named from 'vinyl-named';
 import browserSync from "browser-sync";
 import info from "./package.json";
 import replace from "gulp-replace";
+import config from "./config.json";
 // import wpPot from "gulp-wp-pot";
 const PRODUCTION = yargs.argv.prod;
 const server = browserSync.create();
 export const serve = done => {
   server.init({
-    proxy: "https://wawa.kermit:8443",
-    https: true,
-    port: 3010
+    proxy: config.browserSync.proxy,
+    https: config.browserSync.https,
+    port: config.browserSync.port
   });
   done();
 };
