@@ -354,7 +354,7 @@ export function wadDrawLatestTable( buoyId, dataPoints ) {
 	// Time
 	const timeObject = moment( time );
 	const latestObservations = buoyWrapper.getElementsByClassName( 'latest-observations' )[0];
-	latestObservations.getElementsByTagName( 'time' )[0].innerHTML = timeObject.format( 'h:mma D MMM YYYY' );
+	latestObservations.getElementsByTagName( 'time' )[0].innerHTML = timeObject.format( 'h:mma DD/MM/YYYY' );
 	// Clear it
 	const chartInfo = buoyWrapper.getElementsByClassName("chart-info")[0];
 	chartInfo.innerHTML = "";
