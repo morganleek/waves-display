@@ -145,7 +145,7 @@ export function wadGenerateChartData( waves ) {
 		const mEnd = moment( endTime );
 		const mBaseFormat = 'hh:mma D MMM YYYY';
 		const mStartFormat = ( endTime - startTime > 31536000000 ) ? mBaseFormat : 'h:mma D MMM';
-		const scaleLabel = mStart.format( mStartFormat ) + " - " + mEnd.format( mBaseFormat );
+		const scaleLabel = mStart.format( mStartFormat ) + " — " + mEnd.format( mBaseFormat );
 
 		// Data
 		var data = {
@@ -256,7 +256,10 @@ export function wadGenerateChartData( waves ) {
 						},
 						scaleLabel: {
 							display: true,
-							labelString: scaleLabel
+							labelString: scaleLabel,
+							fontSize: 15,
+							fontFamily: "'Lato', sans-serif",
+							fontColor: '#000'
 						}
 					}],
 					yAxes: [{
