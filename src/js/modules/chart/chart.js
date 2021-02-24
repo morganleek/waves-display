@@ -25,8 +25,15 @@ const panelWrapper = "<div class='panel panel-primary'>" +
 
 export function wadInitCharts( response ) {
 	const buoysWrapper = document.getElementById( 'buoys' );
+	// Save Buoy Data
+	if( window.buoysData == undefined ) {
+		window.buoysData = new Map();
+	}
 	// Setup boxes
 	for( let i = 0; i < response.length; i++ ) {
+		// Push on to stack
+		window.buoysData.set( parseInt( response[i].id ), response[i] );
+		// Setup visuals
 		const newBuoyWrapper = document.createElement( "div" );
 		newBuoyWrapper.id = "buoy-" + response[i].id;
 		// Internals
@@ -313,7 +320,7 @@ export function wadDrawLatestTable( buoyId, dataPoints ) {
 	// Make work with new draw method
 	//
 	let buoyInfoHtml = "";
-	let time = 0;
+	
 	
 	for( const [key, value] of Object.entries( dataPoints ) ) {
 		// Max value
@@ -321,7 +328,7 @@ export function wadDrawLatestTable( buoyId, dataPoints ) {
 		// Append to table
 		if( typeof( recent ) != "undefined" && recent.hasOwnProperty( 'y' ) && recent.y > 0 ) {
 			const recentText = recent.y;
-			time = ( recent.hasOwnProperty( 'x' ) && recent.x > 0 ) ? recent.x : time;
+			// time = ( recent.hasOwnProperty( 'x' ) && recent.x > 0 ) ? recent.x : time;
 			buoyInfoHtml += "<dt>" + value.description + "</dt>" +
 				"<dd>" + recentText + "</dd>";
 		}
@@ -329,9 +336,19 @@ export function wadDrawLatestTable( buoyId, dataPoints ) {
 	
 	const buoyWrapper = document.getElementById( 'buoy-' + buoyId );
 	// Time
-	const timeObject = moment( time );
-	const latestObservations = buoyWrapper.getElementsByClassName( 'latest-observations' )[0];
-	latestObservations.getElementsByTagName( 'time' )[0].innerHTML = timeObject.format( 'h:mma DD/MM/YYYY' );
+	let time = "";
+	if( window.buoysData != undefined && window.buoysData.has( parseInt( buoyId ) ) ) {
+		const lastUpdate = moment( window.buoysData.get( parseInt( buoyId ) ).last_update * 1000 );
+		const queryTime = moment( window.buoysData.get( parseInt( buoyId ) ).now * 1000 );
+		
+		const timeDiff = queryTime.diff( lastUpdate, 'hours' );
+		const hasWarning = ( timeDiff >= 3 ) ? true : false;
+		const formattedTime = ( timeDiff >= 3 ) ? lastUpdate.format( 'h:mma DD/MM/YYYY' ) + ' (' + timeDiff + ' hours ago)' : lastUpdate.format( 'h:mma DD/MM/YYYY' );
+
+		const latestObservations = buoyWrapper.getElementsByClassName( 'latest-observations' )[0];
+		latestObservations.getElementsByTagName( 'time' )[0].innerHTML = formattedTime;
+		latestObservations.getElementsByTagName( 'time' )[0].classList.toggle( 'warning', hasWarning );
+	}
 	// Clear it
 	const chartInfo = buoyWrapper.getElementsByClassName("chart-info")[0];
 	chartInfo.innerHTML = "";
