@@ -6,9 +6,10 @@ import { wadProcessBuoyData } from './buoy-data';
 // const stringify = require('csv-stringify');
 
 export function wadToggleChart( e ) {
-	if( !e.target.classList.contains( 'expanded' ) ) {
-		e.target.classList.add( 'expanded' );
-	}
+	// if( !e.target.classList.contains( 'expanded' ) ) {
+	// 	e.target.classList.add( 'expanded' );
+	// }
+	e.target.classList.toggle( 'expanded' );
 }
 
 export function wadDatePicker( trigger, startDate = 'Sun Dec 01 2019' ) {
