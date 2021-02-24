@@ -33,7 +33,8 @@ export function wadDrawMap( buoys ) {
 
 				// map.addListener( "click", ( e ) => { console.log( e.latLng.lat() ); console.log( e.latLng.lng() ); } );
 				// { -23.001983515270528, 122.07808387499998 }
-	
+				window.myMapMarkers = new Map();
+
 				// Set markers
 				for(var i = 0; i < buoys.length; i++) {
 					var point = new MarkerWithLabel({
@@ -48,15 +49,21 @@ export function wadDrawMap( buoys ) {
 						labelClass: "buoy-" + buoys[i].id,
 						labelStyle: { opacity: 0.9 }
 					});
+					// Push on to marker stack
+					window.myMapMarkers.set( parseInt( buoys[i].id ), point );
 
-					googleMaps.event.addListener( point, "click", function (e) { 
+					googleMaps.event.addListener( point, "click", function( e ) { 
 						const buoy = this.labelClass;
 						if( document.getElementById( buoy ) ) {
 							document.getElementById( buoy )
 								.scrollIntoView({ behavior: 'smooth' });
 						}
 					} );
+
 				}
+				// googleMaps.event.addListener( window.myMap, "center_changed", function( e ) { 
+				// 	console.log( e );
+				// } );
 			}).catch( (e) => {
 				console.error(e);
 			});
@@ -85,13 +92,25 @@ export function wadDrawMap( buoys ) {
 export function wadMapLocator ( trigger ) {
 	if( trigger != "undefined" ) {
 		trigger.addEventListener( 'click', ( e ) => {
-			const center = { 
-				lat: parseFloat( e.target.dataset.buoyLat ),
-				lng: parseFloat( e.target.dataset.buoyLng )
-			};
-
-			window.myMap.panTo( center );
-			// map.setZoom( 11 );
+			const buoyId = parseInt( e.target.dataset.buoyId );
+			// console.log( e.target.dataset );
+			// console.log( typeof( buoyId ) );
+			// console.log( window.myMapMarkers );
+			if( window.myMapMarkers.has( buoyId ) ) {
+				// console.log( window.myMapMarkers.get( buoyId ) );
+				const marker = window.myMapMarkers.get( buoyId );
+				const center = { 
+					lat: marker.position.lat(),
+					lng: marker.position.lng()
+				};
+				window.myMap.panTo( center )
+				window.myMap.setZoom( 8 );
+				// Animate
+				marker.setAnimation( window.myGoogleMaps.Animation.DROP );
+			}
+			else {
+				alert( 'Can\'t location buoy ID: ' + buoyId );
+			}
 		} );
 	}
 }
