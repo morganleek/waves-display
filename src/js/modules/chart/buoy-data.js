@@ -1,7 +1,7 @@
 import $ from 'jquery';
 
 import { wadDrawMap } from '../map';
-import { wadDrawLatestTable, wadGenerateChartData, wadDrawChart, wadInitCharts } from './chart';
+import { wadDrawLatestTable, wadGenerateChartData, wadDrawHeading, wadDrawChart, wadInitCharts } from './chart';
 
 export function wadFetchBuoys() {
   // Fetch all buoys
@@ -45,6 +45,8 @@ export function wadProcessBuoyData( response ) {
         wadDrawLatestTable( response.buoy_id, chartData.dataPoints );
         // Draw with chartData
         wadDrawChart( response.buoy_id, chartData.config );
+        // Update heading with time
+        wadDrawHeading( response.buoy_id, chartData.timeLabel );
       }
     }
     else {

@@ -7,7 +7,7 @@ import moment from 'moment';
 
 const panelWrapper = "<div class='panel panel-primary'>" +
   "<div class='panel-heading clearfix'>" +
-		"<h6 class='pull-left'>{{ buoyLabel }}</h6>" + 
+		"<h6 class='pull-left'>{{ buoyLabel }} <time></time></h6>" + 
 		"<div class='btn-group btn-group-sm chart-js-menu pull-right' role='group' aria-label='Chart Tools'>" + 
 			"<button class='download-trigger btn btn-default' data-buoy-id='{{ buoyId }}'><i class='fa fa-floppy-o' aria-hidden='true'></i>&nbsp;&nbsp;Export</button>" +
 			"<button class='maps-trigger btn btn-default' data-buoy-id='{{ buoyId }}' data-buoy-lat='{{ buoyLat }}' data-buoy-lng='{{ buoyLng }}'><i class='fa fa-crosshairs' aria-hidden='true'></i>&nbsp;&nbsp;Centre</button>" +
@@ -143,9 +143,10 @@ export function wadGenerateChartData( waves ) {
 
 		const mStart = moment( startTime );
 		const mEnd = moment( endTime );
-		const mBaseFormat = 'hh:mma D MMM YYYY';
-		const mStartFormat = ( endTime - startTime > 31536000000 ) ? mBaseFormat : 'h:mma D MMM';
-		const scaleLabel = mStart.format( mStartFormat ) + " — " + mEnd.format( mBaseFormat );
+		// const mBaseFormat = 'hh:mma D MMM YYYY';
+		// const mStartFormat = ( endTime - startTime > 31536000000 ) ? mBaseFormat : 'h:mma D MMM';
+		const mBaseFormat = 'D MMM, YYYY hh:mma';
+		const scaleLabel = ' ( ' + mStart.format( mBaseFormat ) + " — " + mEnd.format( mBaseFormat ) + ' )';
 
 		// Data
 		var data = {
@@ -232,12 +233,15 @@ export function wadGenerateChartData( waves ) {
 			data: data,
 			options: {
 				responsive: true,
-				aspectRatio: window.innerWidth >= 768 ? 2.25 : 1.25, // ( window.innerWidth < 768 ) ? 15 : 
+				aspectRatio: window.innerWidth >= 768 ? 2.65 : 1.25, // ( window.innerWidth < 768 ) ? 15 : 
 				hoverMode: 'index',
 				stacked: false,
 				title: {
 					display: false,
-					// text: 'Significant Wave Height'
+					text: scaleLabel,
+					fontSize: 15,
+					fontFamily: "'Lato', sans-serif",
+					fontColor: '#000'
 				},
 				scales: {
 					xAxes: [{
@@ -255,11 +259,7 @@ export function wadGenerateChartData( waves ) {
 							},
 						},
 						scaleLabel: {
-							display: true,
-							labelString: scaleLabel,
-							fontSize: 15,
-							fontFamily: "'Lato', sans-serif",
-							fontColor: '#000'
+							display: false,
 						}
 					}],
 					yAxes: [{
@@ -320,7 +320,7 @@ export function wadGenerateChartData( waves ) {
 				}
 			}
 		};
-		return { config: config, dataPoints: dataPoints };
+		return { config: config, dataPoints: dataPoints, timeLabel: scaleLabel };
 	}
 	return false;
 } 
@@ -387,6 +387,17 @@ export function wadDrawTable( buoyId, dataPoints ) {
 	chartInfo.innerHTML = "";
 	chartInfo.insertAdjacentHTML( 'afterbegin', "<dl>" + buoyInfoHtml + "</dl>" );
 	chartInfo.addEventListener( 'click', wadToggleChart );
+}
+
+export function wadDrawHeading( buoyId, label ) {
+	const buoyWrapper = document.getElementById( 'buoy-' + buoyId );
+	const panelHeading = buoyWrapper.getElementsByClassName( 'panel-heading' )
+	if( panelHeading.length > 0 ) {
+		const time = panelHeading[0].getElementsByTagName( 'time' );
+		if( time.length > 0 ) {
+			time[0].innerHTML = label;
+		}
+	}
 }
 
 export function wadDrawChart( buoyId, config ) {
