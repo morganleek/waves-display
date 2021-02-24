@@ -244,6 +244,7 @@ export function wadGenerateChartData( waves ) {
 						distribution: 'linear',
 						ticks: {
 							min: new Date( startTimeRounded ),
+							maxTicksLimit: 12
 						},
 						type: 'time',
 						time: {
@@ -266,7 +267,9 @@ export function wadGenerateChartData( waves ) {
 						ticks: {
 							beginAtZero: true,
 							min: 0,
-							max: maxWaveHeight * 2
+							max: maxWaveHeight * 2,
+							// precision: 0.5,
+							maxTicksLimit: 6
 						},
 						scaleLabel: {
 							display: ( window.innerWidth < 768 ) ? false : true,
@@ -283,7 +286,9 @@ export function wadGenerateChartData( waves ) {
 						ticks: {
 							beginAtZero: true,
 							min: ( minPeakPeriodSpaced > 0 ) ? minPeakPeriodSpaced : 0,
-							max: Math.ceil( maxPeakPeriod / 2 ) * 2
+							max: Math.ceil( maxPeakPeriod / 2 ) * 2,
+							// precision: 0.5,
+							maxTicksLimit: 6
 						},
 						scaleLabel: {
 							display: ( window.innerWidth < 768 ) ? false : true,
@@ -300,7 +305,9 @@ export function wadGenerateChartData( waves ) {
 						ticks: {
 							beginAtZero: true,
 							min: 0,
-							max: maxSurfaceTemp * 2
+							max: maxSurfaceTemp * 2,
+							// precision: 0.5,
+							maxTicksLimit: 6
 						},
 						scaleLabel: {
 							display: ( window.innerWidth < 768 ) ? false : true,
