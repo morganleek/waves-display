@@ -106,7 +106,13 @@ export function wadMapLocator ( trigger ) {
 				window.myMap.panTo( center )
 				window.myMap.setZoom( 8 );
 				// Animate
-				marker.setAnimation( window.myGoogleMaps.Animation.DROP );
+				if( marker.getAnimation() > 0 ) {
+					marker.setAnimation( undefined );
+				}
+				marker.setAnimation( window.myGoogleMaps.Animation.BOUNCE ); 
+				window.setTimeout( () => { 
+					marker.setAnimation( undefined ); 
+				}, 2100 );
 			}
 			else {
 				alert( 'Can\'t location buoy ID: ' + buoyId );
