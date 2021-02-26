@@ -360,8 +360,8 @@ export function wadDrawLatestTable( buoyId, dataPoints ) {
 		if( typeof( recent ) != "undefined" && recent.hasOwnProperty( 'y' ) && recent.y > 0 ) {
 			const recentText = recent.y;
 			// time = ( recent.hasOwnProperty( 'x' ) && recent.x > 0 ) ? recent.x : time;
-			buoyInfoHtml += "<dt>" + value.description + "</dt>" +
-				"<dd>" + recentText + "</dd>";
+			buoyInfoHtml += "<li>" + value.description + // "</dt>" +
+				"<span class='value'>" + recentText + "</span></li>";
 		}
 	}
 	
@@ -383,7 +383,7 @@ export function wadDrawLatestTable( buoyId, dataPoints ) {
 	// Clear it
 	const chartInfo = buoyWrapper.getElementsByClassName("chart-info")[0];
 	chartInfo.innerHTML = "";
-	chartInfo.insertAdjacentHTML( 'afterbegin', "<dl>" + buoyInfoHtml + "</dl>" );
+	chartInfo.insertAdjacentHTML( 'afterbegin', "<ul>" + buoyInfoHtml + "</ul>" );
 	chartInfo.addEventListener( 'click', wadToggleChart );
 }
 
@@ -406,7 +406,7 @@ export function wadDrawTable( buoyId, dataPoints ) {
 	// Clear it
 	const chartInfo = buoyWrapper.getElementsByClassName("chart-info")[0]
 	chartInfo.innerHTML = "";
-	chartInfo.insertAdjacentHTML( 'afterbegin', "<dl>" + buoyInfoHtml + "</dl>" );
+	chartInfo.insertAdjacentHTML( 'afterbegin', "<ul>" + buoyInfoHtml + "</ul>" );
 	chartInfo.addEventListener( 'click', wadToggleChart );
 }
 

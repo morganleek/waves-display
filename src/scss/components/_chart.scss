@@ -62,25 +62,28 @@
   //     pointer-events: all;
   //   }
   // }
-  dl {
-    display: grid;
+  ul {
+    column-count: 1;
+    column-gap: 0;
     font-size: 1.2rem;
-    grid-template-columns: 2fr 1fr;
+    grid-template-columns: 1fr;
     border-top: 1px solid #f0f0f0;
+    border-left: 1px solid #f0f0f0;
+    list-style: none;
+    padding-left: 0;
     @media (min-width: 768px) {
-      grid-template-columns: 2fr 1fr 2fr 1fr;
+      column-count: 2;
     }
-    dt, dd {
+    li {
       border-right: 1px solid #f0f0f0;
       border-bottom: 1px solid #f0f0f0;
       padding: 0.25em 0.5em;
-    }
-    dt {
       font-weight: 400;
-      border-left: 1px solid #f0f0f0;
-    }
-    dd {
-      font-weight: 300;
+      display: flex;
+      justify-content: space-between;
+      span {
+        font-weight: 300;
+      }
     }
   }
 }
