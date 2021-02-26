@@ -132,16 +132,17 @@ export function wadGenerateChartData( waves ) {
 		
 		const startTime = Math.min(...waves.map( ( wave ) => wave['Time (UTC)'] ) ) * 1000;
 		const endTime = Math.max(...waves.map( ( wave ) => wave['Time (UTC)'] ) ) * 1000;
-		const startTimeRounded = Math.ceil( startTime / 3600000 ) * 3600000;
+		const startTimeRounded = ( Math.ceil( startTime / 3600000 ) + 1 ) * 3600000;
 		
 		const maxWaveHeight = Math.ceil( Math.max( ...dataPoints.hsig.data.map( ( wave ) => wave.y ) ) );
 		const maxPeakPeriod = Math.ceil( Math.max( ...dataPoints.tp.data.map( ( wave )  => wave.y ) ) );
 		const minPeakPeriod = Math.floor( Math.min( ...dataPoints.tp.data.map( ( wave )  => wave.y ) ) );
 		const minPeakPeriodSpaced = ( maxPeakPeriod - ( ( maxPeakPeriod - minPeakPeriod ) * 2 ) );
+		const minSurfaceTemp = Math.ceil( Math.min( ...dataPoints.sst.data.map( ( wave ) => wave.y ) ) );
 		const maxSurfaceTemp = Math.ceil( Math.max( ...dataPoints.sst.data.map( ( wave ) => wave.y ) ) );
 
 
-		const mStart = moment( startTime );
+		const mStart = moment( startTimeRounded );
 		const mEnd = moment( endTime );
 		// const mBaseFormat = 'hh:mma D MMM YYYY';
 		// const mStartFormat = ( endTime - startTime > 31536000000 ) ? mBaseFormat : 'h:mma D MMM';
@@ -154,7 +155,14 @@ export function wadGenerateChartData( waves ) {
 			datasets: []
 		};
 
+		let hasHSig = false;
+		let hasTp = false;
+		// let hasTm = false;
+		let hasSurfTemp = false;
+		let hasBottTemp = false;
+
 		if( dataPoints.hsig.data.length > 0 ) {
+			hasHSig = true;
 			data.datasets.push({
 				label: window.innerWidth >= 768 ? 'Significant Wave Height (m)' : 'Sig Wave (m)', // Wave Height (m)
 				backgroundColor: 'rgba(75, 192, 192, 0.5)',
@@ -168,6 +176,7 @@ export function wadGenerateChartData( waves ) {
 			});	
 		}
 		if( dataPoints.tp.data.length > 0 ) {
+			hasTp = true;
 			data.datasets.push({					
 				label: window.innerWidth >= 768 ? 'Peak Wave Period & Direction (s & deg)' : 'Peak Wave/Dir (s & deg)', // Peak Period (s)
 				backgroundColor: '#0f0f0f',
@@ -199,32 +208,129 @@ export function wadGenerateChartData( waves ) {
 		// 	});
 		// }
 		if( dataPoints.sst.data.length > 0 ) {
+			hasSurfTemp = true;
 			data.datasets.push({					
 				label: window.innerWidth >= 768 ? 'Sea Surface Temperature (°C)' : 'Sea Surf (°C)', 
 				backgroundColor: 'rgba(255, 206, 87, 0.5)',
 				borderColor: 'rgba(255, 206, 87, 1)',
 				borderWidth: 0,
 				lineTension: 0,
-				pointRadius: 0,
-				fill: true,
+				pointRadius: 2,
+				fill: false,
 				data: dataPoints.sst.data,
 				yAxisID: 'y-axis-3',
 				hidden: true
 			});
 		}
 		if( dataPoints.bottomTemp.data.length > 0 ) {
+			hasBottTemp = true;
 			data.datasets.push({					
 				label: window.innerWidth ? 'Bottom Temperature (°C)' : 'Bot Temp (°C)',
 				backgroundColor: 'rgb(255, 159, 64, 0.5)',
 				borderColor: 'rgb(255, 159, 64, 1)',
 				borderWidth: 0,
 				lineTension: 0,
-				pointRadius: 0,
-				fill: true,
+				pointRadius: 2,
+				fill: false,
 				data: dataPoints.bottomTemp.data,
 				yAxisID: 'y-axis-3',
 				hidden: true
 			});
+		}
+
+		// Time Axes (x)
+		const timeAxes = {
+			distribution: 'linear',
+			ticks: {
+				min: new Date( startTimeRounded ),
+				maxTicksLimit: 12
+			},
+			type: 'time',
+			time: {
+				stepSize: 120,
+				unit: 'minute',
+				displayFormats: {
+					minute: 'ha',
+				},
+			},
+			scaleLabel: {
+				display: false,
+			}
+		};
+		const xAxes = [ timeAxes ];
+
+		// Wave Height Axes
+		const waveHeightAxes = {
+			type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+			display: true,
+			position: 'left',
+			id: 'y-axis-1',
+			ticks: {
+				beginAtZero: true,
+				min: 0,
+				max: maxWaveHeight * 2,
+				// precision: 0.5,
+				maxTicksLimit: 6
+			},
+			scaleLabel: {
+				display: ( window.innerWidth < 768 ) ? false : true,
+				labelString: 'Wave height (m)',
+			},
+		};
+		// Peak Period Axes
+		const peakPeriodAxes = {
+			type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+			display: true,
+			position: 'right',
+			id: 'y-axis-2',
+			gridLines: {
+				drawOnChartArea: false, // only want the grid lines for one axis to show up
+			},
+			ticks: {
+				beginAtZero: true,
+				min: ( minPeakPeriodSpaced > 0 ) ? minPeakPeriodSpaced : 0,
+				max: Math.ceil( maxPeakPeriod / 2 ) * 2,
+				// precision: 0.5,
+				maxTicksLimit: 6
+			},
+			scaleLabel: {
+				display: ( window.innerWidth < 768 ) ? false : true,
+				labelString: 'Peak period (s)',
+			},
+		};
+		// Temp Axes
+		const tempAxes = {
+			type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+			display: true,
+			position: 'right',
+			id: 'y-axis-3',
+			gridLines: {
+				drawOnChartArea: false, // only want the grid lines for one axis to show up
+			},
+			ticks: {
+				beginAtZero: true,
+				min: minSurfaceTemp - 1,
+				max: maxSurfaceTemp + 1,
+				// precision: 0.5,
+				maxTicksLimit: 6
+			},
+			scaleLabel: {
+				display: ( window.innerWidth < 768 ) ? false : true,
+				labelString: 'Temp (Deg C)',
+			},
+		};
+		// Y Axes
+		const yAxes = [ ];
+
+		// Add only useds axes'
+		if( hasHSig ) {
+			yAxes.push( waveHeightAxes );
+		}
+		if( hasTp ) {
+			yAxes.push( peakPeriodAxes );
+		}
+		if( hasSurfTemp || hasBottTemp ) {
+			yAxes.push( tempAxes );
 		}
 		
 		// Draw Chart
@@ -244,79 +350,8 @@ export function wadGenerateChartData( waves ) {
 					fontColor: '#000'
 				},
 				scales: {
-					xAxes: [{
-						distribution: 'linear',
-						ticks: {
-							min: new Date( startTimeRounded ),
-							maxTicksLimit: 12
-						},
-						type: 'time',
-						time: {
-							stepSize: 120,
-							unit: 'minute',
-							displayFormats: {
-								minute: 'ha',
-							},
-						},
-						scaleLabel: {
-							display: false,
-						}
-					}],
-					yAxes: [{
-						type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
-						display: true,
-						position: 'left',
-						id: 'y-axis-1',
-						ticks: {
-							beginAtZero: true,
-							min: 0,
-							max: maxWaveHeight * 2,
-							// precision: 0.5,
-							maxTicksLimit: 6
-						},
-						scaleLabel: {
-							display: ( window.innerWidth < 768 ) ? false : true,
-							labelString: 'Height (m)',
-						},
-					}, {
-						type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
-						display: true,
-						position: 'right',
-						id: 'y-axis-2',
-						gridLines: {
-							drawOnChartArea: false, // only want the grid lines for one axis to show up
-						},
-						ticks: {
-							beginAtZero: true,
-							min: ( minPeakPeriodSpaced > 0 ) ? minPeakPeriodSpaced : 0,
-							max: Math.ceil( maxPeakPeriod / 2 ) * 2,
-							// precision: 0.5,
-							maxTicksLimit: 6
-						},
-						scaleLabel: {
-							display: ( window.innerWidth < 768 ) ? false : true,
-							labelString: 'Period (s)',
-						},
-					}, {
-						type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
-						display: true,
-						position: 'right',
-						id: 'y-axis-3',
-						gridLines: {
-							drawOnChartArea: false, // only want the grid lines for one axis to show up
-						},
-						ticks: {
-							beginAtZero: true,
-							min: 0,
-							max: maxSurfaceTemp * 2,
-							// precision: 0.5,
-							maxTicksLimit: 6
-						},
-						scaleLabel: {
-							display: ( window.innerWidth < 768 ) ? false : true,
-							labelString: 'Temp (Deg C)',
-						},
-					}],
+					xAxes: xAxes,
+					yAxes: yAxes,
 				}
 			}
 		};
