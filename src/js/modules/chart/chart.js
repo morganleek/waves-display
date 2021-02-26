@@ -3,6 +3,7 @@ import Chart from 'chart.js';
 import { wadToggleChart, wadDatePicker, wadCSVDownload } from './chart-events';
 import { wadProcessBuoyData } from './buoy-data';
 import { wadMapLocator } from '../map';
+import chartStyles from './chart-style';
 import moment from 'moment';
 
 const panelWrapper = "<div class='panel panel-primary'>" +
@@ -239,97 +240,37 @@ export function wadGenerateChartData( waves ) {
 		}
 
 		// Time Axes (x)
-		const timeAxes = {
-			distribution: 'linear',
-			ticks: {
-				min: new Date( startTimeRounded ),
-				maxTicksLimit: 12
-			},
-			type: 'time',
-			time: {
-				stepSize: 120,
-				unit: 'minute',
-				displayFormats: {
-					minute: 'ha',
-				},
-			},
-			scaleLabel: {
-				display: false,
-			}
-		};
+		const timeAxes = chartStyles.axesStyles.timeAxes;
+		timeAxes.ticks.min = new Date( startTimeRounded );
+		// All x Axes'
 		const xAxes = [ timeAxes ];
 
-		// Wave Height Axes
-		const waveHeightAxes = {
-			type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
-			display: true,
-			position: 'left',
-			id: 'y-axis-1',
-			ticks: {
-				beginAtZero: true,
-				min: 0,
-				max: maxWaveHeight * 2,
-				// precision: 0.5,
-				maxTicksLimit: 6
-			},
-			scaleLabel: {
-				display: ( window.innerWidth < 768 ) ? false : true,
-				labelString: 'Wave height (m)',
-			},
-		};
-		// Peak Period Axes
-		const peakPeriodAxes = {
-			type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
-			display: true,
-			position: 'right',
-			id: 'y-axis-2',
-			gridLines: {
-				drawOnChartArea: false, // only want the grid lines for one axis to show up
-			},
-			ticks: {
-				beginAtZero: true,
-				min: ( minPeakPeriodSpaced > 0 ) ? minPeakPeriodSpaced : 0,
-				max: Math.ceil( maxPeakPeriod / 2 ) * 2,
-				// precision: 0.5,
-				maxTicksLimit: 6
-			},
-			scaleLabel: {
-				display: ( window.innerWidth < 768 ) ? false : true,
-				labelString: 'Peak period (s)',
-			},
-		};
-		// Temp Axes
-		const tempAxes = {
-			type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
-			display: true,
-			position: 'right',
-			id: 'y-axis-3',
-			gridLines: {
-				drawOnChartArea: false, // only want the grid lines for one axis to show up
-			},
-			ticks: {
-				beginAtZero: true,
-				min: minSurfaceTemp - 1,
-				max: maxSurfaceTemp + 1,
-				// precision: 0.5,
-				maxTicksLimit: 6
-			},
-			scaleLabel: {
-				display: ( window.innerWidth < 768 ) ? false : true,
-				labelString: 'Temp (Deg C)',
-			},
-		};
 		// Y Axes
 		const yAxes = [ ];
 
-		// Add only useds axes'
 		if( hasHSig ) {
+			// Wave Height Axes
+			const waveHeightAxes = chartStyles.axesStyles.waveHeightAxes;
+			waveHeightAxes.ticks.max = maxWaveHeight * 2;
+			waveHeightAxes.scaleLabel.display = ( window.innerWidth < 768 ) ? false : true;
 			yAxes.push( waveHeightAxes );
 		}
+		
 		if( hasTp ) {
+			// Peak Period Axes
+			const peakPeriodAxes = chartStyles.axesStyles.peakPeriodAxes;
+			peakPeriodAxes.ticks.min = ( minPeakPeriodSpaced > 0 ) ? minPeakPeriodSpaced : 0;
+			peakPeriodAxes.ticks.max = Math.ceil( maxPeakPeriod / 2 ) * 2;
+			peakPeriodAxes.scaleLabel.display = ( window.innerWidth < 768 ) ? false : true;
 			yAxes.push( peakPeriodAxes );
 		}
+
 		if( hasSurfTemp || hasBottTemp ) {
+			// Temp Axes
+			const tempAxes = chartStyles.axesStyles.tempAxes;
+			tempAxes.ticks.min = minSurfaceTemp - 1;
+			tempAxes.ticks.max = maxSurfaceTemp + 1;
+			tempAxes.scaleLabel.display = ( window.innerWidth < 768 ) ? false : true;
 			yAxes.push( tempAxes );
 		}
 		
