@@ -67,6 +67,20 @@ export function wadInitCharts( response ) {
 	}
 }
 
+// var HourDayScale = Chart.scaleService.getScaleConstructor('time').extend({
+    
+  // generateTickLabels(ticks) {
+  //   let i, ilen, tick;
+
+  //   for (i = 0, ilen = ticks.length; i < ilen; ++i) {
+  //     tick = ticks[i];
+  //     tick.label = this._tickFormatFunction(tick.value, i, ticks);
+  //   }
+  // }
+    
+// });
+// Chart.scaleService.registerScaleType('hourdaytime', HourDayScale );
+
 export function wadGenerateChartData( waves ) {
 	if( typeof( waves ) != "undefined" && waves.length > 0 ) {
 		// let arrowPointers = [];
@@ -242,6 +256,7 @@ export function wadGenerateChartData( waves ) {
 		// Time Axes (x)
 		const timeAxes = chartStyles.axesStyles.timeAxes;
 		timeAxes.ticks.min = new Date( startTimeRounded );
+		timeAxes.type = 'time';
 		// All x Axes'
 		const xAxes = [ timeAxes ];
 
@@ -293,6 +308,34 @@ export function wadGenerateChartData( waves ) {
 				scales: {
 					xAxes: xAxes,
 					yAxes: yAxes,
+				},
+				tooltips: {
+					callbacks: {
+						label: function(tooltipItem, data) {
+							if( ( tooltipItem.datasetIndex == 2 || tooltipItem.datasetIndex == 3 ) && data.datasets.hasOwnProperty( 3 ) ) {
+								// Temp data and Bottom Temp Exists
+								const otherIndex = ( tooltipItem.datasetIndex == 2 ) ? 3 : 2;
+								const firstValue = Math.round(tooltipItem.yLabel * 100) / 100;
+								const secondValue = Math.round(data.datasets[otherIndex].data[tooltipItem.index].y * 100) / 100;
+								if( firstValue != secondValue ) {
+									let firstLabel = data.datasets[tooltipItem.datasetIndex].label || '';
+									let secondLabel = data.datasets[otherIndex].label || '';
+									firstLabel = ( firstLabel ) ? firstLabel + ': ' + firstValue : firstValue;
+									secondLabel = ( secondLabel ) ? secondLabel + ': ' + secondValue : secondValue;
+									return [ firstLabel, secondLabel ];
+								}
+							}
+							// Everything else
+							var label = data.datasets[tooltipItem.datasetIndex].label || '';
+
+							if (label) {
+								label += ': ';
+							}
+							label += Math.round(tooltipItem.yLabel * 100) / 100;
+							return label;
+							
+						}
+					}
 				}
 			}
 		};
