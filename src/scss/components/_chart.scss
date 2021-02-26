@@ -109,7 +109,11 @@
       background: $header;
       border-color: $header;
       h6 {
-        margin: 8px 0;
+        margin: 0;
+        line-height: 1.25em;
+      }
+      time {
+        display: block;
       }
     }
     .panel-body {

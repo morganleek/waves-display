@@ -163,8 +163,8 @@ export function wadGenerateChartData( waves ) {
 		const mEnd = moment( endTime );
 		// const mBaseFormat = 'hh:mma D MMM YYYY';
 		// const mStartFormat = ( endTime - startTime > 31536000000 ) ? mBaseFormat : 'h:mma D MMM';
-		const mBaseFormat = 'D MMM, YYYY hh:mma';
-		const scaleLabel = ' ( ' + mStart.format( mBaseFormat ) + " — " + mEnd.format( mBaseFormat ) + ' )';
+		const mBaseFormat = 'DD/MM/YYYY h:mma';
+		const scaleLabel = ' (' + mStart.format( mBaseFormat ) + " — " + mEnd.format( mBaseFormat ) + ')';
 
 		// Data
 		var data = {
