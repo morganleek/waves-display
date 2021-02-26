@@ -153,9 +153,11 @@ export function wadGenerateChartData( waves ) {
 		const maxPeakPeriod = Math.ceil( Math.max( ...dataPoints.tp.data.map( ( wave )  => wave.y ) ) );
 		const minPeakPeriod = Math.floor( Math.min( ...dataPoints.tp.data.map( ( wave )  => wave.y ) ) );
 		const minPeakPeriodSpaced = ( maxPeakPeriod - ( ( maxPeakPeriod - minPeakPeriod ) * 2 ) );
-		const minSurfaceTemp = Math.ceil( Math.min( ...dataPoints.sst.data.map( ( wave ) => wave.y ) ) );
-		const maxSurfaceTemp = Math.ceil( Math.max( ...dataPoints.sst.data.map( ( wave ) => wave.y ) ) );
+		const maxTemp = Math.ceil( Math.max( ...dataPoints.sst.data.map( ( wave ) => wave.y ), ...dataPoints.bottomTemp.data.map( ( wave ) => wave.y ) ) );
+		const minTemp = Math.floor( Math.min( ...dataPoints.sst.data.map( ( wave ) => wave.y ), ...dataPoints.bottomTemp.data.map( ( wave ) => wave.y ) ) );
 
+		// console.log( dataPoints.bottomTemp.data );
+		// console.log( Math.max( ...dataPoints.sst.data.map( ( wave ) => wave.y ), ...dataPoints.bottomTemp.data.map( ( wave ) => wave.y ) ) );
 
 		const mStart = moment( startTimeRounded );
 		const mEnd = moment( endTime );
@@ -283,8 +285,8 @@ export function wadGenerateChartData( waves ) {
 		if( hasSurfTemp || hasBottTemp ) {
 			// Temp Axes
 			const tempAxes = chartStyles.axesStyles.tempAxes;
-			tempAxes.ticks.min = minSurfaceTemp - 1;
-			tempAxes.ticks.max = maxSurfaceTemp + 1;
+			tempAxes.ticks.min = minTemp - 1;
+			tempAxes.ticks.max = maxTemp + 1;
 			tempAxes.scaleLabel.display = ( window.innerWidth < 768 ) ? false : true;
 			yAxes.push( tempAxes );
 		}
