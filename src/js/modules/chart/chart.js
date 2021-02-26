@@ -10,9 +10,9 @@ const panelWrapper = "<div class='panel panel-primary'>" +
   "<div class='panel-heading clearfix'>" +
 		"<h6 class='pull-left'>{{ buoyLabel }} <time></time></h6>" + 
 		"<div class='btn-group btn-group-sm chart-js-menu pull-right' role='group' aria-label='Chart Tools'>" + 
-			"<button class='download-trigger btn btn-default' data-buoy-id='{{ buoyId }}'><i class='fa fa-floppy-o' aria-hidden='true'></i>&nbsp;&nbsp;Export</button>" +
+			"<button class='download-trigger btn btn-default' data-buoy-id='{{ buoyId }}'><i class='fa fa-floppy-o' aria-hidden='true'></i>&nbsp;&nbsp;Export Data</button>" +
 			"<button class='maps-trigger btn btn-default' data-buoy-id='{{ buoyId }}' data-buoy-lat='{{ buoyLat }}' data-buoy-lng='{{ buoyLng }}'><i class='fa fa-crosshairs' aria-hidden='true'></i>&nbsp;&nbsp;Centre</button>" +
-			"<button class='calendars-trigger btn btn-default' data-buoy-id='{{ buoyId }}' data-buoy-start='{{ buoyStartTime }}' data-buoy-end='{{ buoyEndTime }}'><i class='fa fa-calendar' aria-hidden='true'></i>&nbsp;&nbsp;Date</button>" +
+			"<button class='calendars-trigger btn btn-default' data-buoy-id='{{ buoyId }}' data-buoy-start='{{ buoyStartTime }}' data-buoy-end='{{ buoyEndTime }}'><i class='fa fa-calendar' aria-hidden='true'></i>&nbsp;&nbsp;Date Range</button>" +
 		"</div>" +
 	"</div>" + 
 	"<div class='panel-body'>" + 
