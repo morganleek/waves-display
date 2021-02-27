@@ -44,18 +44,22 @@ export const ChartsLoop = ( props ) => {
   let chartsLoopRender = props.buoyData.map( ( row, index ) => {    
     return (
       <div className={ classNames( ['panel', 'panel-primary'] ) } key={ index }>
-        <div className={ classNames( ['panel-heading', 'clearfix'] ) }>
-          <h5>{ row.label }</h5>
-        </div>
-        <div className='panel-body'> 
-          <div className='chart-js-menu'>Buttons</div>
-          <Chart buoyId={ row.id } />
-        </div>
+        <Chart buoyId={ row.id } buoyLabel={ row.label } buoyLastUpdated={ row.last_update } />
       </div>
     )
   } );
 
   return <div>{ chartsLoopRender }</div>
+}
+
+export const ChartButtons = ( prop ) => {
+  return (
+    <div className={ classNames( ['btn-group', 'btn-group-sm', 'pull-right'] ) }>
+      <button className={ classNames( ['btn', 'btn-default', 'fa', 'fa-floppy-o'] ) }>Export Data</button>
+      <button className={ classNames( ['btn', 'btn-default', 'fa', 'fa-crosshairs'] ) }>Centre</button>
+      <button className={ classNames( ['btn', 'btn-default', 'fa', 'fa-calendar'] ) }>Date Range</button>
+    </div>
+  )
 }
 
 export class LineTable extends Component {
@@ -71,20 +75,21 @@ export class LineTable extends Component {
     // Iterate through chart table items
     let lineTableRender = [];
     for( const [key, value] of Object.entries( this.props.dataPoints ) ) {
-      // Max value
-      const max = Math.max( ...value.data.map( point => point.y ) );
-      max = ( max > 0 ) ? max : "-";
-
-      lineTableRender.push( <Fragment key={ key }>
-        <dt>{ value.description }</dt>
-        <dd>{ max }</dd>
-      </Fragment> );
+      // Last value
+      const last = ( value.data.length > 0 ) ? value.data[ value.data.length - 1 ].y : 0;
+      if( last > 0 ) {
+        lineTableRender.push( <li key={ key }>
+          { value.description }
+          <span>{ last }</span>
+        </li> );
+      }
     }
 
     return (
       <div className={ classNames( "chart-info", { "expanded": this.state.active } ) }
         onClick={ () => this.setState( { active: !this.state.active } ) } >
-        <dl>{ lineTableRender }</dl>
+        <h5 className='latest-observations'>Latest Observations</h5>
+        <ul>{ lineTableRender }</ul>
       </div>
     );
   }
@@ -112,18 +117,28 @@ export class Chart extends Component {
   
   render() {
     let lineChart = <p>Loading &hellip;</p>;
-    let lineTable;
+    let lineTable, dateRange;
     const { data } = this.state;
+    const buoyLabel = this.props.buoyLabel;
     if( Object.keys( data ).length > 0 ) {
-      lineChart = <Line data={ data.config.data } options={ data.config.options } />
-      lineTable = <LineTable dataPoints={ data.dataPoints } />
+      dateRange = <time>{ data.config.options.title.text }</time>;
+      lineChart = <Line data={ data.config.data } options={ data.config.options } />;
+      lineTable = <LineTable dataPoints={ data.dataPoints } lastUpdated={ this.props.lastUpdated } />;
     }
 
     return (
-      <div className={ classNames( ['canvas-wrapper', 'loading'] ) }>
-        { lineChart }
-        { lineTable }
-      </div>
+      <>
+        <div className={ classNames( ['panel-heading', 'clearfix'] ) }>
+          <h6 className='pull-left'>{ buoyLabel } { dateRange }</h6>
+          <ChartButtons />
+        </div>
+        <div className='panel-body'> 
+          <div className={ classNames( ['canvas-wrapper', 'loading'] ) }>
+            { lineChart }
+            { lineTable }
+          </div>
+        </div>
+      </>
     );
   }
 }

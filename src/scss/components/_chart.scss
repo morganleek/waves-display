@@ -107,6 +107,15 @@
 // }
 
 .panel {
+  .btn-group {
+    & > button.btn {
+      font-family: 'Lato', sans-serif;
+      &:before {
+        font-family: 'FontAwesome';
+        margin-right: 3px;
+      }
+    }
+  }
   &.panel-primary {
     .panel-heading {
       background: $header;
