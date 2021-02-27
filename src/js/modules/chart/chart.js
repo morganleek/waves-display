@@ -6,17 +6,17 @@ import { wadMapLocator } from '../map';
 import chartStyles from './chart-style';
 import moment from 'moment';
 
-const panelWrapper = "<div class='panel panel-primary'>" +
-  "<div class='panel-heading clearfix'>" +
-		"<h6 class='pull-left'>{{ buoyLabel }} <time></time></h6>" + 
-		"<div class='btn-group btn-group-sm chart-js-menu pull-right' role='group' aria-label='Chart Tools'>" + 
-			"<button class='download-trigger btn btn-default' data-buoy-id='{{ buoyId }}'><i class='fa fa-floppy-o' aria-hidden='true'></i>&nbsp;&nbsp;Export Data</button>" +
-			"<button class='maps-trigger btn btn-default' data-buoy-id='{{ buoyId }}' data-buoy-lat='{{ buoyLat }}' data-buoy-lng='{{ buoyLng }}'><i class='fa fa-crosshairs' aria-hidden='true'></i>&nbsp;&nbsp;Centre</button>" +
-			"<button class='calendars-trigger btn btn-default' data-buoy-id='{{ buoyId }}' data-buoy-start='{{ buoyStartTime }}' data-buoy-end='{{ buoyEndTime }}'><i class='fa fa-calendar' aria-hidden='true'></i>&nbsp;&nbsp;Date Range</button>" +
+const panelWrapper = "<div class='card card-primary mb-3'>" +
+  "<div class='card-header'>" +
+		"<h6 class='pull-left text-white'>{{ buoyLabel }} <time></time></h6>" + 
+		"<div class='btn-group chart-js-menu pull-right' role='group' aria-label='Chart Tools'>" + 
+			"<button class='download-trigger btn btn-outline-secondary' data-buoy-id='{{ buoyId }}'><i class='fa fa-floppy-o' aria-hidden='true'></i>&nbsp;&nbsp;Export Data</button>" +
+			"<button class='maps-trigger btn btn-outline-secondary' data-buoy-id='{{ buoyId }}' data-buoy-lat='{{ buoyLat }}' data-buoy-lng='{{ buoyLng }}'><i class='fa fa-crosshairs' aria-hidden='true'></i>&nbsp;&nbsp;Centre</button>" +
+			"<button class='calendars-trigger btn btn-outline-secondary' data-buoy-id='{{ buoyId }}' data-buoy-start='{{ buoyStartTime }}' data-buoy-end='{{ buoyEndTime }}'><i class='fa fa-calendar' aria-hidden='true'></i>&nbsp;&nbsp;Date Range</button>" +
 		"</div>" +
 	"</div>" + 
-	"<div class='panel-body'>" + 
-    "<div class='canvas-wrapper loading clearfix'>" +
+	"<div class='card-body'>" + 
+    "<div class='canvas-wrapper loading'>" +
       "<canvas></canvas>" +
     "</div>" +
     "<h5 class='latest-observations'>Latest Observations <time></time></h5>" +
@@ -412,7 +412,7 @@ export function wadDrawTable( buoyId, dataPoints ) {
 
 export function wadDrawHeading( buoyId, label ) {
 	const buoyWrapper = document.getElementById( 'buoy-' + buoyId );
-	const panelHeading = buoyWrapper.getElementsByClassName( 'panel-heading' )
+	const panelHeading = buoyWrapper.getElementsByClassName( 'card-header' )
 	if( panelHeading.length > 0 ) {
 		const time = panelHeading[0].getElementsByTagName( 'time' );
 		if( time.length > 0 ) {

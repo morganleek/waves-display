@@ -97,8 +97,8 @@
     & > button.btn {
       &.calendars-trigger {
         &:not(:last-child) {
-          border-top-right-radius: 4px;
-          border-bottom-right-radius: 4px;
+          border-top-right-radius: 2px;
+          border-bottom-right-radius: 2px;
         }
       }
     }
@@ -106,7 +106,7 @@
 }
 // }
 
-.panel {
+.card {
   .btn-group {
     & > button.btn {
       font-family: 'Lato', sans-serif;
@@ -116,23 +116,34 @@
       }
     }
   }
-  &.panel-primary {
-    .panel-heading {
+  &.card-primary {
+    border-color: $header;
+    box-shadow: 0 0 18px rgba(0, 0, 0, 0.1);
+    .card-header {
       background: $header;
-      border-color: $header;
+      padding: 0.6rem ​1rem;
       h6 {
+        font-size: 1.2rem;
         margin: 0;
         line-height: 1.25em;
+        font-weight: 600;
       }
       time {
         display: block;
       }
+      button.btn {
+        // color: #fff;
+        // border-color: #fff;
+        background: #f0f0f0;
+        color: #111;
+        font-size: 1.2rem;
+      }
     }
-    .panel-body {
-      padding: 10px 15px 5px;
+    .card-body {
+      // padding: 10px 15px 5px;
       h5.latest-observations {
         padding-left: 16px;
-        margin-bottom: 0.4em;
+        margin: 0.6em ​0 0.4em;
         font-size: 13px;
         font-weight: bold;
       }
@@ -180,4 +191,8 @@
       }
     }
   }
+}
+
+.litepicker {
+  font-size: 1.2em;
 }

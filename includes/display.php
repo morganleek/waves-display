@@ -5,12 +5,14 @@
 			// Plugin Options
 			$options = get_option('wad_options');
 
+			// wp_register_style( 'bootstrap-5-beta', 'https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css', array(), '5.0.0' );
 			wp_register_style(
-				'wad-style', WAD__PLUGIN_URL . 'dist/css/bundle.css', array(), WAD__VERSION, 'screen'
+				'wad-style', WAD__PLUGIN_URL . 'dist/css/bundle.css', array( ), WAD__VERSION, 'screen'
 			);
 			wp_enqueue_style( 'wad-style' );
 
 			// Register
+			// If needed // https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js
 			wp_register_script(
 				'wad-scripts', 
 				WAD__PLUGIN_URL . 'dist/js/bundle.js', 

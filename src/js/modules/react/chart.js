@@ -77,6 +77,10 @@ export class LineTable extends Component {
     for( const [key, value] of Object.entries( this.props.dataPoints ) ) {
       // Last value
       const last = ( value.data.length > 0 ) ? value.data[ value.data.length - 1 ].y : 0;
+      // Last Updates
+      // this.props.lastUpdated;
+      // const lastUpdate = moment( this.props.lastUpdated * 1000 );
+      // const queryTime = moment( window.buoysData.get( parseInt( buoyId ) ).now * 1000 );
       if( last > 0 ) {
         lineTableRender.push( <li key={ key }>
           { value.description }
