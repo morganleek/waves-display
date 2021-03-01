@@ -1,9 +1,11 @@
 // Charts - React.js
 import React, { Component, Fragment } from "react";
-import { wadRawDataToChartData } from '../chart/buoy-data';
-import { wadGenerateChartData } from '../chart/chart';
+import { wadRawDataToChartData } from '../../chart/buoy-data';
+import { wadGenerateChartData } from '../../chart/chart';
 import { Line } from 'react-chartjs-2';
-import { getBuoys, getBuoy } from './fetch';
+import { getBuoys, getBuoy } from '../fetch';
+// import styles from './style';
+// import DateRangePicker from '@wojtekmaj/react-daterange-picker';
 
 const classNames = require('classnames');
 
@@ -43,7 +45,7 @@ export const ChartsLoop = ( props ) => {
   // Interate through buoys
   let chartsLoopRender = props.buoyData.map( ( row, index ) => {    
     return (
-      <div className={ classNames( ['panel', 'panel-primary'] ) } key={ index }>
+      <div className={ classNames( ['card', 'card-primary', 'mb-3'] ) } key={ index }>
         <Chart buoyId={ row.id } buoyLabel={ row.label } buoyLastUpdated={ row.last_update } />
       </div>
     )
@@ -54,10 +56,10 @@ export const ChartsLoop = ( props ) => {
 
 export const ChartButtons = ( prop ) => {
   return (
-    <div className={ classNames( ['btn-group', 'btn-group-sm', 'pull-right'] ) }>
-      <button className={ classNames( ['btn', 'btn-default', 'fa', 'fa-floppy-o'] ) }>Export Data</button>
-      <button className={ classNames( ['btn', 'btn-default', 'fa', 'fa-crosshairs'] ) }>Centre</button>
-      <button className={ classNames( ['btn', 'btn-default', 'fa', 'fa-calendar'] ) }>Date Range</button>
+    <div className={ classNames( ['btn-group', 'pull-right'] ) }>
+      <button className={ classNames( ['btn', 'btn-outline-secondary', 'fa', 'fa-floppy-o'] ) }>Export Data</button>
+      <button className={ classNames( ['btn', 'btn-outline-secondary', 'fa', 'fa-crosshairs'] ) }>Centre</button>
+      <button className={ classNames( ['btn', 'btn-outline-secondary', 'fa', 'fa-calendar'] ) }>Date Range</button>
     </div>
   )
 }
@@ -121,22 +123,26 @@ export class Chart extends Component {
   
   render() {
     let lineChart = <p>Loading &hellip;</p>;
-    let lineTable, dateRange;
-    const { data } = this.state;
+    let lineTable, dateRangeLabel, drSimple;
+    const { data, dateRange } = this.state;
     const buoyLabel = this.props.buoyLabel;
     if( Object.keys( data ).length > 0 ) {
-      dateRange = <time>{ data.config.options.title.text }</time>;
+      dateRangeLabel = <time>{ data.config.options.title.text }</time>;
       lineChart = <Line data={ data.config.data } options={ data.config.options } />;
       lineTable = <LineTable dataPoints={ data.dataPoints } lastUpdated={ this.props.lastUpdated } />;
     }
+    // if( dateRange.length > 0 ) {
+    //   drSimple = dateRange[0] + " - " + dateRange[1];
+    // }
 
     return (
       <>
-        <div className={ classNames( ['panel-heading', 'clearfix'] ) }>
-          <h6 className='pull-left'>{ buoyLabel } { dateRange }</h6>
+        <div className={ classNames( ['card-header', 'clearfix'] ) }>
+          <h6 className='pull-left'>{ buoyLabel } { dateRangeLabel }</h6>
+          <span className='drSimple'>{ drSimple }</span>
           <ChartButtons />
         </div>
-        <div className='panel-body'> 
+        <div className='card-body'> 
           <div className={ classNames( ['canvas-wrapper', 'loading'] ) }>
             { lineChart }
             { lineTable }

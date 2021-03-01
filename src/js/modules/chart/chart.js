@@ -165,6 +165,7 @@ export function wadGenerateChartData( waves ) {
 		// const mStartFormat = ( endTime - startTime > 31536000000 ) ? mBaseFormat : 'h:mma D MMM';
 		const mBaseFormat = 'DD/MM/YYYY h:mma';
 		const scaleLabel = ' (' + mStart.format( mBaseFormat ) + " — " + mEnd.format( mBaseFormat ) + ')';
+		const timeRange = [ mStart.format( 'x' ), mEnd.format( 'x' ) ];
 
 		// Data
 		var data = {
@@ -341,7 +342,7 @@ export function wadGenerateChartData( waves ) {
 				}
 			}
 		};
-		return { config: config, dataPoints: dataPoints, timeLabel: scaleLabel };
+		return { config: config, dataPoints: dataPoints, timeLabel: scaleLabel, timeRange: timeRange };
 	}
 	return false;
 } 

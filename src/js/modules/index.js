@@ -3,4 +3,4 @@ import './chart';
 import './overlay';
 
 // Reactify
-// import './react';
+import './react';
