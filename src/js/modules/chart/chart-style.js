@@ -12,7 +12,7 @@ export default {
 				"stepSize": 6,
 				"unit": "hour",
 				"displayFormats": {
-					"hour": "HH:mm",
+					"hour": "D MMM H:mm",
 					"minute": "ha"
 				}
 			},
