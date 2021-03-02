@@ -201,3 +201,9 @@
 .litepicker {
   font-size: 1.2em;
 }
+
+.warning {
+  // @extend .alert;
+  @extend .alert-danger;
+  padding: 0.1em 0.25em;
+}
