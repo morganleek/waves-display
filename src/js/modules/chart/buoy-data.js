@@ -29,15 +29,18 @@ export function wadProcessBuoys( response ) {
 // Create Divs for each Buoy
 export function wadProcessBuoyData( response ) {
   if( response ) {
-    if( response.success == "1" ) {
-      if( document.getElementById( 'buoy-' + response.buoy_id ) != null ) {
-        const buoyDiv = document.getElementById( 'buoy-' + response.buoy_id );
+    if( typeof( window.myCharts ) == "undefined" ) {
+      window.myCharts = [];
+    }
+    if( typeof( window.myChartData ) == "undefined" ) {
+      window.myChartData = [];
+    }
+    const buoyDiv = document.getElementById( 'buoy-' + response.buoy_id );
+    if( buoyDiv != null ) {
+      if( response.success == "1" ) {
         // Convert to useful chart data
         const processed = wadRawDataToChartData( response.data );
         // Store in Window
-        if( typeof( window.myChartData ) == "undefined" ) {
-          window.myChartData = [];
-        }
         window.myChartData['buoy-' + response.buoy_id] = processed;
         // Generate Chart.js data
         const chartData = wadGenerateChartData( processed );
@@ -46,27 +49,31 @@ export function wadProcessBuoyData( response ) {
         // Draw with chartData
         wadDrawChart( response.buoy_id, chartData.config );
         // Update heading with time
-        wadDrawHeading( response.buoy_id, chartData.timeLabel );
-      }
-    }
-    else {
-      // No data returned
-      const failedBuoy = document.getElementById( 'buoy-' + response.buoy_id );
-      const canvasWrapper = failedBuoy.getElementsByClassName( 'canvas-wrapper' )[0]; // .innerHTML = "No results found";
-      const chartInfo = failedBuoy.getElementsByClassName( 'chart-info' )[0];
-      canvasWrapper.classList.remove( 'loading' );
-      canvasWrapper.classList.add( 'no-results' );
-      // Destroy Chart if it exists
-      if( typeof( window.myCharts['buoy' + response.buoy_id] ) != "undefined" ) {
-        window.myCharts['buoy' + response.buoy_id].destroy();
-        // Remove chart data
-        chartInfo.classList.add( 'no-results' );
-        chartInfo.innerHTML = "";
+        wadDrawHeading( response.buoy_id, chartData.timeLabel, chartData.timeRange );
+        // Chart Appearance
+        const canvasWrapper = buoyDiv.getElementsByClassName( 'canvas-wrapper' )[0]; // .innerHTML = "No results found";
+        canvasWrapper.classList.remove( 'loading' );
+        canvasWrapper.classList.remove( 'no-results' );
       }
       else {
-        // Remove inner elements only for initial loads
-        failedBuoy.getElementsByClassName( 'chart-js-menu' )[0].remove();
-        chartInfo.remove();
+        // No data returned
+        // const buoyDiv = document.getElementById( 'buoy-' + response.buoy_id );
+        const canvasWrapper = buoyDiv.getElementsByClassName( 'canvas-wrapper' )[0]; // .innerHTML = "No results found";
+        const chartInfo = buoyDiv.getElementsByClassName( 'chart-info' )[0];
+        canvasWrapper.classList.remove( 'loading' );
+        canvasWrapper.classList.add( 'no-results' );
+        // Destroy Chart if it exists
+        if ( window.myCharts.hasOwnProperty( 'buoy' + response.buoy_id ) ) {
+          window.myCharts['buoy' + response.buoy_id].destroy();
+          // Remove chart data
+          chartInfo.classList.add( 'no-results' );
+          chartInfo.innerHTML = "";
+        }
+        else {
+          // Remove inner elements only for initial loads
+          buoyDiv.getElementsByClassName( 'chart-js-menu' )[0].remove();
+          chartInfo.remove();
+        }
       }
     }
   }

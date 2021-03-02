@@ -71,6 +71,7 @@
     border-left: 1px solid #f0f0f0;
     list-style: none;
     padding-left: 0;
+    margin: 0.25em 0;
     @media (min-width: 768px) {
       column-count: 2;
     }
@@ -101,6 +102,9 @@
           border-bottom-right-radius: 2px;
         }
       }
+      span {
+        pointer-events: none;
+      }
     }
   }
 }
@@ -124,7 +128,7 @@
       padding: 0.6rem ​1rem;
       h6 {
         font-size: 1.2rem;
-        margin: 0;
+        margin: 0.5em 0;
         line-height: 1.25em;
         font-weight: 500;
         color: #fff;
@@ -144,7 +148,7 @@
       // padding: 10px 15px 5px;
       h5.latest-observations {
         padding-left: 16px;
-        margin: 0.6em ​0 0.4em;
+        margin: 0.5em 0 0;
         font-size: 13px;
         font-weight: bold;
       }
@@ -184,7 +188,7 @@
             }
             canvas {
               @media (min-width: 768px) { 
-                padding-bottom: 10%;
+                padding-bottom: 35px;
               }
             }
           }

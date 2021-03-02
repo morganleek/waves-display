@@ -17,6 +17,10 @@ export function wadDatePicker( trigger, startDate = 'Sun Dec 01 2019' ) {
 		// Add a day either side +-86400
 		const start = ( trigger.dataset.hasOwnProperty( 'buoyStart' ) ) ? new Date( ( parseInt( trigger.dataset['buoyStart'] ) - 86400 ) * 1000 ) : new Date();
 		const end = ( trigger.dataset.hasOwnProperty( 'buoyEnd' ) && parseInt( trigger.dataset['buoyEnd'] ) != 0 ) ? new Date( ( parseInt( trigger.dataset['buoyEnd'] ) + 86400 ) * 1000 ) : new Date();
+		const startDate = ( trigger.dataset.hasOwnProperty( 'start' ) ) ? new Date( ( parseInt( trigger.dataset['start'] ) - 86400 ) * 1000 ) : new Date();
+		const endDate = ( trigger.dataset.hasOwnProperty( 'end' ) && parseInt( trigger.dataset['end'] ) != 0 ) ? new Date( ( parseInt( trigger.dataset['end'] ) + 86400 ) * 1000 ) : new Date();
+		// console.log( trigger.dataset );
+		
 		let picker = new Litepicker( { 
 			element: trigger,
 			firstDay: 1,
@@ -25,6 +29,8 @@ export function wadDatePicker( trigger, startDate = 'Sun Dec 01 2019' ) {
 			numberOfColumns: 2,
 			minDate: start,
 			maxDate: end,
+			startDate: startDate,
+			endDate: endDate,
 			selectForward: true,
 			autoApply: true,
 			mobileFriendly: true,
@@ -56,6 +62,14 @@ export function wadDatePicker( trigger, startDate = 'Sun Dec 01 2019' ) {
 				})
 			},
 		} );
+		// Store Picker
+		if( trigger.dataset.hasOwnProperty( 'buoyId' ) ) {
+			if( typeof( window.myPickers ) == "undefined" ) {
+				window.myPickers = [];
+			}
+			const buoyId = trigger.dataset['buoyId'];
+			window.myPickers['buoy' + buoyId] = picker;
+		}
 	}
 }
 

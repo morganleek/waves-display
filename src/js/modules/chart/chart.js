@@ -8,11 +8,11 @@ import moment from 'moment';
 
 const panelWrapper = "<div class='card card-primary mb-3'>" +
   "<div class='card-header'>" +
-		"<h6 class='pull-left text-white'>{{ buoyLabel }} <time></time></h6>" + 
+		"<h6 class='pull-left text-white'>{{ buoyLabel }} <span style='opacity: 0.35;'>#{{ buoyId }}</span><time></time></h6>" + 
 		"<div class='btn-group chart-js-menu pull-right' role='group' aria-label='Chart Tools'>" + 
-			"<button class='download-trigger btn btn-outline-secondary' data-buoy-id='{{ buoyId }}'><i class='fa fa-floppy-o' aria-hidden='true'></i>&nbsp;&nbsp;Export Data</button>" +
 			"<button class='maps-trigger btn btn-outline-secondary' data-buoy-id='{{ buoyId }}' data-buoy-lat='{{ buoyLat }}' data-buoy-lng='{{ buoyLng }}'><i class='fa fa-crosshairs' aria-hidden='true'></i>&nbsp;&nbsp;Centre</button>" +
-			"<button class='calendars-trigger btn btn-outline-secondary' data-buoy-id='{{ buoyId }}' data-buoy-start='{{ buoyStartTime }}' data-buoy-end='{{ buoyEndTime }}'><i class='fa fa-calendar' aria-hidden='true'></i>&nbsp;&nbsp;Date Range</button>" +
+			"<button class='download-trigger btn btn-outline-secondary' data-buoy-id='{{ buoyId }}'><i class='fa fa-floppy-o' aria-hidden='true'></i>&nbsp;&nbsp;Export Data</button>" +
+			"<button class='calendars-trigger btn btn-outline-secondary' data-buoy-id='{{ buoyId }}' data-buoy-start='{{ buoyStartTime }}' data-buoy-end='{{ buoyEndTime }}'><i class='fa fa-calendar' aria-hidden='true'></i>&nbsp;&nbsp;<span class='dateRangeButtonLabel'>Date Range</span> <i class='fa fa-caret-down' aria-hidden='true'></i></button>" +
 		"</div>" +
 	"</div>" + 
 	"<div class='card-body'>" + 
@@ -81,6 +81,26 @@ export function wadInitCharts( response ) {
 // });
 // Chart.scaleService.registerScaleType('hourdaytime', HourDayScale );
 
+function parseIntOr( intVal, altVal ) {
+	if( isNaN( parseInt( intVal ) ) ) {
+		if( !isNaN( parseInt( altVal ) ) ) {
+			return altVal;
+		}
+		return 0;
+	}
+	return parseInt( intVal );
+}
+
+function parseFloatOr( floatVal, altVal ) {
+	if( isNaN( parseFloat( floatVal ) ) ) {
+		if( !isNaN( parseFloat( altVal ) ) ) {
+			return altVal;
+		}
+		return 0.0;
+	}
+	return parseFloat( floatVal );
+}
+
 export function wadGenerateChartData( waves ) {
 	if( typeof( waves ) != "undefined" && waves.length > 0 ) {
 		// let arrowPointers = [];
@@ -123,26 +143,26 @@ export function wadGenerateChartData( waves ) {
 			if( waves[i]["QF_waves"] == "1" ) {
 				// hasWaves = true; // Needs to be here incase there are no valid waves
 				// Values
-				dataPoints.hsig.data.push( { x: time, y: parseFloat( waves[i]["Hsig (m)"] ) } );
-				dataPoints.tp.data.push( { x: time, y: parseFloat( waves[i]["Tp (s)"] ) } );
-				dataPoints.tm.data.push( { x: time, y: parseFloat( waves[i]["Tm (s)"] ) } );
-				dataPoints.dpspr.data.push( { x: time, y: parseFloat( waves[i]["DpSpr (deg)"] ) } );
-				dataPoints.dmspr.data.push( { x: time, y: parseFloat( waves[i]["DmSpr (deg)"] ) } );
+				dataPoints.hsig.data.push( { x: time, y: parseFloatOr( waves[i]["Hsig (m)"], 0.0 ) } );
+				dataPoints.tp.data.push( { x: time, y: parseFloatOr( waves[i]["Tp (s)"], 0.0 ) } );
+				dataPoints.tm.data.push( { x: time, y: parseFloatOr( waves[i]["Tm (s)"], 0.0 ) } );
+				dataPoints.dpspr.data.push( { x: time, y: parseFloatOr( waves[i]["DpSpr (deg)"], 0.0 ) } );
+				dataPoints.dmspr.data.push( { x: time, y: parseFloatOr( waves[i]["DmSpr (deg)"], 0.0 ) } );
 				// Rotation
-				dataPoints.dm.data.push( Math.abs( parseInt( waves[i]["Dm (deg)"] ) - 180 ) );
-				dataPoints.dp.data.push( Math.abs( parseInt( waves[i]["Dp (deg)"] ) - 180 ) ); // Math.abs( waves[i]["Dp (deg)"] - 180 ) // Pointing the oppsite direction
+				dataPoints.dm.data.push( Math.abs( parseIntOr( waves[i]["Dm (deg)"], 0 ) - 180 ) );
+				dataPoints.dp.data.push( Math.abs( parseIntOr( waves[i]["Dp (deg)"], 0 ) - 180 ) ); 
 			}
 			if( waves[i]["QF_sst"] == "1" ) {
-				dataPoints.sst.data.push( { x: time, y: parseFloat( waves[i]["SST (degC)"] ) } );
+				dataPoints.sst.data.push( { x: time, y: parseFloatOr( waves[i]["SST (degC)"], 0.0 ) } );
 			}
 			if( waves[i]["QF_bott_temp"] == "1") {
-				dataPoints.bottomTemp.data.push( { x: time, y: waves[i]["Bottom Temp (degC)"] } );
+				dataPoints.bottomTemp.data.push( { x: time, y: parseFloatOr( waves[i]["Bottom Temp (degC)"], 0.0 ) } );
 			}
-			dataPoints.windspeed.data.push( { x: time, y: parseFloat( waves[i]["WindSpeed (m/s)"] ) } );
-			dataPoints.winddirec.data.push( { x: time, y: parseFloat( waves[i]["WindDirec (deg)"] ) } );
+			dataPoints.windspeed.data.push( { x: time, y: parseFloatOr( waves[i]["WindSpeed (m/s)"], 0.0 ) } );
+			dataPoints.winddirec.data.push( { x: time, y: parseFloatOr( waves[i]["WindDirec (deg)"], 0.0 ) } );
 			// Only want last value
-			dataPoints.currentMag.data = [{ x: time, y: parseFloat( waves[i]["CurrmentMag (m/s)"] ) }];
-			dataPoints.currentDir.data = [{ x: time, y: parseFloat( waves[i]["CurrentDir (deg) "] ) }];
+			dataPoints.currentMag.data = [{ x: time, y: parseFloatOr( waves[i]["CurrmentMag (m/s)"], 0.0 ) }];
+			dataPoints.currentDir.data = [{ x: time, y: parseFloatOr( waves[i]["CurrentDir (deg) "], 0.0 ) }];
 		}
 		
 		const startTime = Math.min(...waves.map( ( wave ) => wave['Time (UTC)'] ) ) * 1000;
@@ -164,7 +184,7 @@ export function wadGenerateChartData( waves ) {
 		// const mBaseFormat = 'hh:mma D MMM YYYY';
 		// const mStartFormat = ( endTime - startTime > 31536000000 ) ? mBaseFormat : 'h:mma D MMM';
 		const mBaseFormat = 'DD/MM/YYYY h:mma';
-		const scaleLabel = ' (' + mStart.format( mBaseFormat ) + " — " + mEnd.format( mBaseFormat ) + ')';
+		const scaleLabel = mStart.format( mBaseFormat ) + " — " + mEnd.format( mBaseFormat );
 		const timeRange = [ mStart.format( 'x' ), mEnd.format( 'x' ) ];
 
 		// Data
@@ -312,6 +332,11 @@ export function wadGenerateChartData( waves ) {
 					xAxes: xAxes,
 					yAxes: yAxes,
 				},
+				legend: {
+					labels: {
+						boxWidth: 15
+					}
+				},
 				tooltips: {
 					callbacks: {
 						label: function(tooltipItem, data) {
@@ -411,14 +436,33 @@ export function wadDrawTable( buoyId, dataPoints ) {
 	chartInfo.addEventListener( 'click', wadToggleChart );
 }
 
-export function wadDrawHeading( buoyId, label ) {
+export function wadDrawHeading( buoyId, label, range ) {
 	const buoyWrapper = document.getElementById( 'buoy-' + buoyId );
 	const panelHeading = buoyWrapper.getElementsByClassName( 'card-header' )
 	if( panelHeading.length > 0 ) {
-		const time = panelHeading[0].getElementsByTagName( 'time' );
-		if( time.length > 0 ) {
-			time[0].innerHTML = label;
+		// const time = panelHeading[0].getElementsByTagName( 'time' );
+		// if( time.length > 0 ) {
+		// 	time[0].innerHTML = label;
+		// }
+		// Download time range
+		const downloadTrigger = panelHeading[0].getElementsByClassName( 'download-trigger' );
+		if( downloadTrigger.length > 0 ) {
+			downloadTrigger[0].dataset['start'] = range[0];
+			downloadTrigger[0].dataset['end'] = range[1];
 		}
+		if( window.myPickers != undefined ) {
+			// console.log( range[0] );
+			// console.log( parseInt( range[0] ) );
+			// console.log( new Date( parseInt( range[0] ) ) );
+			window.myPickers['buoy' + buoyId].options.startDate.dateInstance = ( new Date( parseInt( range[0] ) ) );
+			window.myPickers['buoy' + buoyId].options.endDate.dateInstance = ( new Date( parseInt( range[1] ) ) );
+		}
+		
+		const dateRangeButton = panelHeading[0].getElementsByClassName( 'dateRangeButtonLabel' );
+		if( dateRangeButton.length > 0 ) {
+			dateRangeButton[0].innerHTML = label;
+		}
+
 	}
 }
 
