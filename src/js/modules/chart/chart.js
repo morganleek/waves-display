@@ -257,7 +257,7 @@ export function wadGenerateChartData( waves ) {
 				fill: false,
 				data: dataPoints.sst.data,
 				yAxisID: 'y-axis-3',
-				hidden: true
+				// hidden: true
 			});
 		}
 		if( dataPoints.bottomTemp.data.length > 0 ) {
@@ -272,7 +272,7 @@ export function wadGenerateChartData( waves ) {
 				fill: false,
 				data: dataPoints.bottomTemp.data,
 				yAxisID: 'y-axis-3',
-				hidden: true
+				// hidden: true
 			});
 		}
 
@@ -333,6 +333,7 @@ export function wadGenerateChartData( waves ) {
 					yAxes: yAxes,
 				},
 				legend: {
+
 					labels: {
 						boxWidth: 15
 					}

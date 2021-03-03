@@ -4,7 +4,7 @@ export default {
 			"distribution": "linear",
 			"ticks": {
 				"min": 0,
-				// "maxTicksLimit": 12
+				"maxTicksLimit": 10
 				// "maxTicksLimit": 3
 			},
 			"type": "time",

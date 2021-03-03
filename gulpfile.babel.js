@@ -128,5 +128,5 @@ export const watchForChanges = () => {
   watch("**/*.php", reload);
 } 
 export const dev = series(clean, parallel(styles, images, copy, scripts), serve, watchForChanges);
-export const build = series(clean, parallel(styles, images, copy, scripts), themeify);
+export const build = series(clean, parallel(styles, images, copy, scripts));
 export default dev;
