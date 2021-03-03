@@ -132,6 +132,9 @@
         line-height: 1.25em;
         font-weight: 500;
         color: #fff;
+        span {
+          opacity: 0 !important;
+        }
       }
       time {
         display: block;

@@ -322,20 +322,28 @@ export function wadGenerateChartData( waves ) {
 				hoverMode: 'index',
 				stacked: false,
 				title: {
-					display: false,
-					text: scaleLabel,
-					fontSize: 15,
+					display: true,
+					text: 'Click legend labels to toggle their appearance',
+					fontSize: 12,
+					fontStyle: 'normal',
 					fontFamily: "'Lato', sans-serif",
-					fontColor: '#000'
+					padding: 0,
+					lineHeight: 1.1,
+					fontColor: '#989898'
 				},
 				scales: {
 					xAxes: xAxes,
 					yAxes: yAxes,
 				},
+				plugins: {
+					legend: {
+						
+					},
+				},
 				legend: {
-
 					labels: {
-						boxWidth: 15
+						boxWidth: 15,
+						fontColor: '#000000'
 					}
 				},
 				tooltips: {
