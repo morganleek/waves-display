@@ -33,7 +33,9 @@ export class Charts extends Component {
 									 buoyLabel={ row.web_display_name } 
 									 buoyLastUpdated={ row.last_update } 
 									 buoyLat={ row.lat } 
-									 buoyLng={ row.lng } />
+									 buoyLng={ row.lng }
+                   updateCenter={ this.props.updateCenter }
+                   updateZoom={ this.props.updateZoom } />
 					</div>
 				)
 			} );
@@ -91,19 +93,29 @@ export class Chart extends Component {
     this.state = {
       data: []
     }
-
-		// this.handleCentreClick = this.handleCentreClick.bind(this);
   }
 
-	// handleCentreClick = () => {
-	// 	console.log( 'Clicked' );
-	// }
 	handleCentreClick() {
-    console.log('this is:', this);
+    const center = {
+      lat: parseFloat( this.props.buoyLat ),
+      lng: parseFloat( this.props.buoyLng )
+    };
+    this.props.updateCenter( center );
+    this.props.updateZoom( 10 );
   }
 
 	handleExportClick() {
-		console.log('export');
+    const { buoyId } = this.props;
+    const { timeRange } = this.state.data;
+    if( timeRange.length == 2 ) {
+      const start = parseInt( timeRange[0] ) / 1000;
+      const end = parseInt( timeRange[1] ) / 1000;
+      const path = "?action=waf_rest_list_buoy_datapoints_csv&id=" + buoyId + "&start=" + start + "&end=" + end;
+      window.location = wad.ajax + path;
+    }
+    else {
+      console.log( 'No time range specified' );
+    }
 	}
 
 	handleDatePickerClick() {

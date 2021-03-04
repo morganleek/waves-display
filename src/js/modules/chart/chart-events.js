@@ -78,10 +78,6 @@ export function wadCSVDownload( trigger ) {
 		trigger.addEventListener( 'click', ( e ) => {
 			const buoyWrapper = document.getElementById( "buoy-" + e.target.dataset.buoyId );
 			if( buoyWrapper.getElementsByClassName('calendars-trigger')[0] ) {
-				// let data = {
-				// 	action: 'waf_rest_list_buoy_datapoints_csv',
-				// 	id: e.target.dataset.buoyId
-				// };
 				let path = "?action=waf_rest_list_buoy_datapoints_csv&id=" + e.target.dataset.buoyId;
 				
 				const trigger = buoyWrapper.getElementsByClassName( 'calendars-trigger' )[0];
