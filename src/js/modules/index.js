@@ -4,3 +4,6 @@ import './overlay';
 
 // Reactify
 // import './react';
+
+// React V2
+import './components';

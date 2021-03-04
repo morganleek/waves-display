@@ -1720,6 +1720,17 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var jque
 
 /***/ }),
 
+/***/ "./src/js/modules/components/index.js":
+/*!********************************************!*\
+  !*** ./src/js/modules/components/index.js ***!
+  \********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("\n\n//# sourceURL=webpack:///./src/js/modules/components/index.js?");
+
+/***/ }),
+
 /***/ "./src/js/modules/index.js":
 /*!*********************************!*\
   !*** ./src/js/modules/index.js ***!
@@ -1728,7 +1739,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var jque
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _chart__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./chart */ \"./src/js/modules/chart/index.js\");\n/* harmony import */ var _overlay__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./overlay */ \"./src/js/modules/overlay/index.js\");\n// import './map';\n\n // Reactify\n// import './react';\n\n//# sourceURL=webpack:///./src/js/modules/index.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _chart__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./chart */ \"./src/js/modules/chart/index.js\");\n/* harmony import */ var _overlay__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./overlay */ \"./src/js/modules/overlay/index.js\");\n/* harmony import */ var _components__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components */ \"./src/js/modules/components/index.js\");\n/* harmony import */ var _components__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_components__WEBPACK_IMPORTED_MODULE_2__);\n// import './map';\n\n // Reactify\n// import './react';\n// React V2\n\n\n\n//# sourceURL=webpack:///./src/js/modules/index.js?");
 
 /***/ }),
 
