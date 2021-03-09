@@ -149,8 +149,16 @@ export function wadGenerateChartData( waves ) {
 				dataPoints.dpspr.data.push( { x: time, y: parseFloatOr( waves[i]["DpSpr (deg)"], 0.0 ) } );
 				dataPoints.dmspr.data.push( { x: time, y: parseFloatOr( waves[i]["DmSpr (deg)"], 0.0 ) } );
 				// Rotation
-				dataPoints.dm.data.push( Math.abs( parseIntOr( waves[i]["Dm (deg)"], 0 ) - 180 ) );
-				dataPoints.dp.data.push( Math.abs( parseIntOr( waves[i]["Dp (deg)"], 0 ) - 180 ) ); 
+				// console.log( parseIntOr( waves[i]["Dm (deg)"], 0 ) );
+				// console.log( Math.abs( parseIntOr( waves[i]["Dm (deg)"], 0 ) - 180 ) );
+				// console.log( ( parseIntOr( waves[i]["Dm (deg)"], 0 ) + 180 ) % 360 );
+				// if( parseIntOr( waves[i]["Dm (deg)"], 0 ) < 0 ) {
+				// 	console.log( waves[i]["Dm (deg)"] );
+				// }
+				const dmDeg = parseIntOr( waves[i]["Dm (deg)"], 0 );
+				dataPoints.dm.data.push( ( dmDeg < 0 ) ? 0 : ( dmDeg + 180 ) % 360 );
+				const dpDeg = parseIntOr( waves[i]["Dp (deg)"], 0 );
+				dataPoints.dp.data.push( ( dpDeg < 0 ) ? 0 : ( dpDeg + 180 ) % 360 );
 			}
 			if( waves[i]["QF_sst"] == "1" ) {
 				dataPoints.sst.data.push( { x: time, y: parseFloatOr( waves[i]["SST (degC)"], 0.0 ) } );
@@ -227,6 +235,7 @@ export function wadGenerateChartData( waves ) {
 				fill: false,
 				data: dataPoints.tp.data,
 				yAxisID: 'y-axis-2',
+				showLine: false
 			});
 		}
 		// if( dataPoints.tm.data.length > 0 ) {
@@ -249,8 +258,8 @@ export function wadGenerateChartData( waves ) {
 			hasSurfTemp = true;
 			data.datasets.push({					
 				label: window.innerWidth >= 768 ? 'Sea Surface Temperature (°C)' : 'Sea Surf (°C)', 
-				backgroundColor: 'rgba(255, 206, 87, 0.5)',
-				borderColor: 'rgba(255, 206, 87, 1)',
+				backgroundColor: 'rgba(194, 59, 34, 1)',
+				borderColor: 'rgba(194, 59, 34, 1)',
 				borderWidth: 0,
 				lineTension: 0,
 				pointRadius: 2,
