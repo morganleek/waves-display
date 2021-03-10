@@ -4,7 +4,7 @@ export default {
 			"distribution": "linear",
 			"ticks": {
 				"min": 0,
-				"maxTicksLimit": 10
+				"maxTicksLimit": 6
 				// "maxTicksLimit": 3
 			},
 			"type": "time",
@@ -14,7 +14,7 @@ export default {
 				"displayFormats": {
 					"hour": "D MMM H:mm",
 					"minute": "ha"
-				}
+				},
 			},
 			"scaleLabel": {
 				"display": false
