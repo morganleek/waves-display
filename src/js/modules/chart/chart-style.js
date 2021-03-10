@@ -9,7 +9,7 @@ export default {
 			},
 			"type": "time",
 			"time": {
-				"stepSize": 6,
+				"stepSize": 12,
 				"unit": "hour",
 				"displayFormats": {
 					"hour": "D MMM H:mm",

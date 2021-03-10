@@ -321,7 +321,7 @@ export function wadGenerateChartData( waves ) {
 			data: data,
 			options: {
 				responsive: true,
-				aspectRatio: window.innerWidth >= 768 ? 2.65 : 1.25, // ( window.innerWidth < 768 ) ? 15 : 
+				aspectRatio: window.innerWidth >= 768 ? 2.15 : 2.25, // ( window.innerWidth < 768 ) ? 15 : 
 				hoverMode: 'index',
 				stacked: false,
 				title: {
