@@ -149,12 +149,6 @@ export function wadGenerateChartData( waves ) {
 				dataPoints.dpspr.data.push( { x: time, y: parseFloatOr( waves[i]["DpSpr (deg)"], 0.0 ) } );
 				dataPoints.dmspr.data.push( { x: time, y: parseFloatOr( waves[i]["DmSpr (deg)"], 0.0 ) } );
 				// Rotation
-				// console.log( parseIntOr( waves[i]["Dm (deg)"], 0 ) );
-				// console.log( Math.abs( parseIntOr( waves[i]["Dm (deg)"], 0 ) - 180 ) );
-				// console.log( ( parseIntOr( waves[i]["Dm (deg)"], 0 ) + 180 ) % 360 );
-				// if( parseIntOr( waves[i]["Dm (deg)"], 0 ) < 0 ) {
-				// 	console.log( waves[i]["Dm (deg)"] );
-				// }
 				const dmDeg = parseIntOr( waves[i]["Dm (deg)"], 0 );
 				dataPoints.dm.data.push( ( dmDeg < 0 ) ? 0 : ( dmDeg + 180 ) % 360 );
 				const dpDeg = parseIntOr( waves[i]["Dp (deg)"], 0 );
@@ -398,14 +392,31 @@ export function wadDrawLatestTable( buoyId, dataPoints ) {
 	
 	
 	for( const [key, value] of Object.entries( dataPoints ) ) {
+		
 		// Max value
 		const recent = value.data.pop();
-		// Append to table
-		if( typeof( recent ) != "undefined" && recent.hasOwnProperty( 'y' ) && recent.y > 0 ) {
-			const recentText = recent.y;
-			// time = ( recent.hasOwnProperty( 'x' ) && recent.x > 0 ) ? recent.x : time;
-			buoyInfoHtml += "<li>" + value.description + // "</dt>" +
-				"<span class='value'>" + recentText + "</span></li>";
+
+		if( typeof( recent ) != "undefined" ) {
+			let recentValue;
+			
+			switch ( typeof( recent ) ) {
+				case "object": // { x, y }
+					if( recent.hasOwnProperty( 'y' ) && recent.y > 0 ) {
+						recentValue = recent.y;
+					}
+					break;
+				case "number": // y - direction values
+					recentValue = ( recent + 180 ) % 360;
+					// recentValue = recent;
+				default:
+					break;
+			}
+			
+			// Append value to table
+			if( recentValue ) {
+				buoyInfoHtml += "<li>" + value.description + 
+					"<span class='value'>" + recentValue + "</span></li>";
+			}
 		}
 	}
 	

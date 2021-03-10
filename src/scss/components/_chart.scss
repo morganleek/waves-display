@@ -82,6 +82,7 @@
       font-weight: 400;
       display: flex;
       justify-content: space-between;
+      break-inside: avoid;
       span {
         font-weight: 300;
       }
