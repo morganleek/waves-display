@@ -143,16 +143,31 @@ export function wadGenerateChartData( waves ) {
 			if( waves[i]["QF_waves"] == "1" ) {
 				// hasWaves = true; // Needs to be here incase there are no valid waves
 				// Values
-				dataPoints.hsig.data.push( { x: time, y: parseFloatOr( waves[i]["Hsig (m)"], 0.0 ) } );
-				dataPoints.tp.data.push( { x: time, y: parseFloatOr( waves[i]["Tp (s)"], 0.0 ) } );
-				dataPoints.tm.data.push( { x: time, y: parseFloatOr( waves[i]["Tm (s)"], 0.0 ) } );
-				dataPoints.dpspr.data.push( { x: time, y: parseFloatOr( waves[i]["DpSpr (deg)"], 0.0 ) } );
-				dataPoints.dmspr.data.push( { x: time, y: parseFloatOr( waves[i]["DmSpr (deg)"], 0.0 ) } );
-				// Rotation
-				const dmDeg = parseIntOr( waves[i]["Dm (deg)"], 0 );
-				dataPoints.dm.data.push( ( dmDeg < 0 ) ? 0 : ( dmDeg + 180 ) % 360 );
-				const dpDeg = parseIntOr( waves[i]["Dp (deg)"], 0 );
-				dataPoints.dp.data.push( ( dpDeg < 0 ) ? 0 : ( dpDeg + 180 ) % 360 );
+				if( waves[i]["Hsig (m)"] != "NaN" ) {
+					dataPoints.hsig.data.push( { x: time, y: parseFloatOr( waves[i]["Hsig (m)"], 0.0 ) } );
+				}
+				// Peak
+				if( waves[i]["Tp (s)"] != "NaN" ) {
+					dataPoints.tp.data.push( { x: time, y: parseFloatOr( waves[i]["Tp (s)"], 0.0 ) } );
+					const dpDeg = parseIntOr( waves[i]["Dp (deg)"], 0 ); // Rotation
+					dataPoints.dp.data.push( ( dpDeg < 0 ) ? 0 : ( dpDeg + 180 ) % 360 );
+				}
+				// Mean
+				if( waves[i]["Tm (s)"] != "NaN" ) {
+					dataPoints.tm.data.push( { x: time, y: parseFloatOr( waves[i]["Tm (s)"], 0.0 ) } );
+					const dmDeg = parseIntOr( waves[i]["Dm (deg)"], 0 ); // Rotation
+					dataPoints.dm.data.push( ( dmDeg < 0 ) ? 0 : ( dmDeg + 180 ) % 360 );
+				}
+				// Spread
+				if( waves[i]["DpSpr (deg)"] != "NaN" ) {
+					dataPoints.dpspr.data.push( { x: time, y: parseFloatOr( waves[i]["DpSpr (deg)"], 0.0 ) } );
+				}
+				if( waves[i]["DmSpr (deg)"] != "NaN" ) {
+					dataPoints.dmspr.data.push( { x: time, y: parseFloatOr( waves[i]["DmSpr (deg)"], 0.0 ) } );
+				}
+				
+				
+				
 			}
 			if( waves[i]["QF_sst"] == "1" ) {
 				dataPoints.sst.data.push( { x: time, y: parseFloatOr( waves[i]["SST (degC)"], 0.0 ) } );
