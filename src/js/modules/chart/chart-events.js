@@ -88,10 +88,21 @@ export function wadCSVDownload( trigger ) {
 					path += "&end=" + trigger.dataset.end;
 				}
 
-				window.location = wad.ajax + path;
+				if( document.getElementById( 'cc-license' ) ) {
+					$('#cc-license').modal(); // Open popup
+					$('#cc-license').attr('data-url', wad.ajax + path);
+				}
 			}
 		} );
 	}
 }
 
-
+$( function() {
+	$( '#cc-license' ).on( 'click', '.btn.btn-primary', function() {
+		console.log('clicked');
+		if( $( '#cc-license' ).data( 'url' ) ) {
+			window.location = $( '#cc-license' ).data( 'url' );
+		}
+		$( '#cc-license' ).modal( 'hide' );
+	} ); 
+} );
