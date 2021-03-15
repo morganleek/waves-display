@@ -122,8 +122,10 @@ export function wadProcessDriftingBuoys( response ) {
 			let times = [];
 			console.log( processed );
 			for( let j = 0; j < processed.length; j++ ) {
-				path.push( { lat: parseFloat( processed[j]["Latitude (deg)"] ), lng: parseFloat( processed[j]["Longitude (deg) "] ) } );
-				times.push( parseInt( processed[j]['Time (UTC)'] ) );
+				if( !isNaN( parseFloat( processed[j]["Latitude (deg)"] ) ) && !isNaN( parseFloat( processed[j]["Longitude (deg) "] ) ) ) {
+					path.push( { lat: parseFloat( processed[j]["Latitude (deg)"] ), lng: parseFloat( processed[j]["Longitude (deg) "] ) } );
+					times.push( parseInt( processed[j]['Time (UTC)'] ) );
+				}
 			}
 
 			const driftingPath = new window.myGoogleMaps.Polyline( { 
