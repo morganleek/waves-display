@@ -128,6 +128,8 @@ export function wadProcessDriftingBuoys( response ) {
 				}
 			}
 
+			console.log( path );
+
 			const driftingPath = new window.myGoogleMaps.Polyline( { 
 				path: path,
 				geodesic: true,
