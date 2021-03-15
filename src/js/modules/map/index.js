@@ -62,12 +62,9 @@ export function wadDrawMap( buoys ) {
 						}
 					} );
 
-					// Drifting Buoy Data
-					wadDrifting( );
 				}
-				// googleMaps.event.addListener( window.myMap, "center_changed", function( e ) { 
-				// 	console.log( e );
-				// } );
+				// Drifting Buoy Data
+				wadDrifting( );
 			}).catch( (e) => {
 				console.error(e);
 			});
@@ -122,10 +119,13 @@ export function wadProcessDriftingBuoys( response ) {
 		for( let i = 0; i < response.length; i++ ) {
 			const processed = wadRawDataToChartData( response[i].data );
 			let path = [];
+			let times = [];
+			console.log( processed );
 			for( let j = 0; j < processed.length; j++ ) {
 				path.push( { lat: parseFloat( processed[j]["Latitude (deg)"] ), lng: parseFloat( processed[j]["Longitude (deg) "] ) } );
+				times.push( parseInt( processed[j]['Time (UTC)'] ) );
 			}
-			
+
 			const driftingPath = new window.myGoogleMaps.Polyline( { 
 				path: path,
 				geodesic: true,
@@ -134,6 +134,25 @@ export function wadProcessDriftingBuoys( response ) {
 				strokeWeight: 2,
 			} );
 			driftingPath.setMap( window.myMap );
+			
+			// const MarkerWithLabel = require( 'markerwithlabel' )( window.myGoogleMaps );
+			
+			// let halfDays = [];
+			// path = path.reverse();
+			// for( let n = 0; n < path.length; n = n + 48 ) {
+			// 	// const last = path.pop();
+			// 	// const lastTime = times.pop();
+			// 	var point = new MarkerWithLabel({
+			// 		position: path[n],
+			// 		map: window.myMap,
+			// 		title: times[n],
+			// 		labelContent: new Date( times[n] * 1000 ).toLocaleString(),
+			// 		// visible: false,
+			// 		labelStyle: { opacity: 1 },
+			// 		icon: wad.plugin + 'dist/images/invisble-marker.png'
+			// 	});
+			// }
+
 
 		}
 	}
