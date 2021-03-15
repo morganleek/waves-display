@@ -143,31 +143,28 @@ export function wadGenerateChartData( waves ) {
 			if( waves[i]["QF_waves"] == "1" ) {
 				// hasWaves = true; // Needs to be here incase there are no valid waves
 				// Values
-				if( waves[i]["Hsig (m)"] != "NaN" ) {
+				if( parseFloatOr( waves[i]["Hsig (m)"], -1 ) > 0 ) {
 					dataPoints.hsig.data.push( { x: time, y: parseFloatOr( waves[i]["Hsig (m)"], 0.0 ) } );
 				}
 				// Peak
-				if( waves[i]["Tp (s)"] != "NaN" ) {
+				if( parseFloatOr( waves[i]["Tp (s)"], -1 ) > 0 ) {
 					dataPoints.tp.data.push( { x: time, y: parseFloatOr( waves[i]["Tp (s)"], 0.0 ) } );
 					const dpDeg = parseIntOr( waves[i]["Dp (deg)"], 0 ); // Rotation
 					dataPoints.dp.data.push( ( dpDeg < 0 ) ? 0 : ( dpDeg + 180 ) % 360 );
 				}
 				// Mean
-				if( waves[i]["Tm (s)"] != "NaN" ) {
+				if( parseFloatOr( waves[i]["Tm (s)"], -1 ) > 0 ) {
 					dataPoints.tm.data.push( { x: time, y: parseFloatOr( waves[i]["Tm (s)"], 0.0 ) } );
 					const dmDeg = parseIntOr( waves[i]["Dm (deg)"], 0 ); // Rotation
 					dataPoints.dm.data.push( ( dmDeg < 0 ) ? 0 : ( dmDeg + 180 ) % 360 );
 				}
 				// Spread
-				if( waves[i]["DpSpr (deg)"] != "NaN" ) {
+				if( parseFloatOr( waves[i]["DpSpr (deg)"], -1 ) > 0 ) {
 					dataPoints.dpspr.data.push( { x: time, y: parseFloatOr( waves[i]["DpSpr (deg)"], 0.0 ) } );
 				}
-				if( waves[i]["DmSpr (deg)"] != "NaN" ) {
+				if( parseFloatOr( waves[i]["DmSpr (deg)"], -1 ) > 0 ) {
 					dataPoints.dmspr.data.push( { x: time, y: parseFloatOr( waves[i]["DmSpr (deg)"], 0.0 ) } );
 				}
-				
-				
-				
 			}
 			if( waves[i]["QF_sst"] == "1" ) {
 				dataPoints.sst.data.push( { x: time, y: parseFloatOr( waves[i]["SST (degC)"], 0.0 ) } );
@@ -307,7 +304,7 @@ export function wadGenerateChartData( waves ) {
 		if( hasHSig ) {
 			// Wave Height Axes
 			const waveHeightAxes = chartStyles.axesStyles.waveHeightAxes;
-			waveHeightAxes.ticks.max = maxWaveHeight * 2;
+			waveHeightAxes.ticks.max = ( Math.ceil( maxWaveHeight ) > 2 ) ? Math.ceil( maxWaveHeight ) : 2; 
 			waveHeightAxes.scaleLabel.display = ( window.innerWidth < 768 ) ? false : true;
 			yAxes.push( waveHeightAxes );
 		}
@@ -315,8 +312,10 @@ export function wadGenerateChartData( waves ) {
 		if( hasTp ) {
 			// Peak Period Axes
 			const peakPeriodAxes = chartStyles.axesStyles.peakPeriodAxes;
-			peakPeriodAxes.ticks.min = ( minPeakPeriodSpaced > 0 ) ? minPeakPeriodSpaced : 0;
-			peakPeriodAxes.ticks.max = Math.ceil( maxPeakPeriod / 2 ) * 2;
+			// peakPeriodAxes.ticks.min = ( minPeakPeriodSpaced > 0 ) ? minPeakPeriodSpaced : 0;
+			// peakPeriodAxes.ticks.max = Math.ceil( maxPeakPeriod / 2 ) * 2;
+			peakPeriodAxes.ticks.min = 0;
+			peakPeriodAxes.ticks.max = ( maxPeakPeriod < 25 ) ? 25 : Math.ceil( maxPeakPeriod / 2 ) * 2;
 			peakPeriodAxes.scaleLabel.display = ( window.innerWidth < 768 ) ? false : true;
 			yAxes.push( peakPeriodAxes );
 		}
