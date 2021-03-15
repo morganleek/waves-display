@@ -1,7 +1,9 @@
-// import $ from 'jquery';
+import $ from 'jquery';
 // Google Maps
 const loadGoogleMapsApi = require('load-google-maps-api');
 // let map;
+
+import { wadRawDataToChartData } from '../chart/buoy-data';
 
 // $(function() {
 export function wadDrawMap( buoys ) {
@@ -60,6 +62,8 @@ export function wadDrawMap( buoys ) {
 						}
 					} );
 
+					// Drifting Buoy Data
+					wadDrifting( );
 				}
 				// googleMaps.event.addListener( window.myMap, "center_changed", function( e ) { 
 				// 	console.log( e );
@@ -68,24 +72,6 @@ export function wadDrawMap( buoys ) {
 				console.error(e);
 			});
 		}
-		
-		// Centre Map Buttons
-		// $('.map-focus').on('click', function(e) {
-		// 	let dataBuoy = $(this).closest('.chart-js-layout').attr('data-buoy');
-		// 	let lat = 0, lng = 0;
-		// 	for( let i = 0; i <= global_points_object.length; i++ ) {
-		// 		if( global_points_object[i].buoy_id == dataBuoy ) {
-		// 			lat = parseFloat(global_points_object[i].lat);
-		// 			lng = parseFloat(global_points_object[i].lng);
-					
-		// 			// Set Centre and Zoom
-		// 			window.myMap.setCenter({lat, lng});
-		// 			window.myMap.setZoom(12);
-
-		// 			break;
-		// 		}
-		// 	}
-		// });
 	}
 }
 
@@ -118,6 +104,38 @@ export function wadMapLocator ( trigger ) {
 				alert( 'Can\'t location buoy ID: ' + buoyId );
 			}
 		} );
+	}
+}
+
+export function wadDrifting( ) {
+	$.ajax({
+    type: 'POST',
+    url: wad.ajax,
+    data: { action: 'waf_rest_list_buoys_drifting' },
+    success: wadProcessDriftingBuoys, // Process list received
+    dataType: 'json'
+  });
+}
+
+export function wadProcessDriftingBuoys( response ) {
+	if( window.myGoogleMaps ) {
+		for( let i = 0; i < response.length; i++ ) {
+			const processed = wadRawDataToChartData( response[i].data );
+			let path = [];
+			for( let j = 0; j < processed.length; j++ ) {
+				path.push( { lat: parseFloat( processed[j]["Latitude (deg)"] ), lng: parseFloat( processed[j]["Longitude (deg) "] ) } );
+			}
+			
+			const driftingPath = new window.myGoogleMaps.Polyline( { 
+				path: path,
+				geodesic: true,
+				strokeColor: "#FF0000",
+				strokeOpacity: 1.0,
+				strokeWeight: 2,
+			} );
+			driftingPath.setMap( window.myMap );
+
+		}
 	}
 }
 
