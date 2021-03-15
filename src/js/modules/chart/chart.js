@@ -108,20 +108,20 @@ export function wadGenerateChartData( waves ) {
 		let chartLabels = [];
 		
 		let dataPoints = {
-			hsig: { data: [], description: "Significant Wave Height (m)" }, // let hsig = []; // 
-			tp: { data: [], description: "Peak Wave Period (s)" }, // let tp = []; // 
-			tm: { data: [], description: "Mean Wave Period (s)" }, // let tm = []; // 
-			dp: { data: [], description: "Peak Wave Direction (deg)" }, // let dp = []; // 
-			dpspr: { data: [], description: "Peak Wave Directional Spreading (deg)" }, // let dpspr = []; // 
-			dm: { data: [], description: "Mean Wave Direction (deg)" }, // let dm = []; // 
-			dmspr: { data: [], description: "Mean Wave Directional Spreading (deg)" }, // let dmspr = []; // 
-			sst: { data: [], description: "Sea Surface Temperature (degC)" }, // let sst = []; // 
-			bottomTemp: { data: [], description: "Sea Bottom Temperature (degC)" }, // let bottomTemp = []; // 
-			windspeed: { data: [], description: "Wind Speed (m/s)" }, // let windspeed = []; // 
-			winddirec: { data: [], description: "Wind Direction (deg)" }, // let winddirec = []; // 
-			currentMag: { data: [], description: "Current Mag (m/s)" }, // let currentMag = []; // 
-			currentDir: { data: [], description: "Current Direction (deg)" }, // let currentDir = []; 
-			// qfWaves: { data: [], description: "" }, // let qfWaves = []; // QF_waves  - quality flag for wave variables
+			hsig: { data: [], showInChart: true, description: "Significant Wave Height (m)" }, // let hsig = []; // 
+			tp: { data: [], showInChart: true, description: "Peak Wave Period (s)" }, // let tp = []; // 
+			tm: { data: [], showInChart: false, description: "Mean Wave Period (s)" }, // let tm = []; // 
+			dp: { data: [], showInChart: true, description: "Peak Wave Direction (deg)" }, // let dp = []; // 
+			dpspr: { data: [], showInChart: true, description: "Peak Wave Directional Spreading (deg)" }, // let dpspr = []; // 
+			dm: { data: [], showInChart: false, description: "Mean Wave Direction (deg)" }, // let dm = []; // 
+			dmspr: { data: [], showInChart: false, description: "Mean Wave Directional Spreading (deg)" }, // let dmspr = []; // 
+			sst: { data: [], showInChart: true, description: "Sea Surface Temperature (degC)" }, // let sst = []; // 
+			bottomTemp: { data: [], showInChart: true, description: "Sea Bottom Temperature (degC)" }, // let bottomTemp = []; // 
+			windspeed: { data: [], showInChart: false, description: "Wind Speed (m/s)" }, // let windspeed = []; // 
+			winddirec: { data: [], showInChart: false, description: "Wind Direction (deg)" }, // let winddirec = []; // 
+			currentMag: { data: [], showInChart: false, description: "Current Mag (m/s)" }, // let currentMag = []; // 
+			currentDir: { data: [], showInChart: false, description: "Current Direction (deg)" }, // let currentDir = []; 
+			// qfWaves: { data: [], showInChart: false, description: "" }, // let qfWaves = []; // QF_waves  - quality flag for wave variables
 			// qfSst: [], // let qfSst = [];  // QF_sst  – quality flag for sea surface temperature
 			// qfBottTemp: [], // let qfBottTemp = []; // QF_bott_temp – quality flag for bottom temperature
 		};
@@ -405,32 +405,34 @@ export function wadDrawLatestTable( buoyId, dataPoints ) {
 	//
 	let buoyInfoHtml = "";
 	
-	
 	for( const [key, value] of Object.entries( dataPoints ) ) {
-		
-		// Max value
-		const recent = value.data.pop();
+		// Show only if wanted
+		if( value.showInChart ) {
+			// Max value
+			const recent = value.data.pop();
 
-		if( typeof( recent ) != "undefined" ) {
-			let recentValue;
 			
-			switch ( typeof( recent ) ) {
-				case "object": // { x, y }
-					if( recent.hasOwnProperty( 'y' ) && recent.y > 0 ) {
-						recentValue = recent.y;
-					}
-					break;
-				case "number": // y - direction values
-					recentValue = ( recent + 180 ) % 360;
-					// recentValue = recent;
-				default:
-					break;
-			}
-			
-			// Append value to table
-			if( recentValue ) {
-				buoyInfoHtml += "<li>" + value.description + 
-					"<span class='value'>" + recentValue + "</span></li>";
+			if( typeof( recent ) != "undefined" ) {
+				let recentValue;
+				
+				switch ( typeof( recent ) ) {
+					case "object": // { x, y }
+						if( recent.hasOwnProperty( 'y' ) && recent.y > 0 ) {
+							recentValue = recent.y;
+						}
+						break;
+					case "number": // y - direction values
+						recentValue = ( recent + 180 ) % 360;
+						// recentValue = recent;
+					default:
+						break;
+				}
+				
+				// Append value to table
+				if( recentValue ) {
+					buoyInfoHtml += "<li>" + value.description + 
+						"<span class='value'>" + recentValue + "</span></li>";
+				}
 			}
 		}
 	}
