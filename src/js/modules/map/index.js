@@ -120,7 +120,7 @@ export function wadProcessDriftingBuoys( response ) {
 			const processed = wadRawDataToChartData( response[i].data );
 			let path = [];
 			let times = [];
-			console.log( processed );
+			
 			for( let j = 0; j < processed.length; j++ ) {
 				if( !isNaN( parseFloat( processed[j]["Latitude (deg)"] ) ) && !isNaN( parseFloat( processed[j]["Longitude (deg) "] ) ) ) {
 					path.push( { lat: parseFloat( processed[j]["Latitude (deg)"] ), lng: parseFloat( processed[j]["Longitude (deg) "] ) } );
