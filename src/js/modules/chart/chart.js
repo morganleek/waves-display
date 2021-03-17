@@ -409,7 +409,7 @@ export function wadDrawLatestTable( buoyId, dataPoints ) {
 		// Show only if wanted
 		if( value.showInChart ) {
 			// Max value
-			const recent = value.data.shift();
+			const recent = value.data[0];
 			
 			if( typeof( recent ) != "undefined" ) {
 				let recentValue;
