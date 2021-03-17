@@ -182,6 +182,7 @@ export function wadGenerateChartData( waves ) {
 		const startTime = Math.min(...waves.map( ( wave ) => wave['Time (UTC)'] ) ) * 1000;
 		const endTime = Math.max(...waves.map( ( wave ) => wave['Time (UTC)'] ) ) * 1000;
 		const startTimeRounded = ( Math.ceil( startTime / 3600000 ) + 1 ) * 3600000;
+		const endTimeRounded = ( Math.ceil( endTime / 3600000 ) + 1 ) * 3600000;
 		
 		const maxWaveHeight = Math.ceil( Math.max( ...dataPoints.hsig.data.map( ( wave ) => wave.y ) ) );
 		const maxPeakPeriod = Math.ceil( Math.max( ...dataPoints.tp.data.map( ( wave )  => wave.y ) ) );
@@ -194,7 +195,7 @@ export function wadGenerateChartData( waves ) {
 		// console.log( Math.max( ...dataPoints.sst.data.map( ( wave ) => wave.y ), ...dataPoints.bottomTemp.data.map( ( wave ) => wave.y ) ) );
 
 		const mStart = moment( startTimeRounded );
-		const mEnd = moment( endTime );
+		const mEnd = moment( endTimeRounded );
 		// const mBaseFormat = 'hh:mma D MMM YYYY';
 		// const mStartFormat = ( endTime - startTime > 31536000000 ) ? mBaseFormat : 'h:mma D MMM';
 		const mBaseFormat = 'DD/MM/YYYY h:mma';
@@ -408,8 +409,7 @@ export function wadDrawLatestTable( buoyId, dataPoints ) {
 		// Show only if wanted
 		if( value.showInChart ) {
 			// Max value
-			const recent = value.data.pop();
-
+			const recent = value.data.shift();
 			
 			if( typeof( recent ) != "undefined" ) {
 				let recentValue;

@@ -214,3 +214,11 @@
   @extend .alert-danger;
   padding: 0.1em 0.25em;
 }
+
+.modal-dialog {
+  .modal-content {
+    .btn {
+      font-size: 1.3rem;
+    }
+  }
+}
