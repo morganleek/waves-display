@@ -137,7 +137,7 @@ export function wadGenerateChartData( waves ) {
 		// Loop
 		for( let i = 0; i < waves.length; i++ ) {
 			// Time as moment object with offset
-			const time = parseInt( waves[i]['Time (UTC)'] ) * 1000; // moment.unix( parseInt( waves[i].time ) ); // .utcOffset( buoyOffset );
+			const time = parseInt( waves[i]['Time (UNIX/UTC)'] ) * 1000; // moment.unix( parseInt( waves[i].time ) ); // .utcOffset( buoyOffset );
 			chartLabels.push( time );
 
 			if( waves[i]["QF_waves"] == "1" ) {
@@ -179,8 +179,8 @@ export function wadGenerateChartData( waves ) {
 			dataPoints.currentDir.data = [{ x: time, y: parseFloatOr( waves[i]["CurrentDir (deg) "], 0.0 ) }];
 		}
 		
-		const startTime = Math.min(...waves.map( ( wave ) => wave['Time (UTC)'] ) ) * 1000;
-		const endTime = Math.max(...waves.map( ( wave ) => wave['Time (UTC)'] ) ) * 1000;
+		const startTime = Math.min(...waves.map( ( wave ) => wave['Time (UNIX/UTC)'] ) ) * 1000;
+		const endTime = Math.max(...waves.map( ( wave ) => wave['Time (UNIX/UTC)'] ) ) * 1000;
 		const startTimeRounded = ( Math.ceil( startTime / 3600000 ) + 1 ) * 3600000;
 		const endTimeRounded = ( Math.ceil( endTime / 3600000 ) + 1 ) * 3600000;
 		
