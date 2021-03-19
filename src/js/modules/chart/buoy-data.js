@@ -83,7 +83,14 @@ export function wadRawDataToChartData( data ) {
   let processed = [];
   if( data.length > 0 ) {
     for( let i = 0; i < data.length; i++ ) {
-      processed.push( JSON.parse( data[i].data_points ) );
+      if( data[i].data_points ) {
+        try {
+          processed.push( JSON.parse( data[i].data_points ) );
+        } catch( e ) {
+          console.error(e instanceof SyntaxError);
+          console.log( data[i].data_points );
+        }
+      }
     }
   }
 
