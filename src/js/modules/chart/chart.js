@@ -276,21 +276,21 @@ export function wadGenerateChartData( waves ) {
 				// hidden: true
 			});
 		}
-		// if( dataPoints.bottomTemp.data.length > 0 ) {
-		// 	hasBottTemp = true;
-		// 	data.datasets.push({					
-		// 		label: window.innerWidth ? 'Bottom Temperature (°C)' : 'Bot Temp (°C)',
-		// 		backgroundColor: 'rgb(255, 159, 64, 0.5)',
-		// 		borderColor: 'rgb(255, 159, 64, 1)',
-		// 		borderWidth: 0,
-		// 		lineTension: 0,
-		// 		pointRadius: 2,
-		// 		fill: false,
-		// 		data: dataPoints.bottomTemp.data,
-		// 		yAxisID: 'y-axis-3',
-		// 		// hidden: true
-		// 	});
-		// }
+		if( dataPoints.bottomTemp.data.length > 0 ) {
+			hasBottTemp = true;
+			data.datasets.push({					
+				label: window.innerWidth ? 'Bottom Temperature (°C)' : 'Bot Temp (°C)',
+				backgroundColor: 'rgb(255, 159, 64, 0.5)',
+				borderColor: 'rgb(255, 159, 64, 1)',
+				borderWidth: 0,
+				lineTension: 0,
+				pointRadius: 2,
+				fill: false,
+				data: dataPoints.bottomTemp.data,
+				yAxisID: 'y-axis-3',
+				// hidden: true
+			});
+		}
 
 		// Time Axes (x)
 		const timeAxes = chartStyles.axesStyles.timeAxes;
