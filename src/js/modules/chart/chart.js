@@ -333,8 +333,8 @@ export function wadGenerateChartData( waves ) {
 		const sizing = ( window.innerWidth >= 992 ) ? 'desktop' : ( window.innerWidth >= 768 ) ? 'tablet' : ( window.innerWidth >= 450 ) ? 'mobileLandscape' : 'mobilePortrait';
 		const ratios = {
 			desktop: 2.15,
-			tablet: 2.15,
-			mobileLandscape: 1.8,
+			tablet: 2,
+			mobileLandscape: 1.75,
 			mobilePortrait: 1,
 		};
 		

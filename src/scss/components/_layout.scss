@@ -24,9 +24,17 @@ body {
 						height: calc(100vh - var(--headers-height));
 					}
 				}
+				#map {
+					@media (min-width: 768px) { 
+						grid-area: 1 / 1 / 2 / 3;
+					}
+				}
 				#buoys {
 					overflow: scroll;
 					padding: 10px;
+					@media (min-width: 768px) { 
+						grid-area: 1 / 2 / 2 / 3;
+					}
 				}
 			}
 		}
