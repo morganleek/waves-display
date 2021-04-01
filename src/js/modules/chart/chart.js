@@ -273,7 +273,7 @@ export function wadGenerateChartData( waves ) {
 				fill: false,
 				data: dataPoints.sst.data,
 				yAxisID: 'y-axis-3',
-				// hidden: true
+				hidden: true
 			});
 		}
 		if( dataPoints.bottomTemp.data.length > 0 ) {
@@ -555,6 +555,34 @@ export function wadDrawChart( buoyId, config ) {
 	// 		buoyWrapper.getElementsByClassName( 'canvas-wrapper' )[0].classList.remove( 'loading' );
 	// 	}
 	// }
+}
+
+export function wadDrawChartLegend( buoyId, config ) {
+	// myCharts["buoy4"].getDatasetMeta(1).hidden = true
+	// myCharts["buoy4"].update()
+	let labels = [];
+
+	// Label and Buoy
+	if( config.data.datasets ) {
+		config.data.datasets.forEach( ( legend, i ) => {
+			labels[i] = {
+				label: legend.label,
+				backgroundColor: legend.backgroundColor,
+				hidden: ( typeof( legend.hidden ) != "undefined" ) ? legend.hidden : false
+			}
+		});
+	}
+
+	console.log( labels );
+
+	// Legend Visibility
+	// if( config.options.scales.yAxes ) {
+	// 	config.options.scales.yAxes.forEach( legend => {
+	// 		console.log( legend );
+	// 	});
+	// }
+
+
 }
  
 // Charts for spread chart extends
