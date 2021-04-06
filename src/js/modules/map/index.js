@@ -33,6 +33,9 @@ export function wadDrawMap( buoys ) {
 					}
 				);
 
+				// Zoom for labels
+				window.myMap.addListener( 'zoom_changed', wadToggleDriftingLabels );
+
 				// map.addListener( "click", ( e ) => { console.log( e.latLng.lat() ); console.log( e.latLng.lng() ); } );
 				// { -23.001983515270528, 122.07808387499998 }
 				window.myMapMarkers = new Map();
@@ -118,13 +121,14 @@ export function wadProcessDriftingBuoys( response ) {
 	if( window.myGoogleMaps ) {
 		for( let i = 0; i < response.length; i++ ) {
 			const processed = wadRawDataToChartData( response[i].data );
+
 			let path = [];
 			let times = [];
 			
 			for( let j = 0; j < processed.length; j++ ) {
 				if( !isNaN( parseFloat( processed[j]["Latitude (deg)"] ) ) && !isNaN( parseFloat( processed[j]["Longitude (deg) "] ) ) ) {
 					path.push( { lat: parseFloat( processed[j]["Latitude (deg)"] ), lng: parseFloat( processed[j]["Longitude (deg) "] ) } );
-					times.push( parseInt( processed[j]['Time (UTC)'] ) );
+					times.push( parseInt( processed[j]['Time (UNIX/UTC)'] ) );
 				}
 			}
 
@@ -137,26 +141,48 @@ export function wadProcessDriftingBuoys( response ) {
 			} );
 			driftingPath.setMap( window.myMap );
 			
-			// const MarkerWithLabel = require( 'markerwithlabel' )( window.myGoogleMaps );
+			const MarkerWithLabel = require( 'markerwithlabel' )( window.myGoogleMaps );
 			
-			// let halfDays = [];
-			// path = path.reverse();
-			// for( let n = 0; n < path.length; n = n + 48 ) {
-			// 	// const last = path.pop();
-			// 	// const lastTime = times.pop();
-			// 	var point = new MarkerWithLabel({
-			// 		position: path[n],
-			// 		map: window.myMap,
-			// 		title: times[n],
-			// 		labelContent: new Date( times[n] * 1000 ).toLocaleString(),
-			// 		// visible: false,
-			// 		labelStyle: { opacity: 1 },
-			// 		icon: wad.plugin + 'dist/images/invisble-marker.png'
-			// 	});
-			// }
+			let halfDays = [];
+			path = path.reverse();
+
+			const isVisible = ( window.myMap.getZoom() >= 7 );
+
+			if( typeof( window.driftingPoints ) == "undefined" ) {
+				window.driftingPoints = [];
+			}
+
+			for( let n = 0; n < path.length; n = n + 48 ) {
+				console.log( times[n] );
+				const last = path.pop();
+				const lastTime = times.pop();
+				var point = new MarkerWithLabel({
+					position: path[n],
+					map: window.myMap,
+					title: new Date( times[n] * 1000).toLocaleString(),
+					labelContent: new Date( times[n] * 1000 ).toLocaleString(),
+					visible: isVisible,
+					labelStyle: { opacity: 1 },
+					icon: 'https://maps.gstatic.com/mapfiles/transparent.png' // wad.plugin + 'dist/images/invisble-marker.png'
+				});
+
+				window.driftingPoints.push( point );
+			}
 
 
 		}
+	}
+}
+
+function wadToggleDriftingLabels() {
+	if( typeof( window.myMap ) !== undefined ) {
+		const isVisible = ( window.myMap.getZoom() >= 7 );
+		if( typeof( window.driftingPoints ) !== undefined ) {
+			window.driftingPoints.forEach( element => {
+				element.setVisible( isVisible );
+			} );
+		}
+		
 	}
 }
 
