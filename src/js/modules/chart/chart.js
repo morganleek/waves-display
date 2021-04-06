@@ -16,6 +16,7 @@ const panelWrapper = "<div class='card card-primary mb-3'>" +
 		"</div>" +
 	"</div>" + 
 	"<div class='card-body'>" + 
+		"<div class='canvas-legend'></div>" +
     "<div class='canvas-wrapper loading'>" +
       "<canvas></canvas>" +
     "</div>" +
@@ -218,7 +219,7 @@ export function wadGenerateChartData( waves ) {
 			hasHSig = true;
 			data.datasets.push({
 				label: window.innerWidth >= 768 ? 'Significant Wave Height (m)' : 'Sig Wave (m)', // Wave Height (m)
-				backgroundColor: 'rgba(75, 192, 192, 0.5)',
+				backgroundColor: 'rgba(165, 223, 223, 1)',
 				borderColor: 'rgba(75, 192, 192, 1)',
 				borderWidth: 0,
 				lineTension: 0,
@@ -232,7 +233,7 @@ export function wadGenerateChartData( waves ) {
 			hasTp = true;
 			data.datasets.push({					
 				label: window.innerWidth >= 768 ? 'Peak Wave Period & Direction (s & deg)' : 'Peak Wave/Dir (s & deg)', // Peak Period (s)
-				backgroundColor: '#0f0f0f',
+				backgroundColor: 'rgba(237, 135, 80, 1)',
 				borderColor: 'rgba(235, 127, 74, 0.5)',
 				borderWidth: 0,
 				lineTension: 0,
@@ -296,6 +297,9 @@ export function wadGenerateChartData( waves ) {
 		const timeAxes = chartStyles.axesStyles.timeAxes;
 		timeAxes.ticks.min = new Date( startTimeRounded );
 		timeAxes.type = 'time';
+		timeAxes.ticks.callback = ( tickValue, index, ticks ) => {
+			return tickValue.split(" ");
+		};
 		// All x Axes'
 		const xAxes = [ timeAxes ];
 
@@ -335,7 +339,7 @@ export function wadGenerateChartData( waves ) {
 			desktop: 2.15,
 			tablet: 2,
 			mobileLandscape: 1.75,
-			mobilePortrait: 1,
+			mobilePortrait: 1.5,
 		};
 		
 		// Draw Chart
@@ -348,9 +352,9 @@ export function wadGenerateChartData( waves ) {
 				hoverMode: 'index',
 				stacked: false,
 				title: {
-					display: true,
+					display: false,
 					text: 'Click legend labels to toggle their appearance',
-					fontSize: 12,
+					fontSize: 10,
 					fontStyle: 'normal',
 					fontFamily: "'Lato', sans-serif",
 					padding: 0,
@@ -361,12 +365,12 @@ export function wadGenerateChartData( waves ) {
 					xAxes: xAxes,
 					yAxes: yAxes,
 				},
-				plugins: {
-					legend: {
-						
-					},
-				},
+				// plugins: {
+				// 	legend: {
+				// 	},
+				// },
 				legend: {
+					display: false,
 					labels: {
 						boxWidth: 15,
 						fontColor: '#000000'
@@ -558,117 +562,44 @@ export function wadDrawChart( buoyId, config ) {
 }
 
 export function wadDrawChartLegend( buoyId, config ) {
-	// myCharts["buoy4"].getDatasetMeta(1).hidden = true
-	// myCharts["buoy4"].update()
 	let labels = [];
 
 	// Label and Buoy
 	if( config.data.datasets ) {
-		config.data.datasets.forEach( ( legend, i ) => {
-			labels[i] = {
-				label: legend.label,
-				backgroundColor: legend.backgroundColor,
-				hidden: ( typeof( legend.hidden ) != "undefined" ) ? legend.hidden : false
-			}
-		});
+		const buoyCanvasLegend = document.querySelector( "#buoy-" + buoyId + " .canvas-legend" );
+		if( buoyCanvasLegend ) {
+			config.data.datasets.forEach( ( legend, i ) => {
+				const checkbox = document.createElement( 'input' );
+				checkbox.id = 'legend-toggle-' + buoyId + '-' + i;
+				checkbox.type = "checkbox";
+				checkbox.checked = ( typeof( legend.hidden ) != "undefined" ) ? !legend.hidden : true;
+				checkbox.dataset.buoyId = buoyId;
+				checkbox.dataset.legendItem = i;
+				checkbox.style.setProperty( '--checkbox-background', legend.backgroundColor );
+				checkbox.addEventListener( 'click', wadLegendToggle );
+
+				const labelSpan = document.createElement( 'span' );
+				labelSpan.innerHTML = legend.label;
+
+				const label = document.createElement( 'label' );
+				// label.innerHTML = legend.label;
+				label.htmlFor = 'legend-toggle-' + buoyId + '-' + i;
+
+				// Add checkbox to label
+				label.insertAdjacentElement( 'afterbegin', labelSpan );
+				label.insertAdjacentElement( 'afterbegin', checkbox );
+				// Add label to legend
+				buoyCanvasLegend.insertAdjacentElement( 'beforeend', label );
+			});
+		}
 	}
-
-	console.log( labels );
-
-	// Legend Visibility
-	// if( config.options.scales.yAxes ) {
-	// 	config.options.scales.yAxes.forEach( legend => {
-	// 		console.log( legend );
-	// 	});
-	// }
-
-
 }
- 
-// Charts for spread chart extends
-// Chart.defaults.stripe = Chart.helpers.clone(Chart.defaults.line);
-// Chart.controllers.stripe = Chart.controllers.line.extend({
-//   draw: function(ease) {
-//     var result = Chart.controllers.line.prototype.draw.apply(this, arguments);
 
-//     // don't render the stripes till we've finished animating
-//     if (!this.rendered && ease !== 1)
-//       return;
-//     this.rendered = true;
-
-
-//     var helpers = Chart.helpers;
-//     var meta = this.getMeta();
-//     var yScale = this.getScaleForId(meta.yAxisID);
-//     var yScaleZeroPixel = yScale.getPixelForValue(0);
-//     var widths = this.getDataset().width;
-//     var ctx = this.chart.chart.ctx;
-
-//     ctx.save();
-//     ctx.fillStyle = this.getDataset().backgroundColor;
-//     ctx.lineWidth = 1;
-//     ctx.beginPath();
-
-//     // initialize the data and bezier control points for the top of the stripe
-//     helpers.each(meta.data, function(point, index) {
-//       point._view.y += (yScale.getPixelForValue(widths[index]) - yScaleZeroPixel);
-//     });
-//     Chart.controllers.line.prototype.updateBezierControlPoints.apply(this);
-
-//     // draw the top of the stripe
-//     helpers.each(meta.data, function(point, index) {
-//       if (index === 0)
-//         ctx.moveTo(point._view.x, point._view.y);
-//       else {
-//         var previous = helpers.previousItem(meta.data, index);
-//         var next = helpers.nextItem(meta.data, index);
-
-//         Chart.elements.Line.prototype.lineToNextPoint.apply({
-//           _chart: {
-//             ctx: ctx
-//           }
-//         }, [previous, point, next, null, null])
-//       }
-//     });
-
-//     // revert the data for the top of the stripe
-//     // initialize the data and bezier control points for the bottom of the stripe
-//     helpers.each(meta.data, function(point, index) {
-//       point._view.y -= 2 * (yScale.getPixelForValue(widths[index]) - yScaleZeroPixel);
-//     });
-//     // we are drawing the points in the reverse direction
-//     meta.data.reverse();
-//     Chart.controllers.line.prototype.updateBezierControlPoints.apply(this);
-
-//     // draw the bottom of the stripe
-//     helpers.each(meta.data, function(point, index) {
-//       if (index === 0)
-//         ctx.lineTo(point._view.x, point._view.y);
-//       else {
-//         var previous = helpers.previousItem(meta.data, index);
-//         var next = helpers.nextItem(meta.data, index);
-
-//         Chart.elements.Line.prototype.lineToNextPoint.apply({
-//           _chart: {
-//             ctx: ctx
-//           }
-//         }, [previous, point, next, null, null])
-//       }
-
-//     });
-
-//     // revert the data for the bottom of the stripe
-//     meta.data.reverse();
-//     helpers.each(meta.data, function(point, index) {
-//       point._view.y += (yScale.getPixelForValue(widths[index]) - yScaleZeroPixel);
-//     });
-//     Chart.controllers.line.prototype.updateBezierControlPoints.apply(this);
-
-//     ctx.stroke();
-//     ctx.closePath();
-//     ctx.fill();
-//     ctx.restore();
-
-//     return result;
-//   }
-// });
+function wadLegendToggle( e ) {
+	const buoyId = e.target.dataset["buoyId"];
+	const legendItem = e.target.dataset["legendItem"];
+	if( myCharts.hasOwnProperty( "buoy" + buoyId ) ) {
+		myCharts["buoy" + buoyId].getDatasetMeta( legendItem ).hidden = !e.target.checked;
+		myCharts["buoy" + buoyId].update();
+	}
+}

@@ -159,6 +159,61 @@
         font-size: 13px;
         font-weight: bold;
       }
+      .canvas-legend {
+        font-size: 1.2rem;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        label {
+          padding: 0 5px;
+          span {
+            // text-decoration: line-through;
+            opacity: 0.25;
+            transition: opacity 0.2s;
+          }
+          input[type="checkbox"] {
+            margin-right: 5px;
+            display: inline-block;
+            vertical-align: middle;
+            position: relative;
+            width: 16px;
+            height: 16px;
+            background: transparent;
+            &:checked {
+              & + span {
+                text-decoration: none;
+                opacity: 1;
+              }
+              &:before {
+                opacity: 1;
+              }
+            }
+            &:after,
+            &:before {
+              content: '';
+              background: var(--checkbox-background);
+              width: 16px;
+              height: 16px;
+              position: absolute;
+              left: 0;
+              top: 0;
+              z-index: 10;
+              // opacity: 0.5;
+              // border-radius: 3px;
+            }
+            &:before {
+              transition: opacity 0.2s;
+              opacity: 0.5;
+            }
+            &:after {
+              background: #fff;
+              z-index: 5;
+            }
+          }
+        }
+      }
       .canvas-wrapper {
         position: relative;
         transition: opacity 0.5s;

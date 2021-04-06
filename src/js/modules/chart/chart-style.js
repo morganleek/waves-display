@@ -4,15 +4,16 @@ export default {
 			"distribution": "linear",
 			"ticks": {
 				"min": 0,
-				"maxTicksLimit": 7
-				// "maxTicksLimit": 3
+				"maxTicksLimit": 7,
+				// "fontSize": "11",
+				"padding": 0
 			},
 			"type": "time",
 			"time": {
-				"stepSize": 12,
+				"stepSize": 8,
 				"unit": "hour",
 				"displayFormats": {
-					"hour": "D MMM H:mm",
+					"hour": "D/MM H:mm", //  
 					"minute": "ha"
 				},
 			},
