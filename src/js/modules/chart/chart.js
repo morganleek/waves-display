@@ -1,6 +1,6 @@
 import $ from 'jquery';
 import Chart from 'chart.js';
-import { wadToggleChart, wadDatePicker, wadCSVDownload } from './chart-events';
+import { wadToggleChart, wadDatePicker, wadCSVDownload, wadExpandCharts } from './chart-events';
 import { wadProcessBuoyData } from './buoy-data';
 import { wadMapLocator } from '../map';
 import chartStyles from './chart-style';
@@ -10,6 +10,7 @@ const panelWrapper = "<div class='card card-primary mb-3'>" +
   "<div class='card-header'>" +
 		"<h6 class='pull-left text-white'>{{ buoyLabel }} <span style='opacity: 0.35;'>#{{ buoyId }}</span><time></time></h6>" + 
 		"<div class='btn-group chart-js-menu pull-right' role='group' aria-label='Chart Tools'>" + 
+			"<button class='expand-trigger btn btn-outline-secondary' data-buoy-id='{{ buoyId }}'><i class='fa fa-expand' aria-hidden='true'></i>&nbsp;&nbsp;Expand</button>" +
 			"<button class='maps-trigger btn btn-outline-secondary' data-buoy-id='{{ buoyId }}' data-buoy-lat='{{ buoyLat }}' data-buoy-lng='{{ buoyLng }}'><i class='fa fa-crosshairs' aria-hidden='true'></i>&nbsp;&nbsp;Centre</button>" +
 			"<button class='download-trigger btn btn-outline-secondary' data-buoy-id='{{ buoyId }}'><i class='fa fa-floppy-o' aria-hidden='true'></i>&nbsp;&nbsp;Export Data</button>" +
 			"<button class='calendars-trigger btn btn-outline-secondary' data-buoy-id='{{ buoyId }}' data-buoy-start='{{ buoyStartTime }}' data-buoy-end='{{ buoyEndTime }}'><i class='fa fa-calendar' aria-hidden='true'></i>&nbsp;&nbsp;<span class='dateRangeButtonLabel'>Date Range</span> <i class='fa fa-caret-down' aria-hidden='true'></i></button>" +
@@ -50,6 +51,7 @@ export function wadInitCharts( response ) {
 		wadDatePicker( newBuoyWrapper.getElementsByClassName( "calendars-trigger" )[0] );
 		wadMapLocator( newBuoyWrapper.getElementsByClassName( "maps-trigger" )[0] );
 		wadCSVDownload( newBuoyWrapper.getElementsByClassName( "download-trigger" )[0] );
+		wadExpandCharts( newBuoyWrapper.getElementsByClassName( "expand-trigger" )[0] );
 		
 		// Attach
 		buoysWrapper.appendChild( newBuoyWrapper );
@@ -102,37 +104,162 @@ function parseFloatOr( floatVal, altVal ) {
 	return parseFloat( floatVal );
 }
 
-export function wadGenerateChartData( waves ) {
+export function wadGenerateChartData( waves, includes ) {
+	console.log( includes );
+	if( !includes ) {
+		includes = {
+			hsig: true,
+			tp: true,
+			sst: false, 
+			bottomTemp: false
+		};
+	}
+
 	if( typeof( waves ) != "undefined" && waves.length > 0 ) {
 		// let arrowPointers = [];
 		// let hasWaves = false;
 		let chartLabels = [];
 		
-		let dataPoints = {
-			hsig: { data: [], showInChart: true, description: "Significant Wave Height (m)" }, // let hsig = []; // 
-			tp: { data: [], showInChart: true, description: "Peak Wave Period (s)" }, // let tp = []; // 
-			tm: { data: [], showInChart: false, description: "Mean Wave Period (s)" }, // let tm = []; // 
-			dp: { data: [], showInChart: true, description: "Peak Wave Direction (deg)" }, // let dp = []; // 
-			dpspr: { data: [], showInChart: true, description: "Peak Wave Directional Spreading (deg)" }, // let dpspr = []; // 
-			dm: { data: [], showInChart: false, description: "Mean Wave Direction (deg)" }, // let dm = []; // 
-			dmspr: { data: [], showInChart: false, description: "Mean Wave Directional Spreading (deg)" }, // let dmspr = []; // 
-			sst: { data: [], showInChart: true, description: "Sea Surface Temperature (degC)" }, // let sst = []; // 
-			bottomTemp: { data: [], showInChart: true, description: "Sea Bottom Temperature (degC)" }, // let bottomTemp = []; // 
-			windspeed: { data: [], showInChart: false, description: "Wind Speed (m/s)" }, // let windspeed = []; // 
-			winddirec: { data: [], showInChart: false, description: "Wind Direction (deg)" }, // let winddirec = []; // 
-			currentMag: { data: [], showInChart: false, description: "Current Mag (m/s)" }, // let currentMag = []; // 
-			currentDir: { data: [], showInChart: false, description: "Current Direction (deg)" }, // let currentDir = []; 
-			// qfWaves: { data: [], showInChart: false, description: "" }, // let qfWaves = []; // QF_waves  - quality flag for wave variables
-			// qfSst: [], // let qfSst = [];  // QF_sst  – quality flag for sea surface temperature
-			// qfBottTemp: [], // let qfBottTemp = []; // QF_bott_temp – quality flag for bottom temperature
-		};
-
 		let arrowImageOrange = new Image( 28, 28 );
 		arrowImageOrange.src = wad.plugin + "dist/images/arrow-orange-g@2x.png";
 		let arrowImageBlue = new Image( 28, 28 );
 		arrowImageBlue.src = wad.plugin + "dist/images/arrow-blue-g@2x.png";
 		let arrowImagePink = new Image( 28, 28 );
 		arrowImagePink.src = wad.plugin + "dist/images/arrow-pink-g@2x.png";
+		let dataPoints = {
+			hsig: { 
+				data: [], 
+				showInChart: true, 
+				label: window.innerWidth >= 768 ? 'Significant Wave Height (m)' : 'Sig Wave (m)',
+				description: "Significant Wave Height (m)",
+				backgroundColor: 'rgba(165, 223, 223, 1)',
+				borderColor: 'rgba(75, 192, 192, 1)',
+				borderWidth: 0,
+				lineTension: 0,
+				pointRadius: 2,
+				fill: true,
+				yAxisID: 'y-axis-1',
+				hidden: ( includes.hasOwnProperty( 'hsig' ) ) ? !includes.hsig : true
+			}, 
+			tp: { 
+				data: [], 
+				showInChart: true, 
+				label: window.innerWidth >= 768 ? 'Peak Wave Period & Direction (s & deg)' : 'Peak Wave/Dir (s & deg)',
+				description: "Peak Wave Period (s)",
+				backgroundColor: 'rgba(237, 135, 80, 1)',
+				borderColor: 'rgba(235, 127, 74, 0.5)',
+				borderWidth: 0,
+				lineTension: 0,
+				pointRadius: 35,
+				pointStyle: arrowImageOrange,
+				rotation: [],
+				fill: false,
+				yAxisID: 'y-axis-2',
+				showLine: false,
+				hidden: ( includes.hasOwnProperty( 'tp' ) ) ? !includes.tp : true
+			}, 
+			tm: { 
+				data: [], 
+				showInChart: false, 
+				description: "Mean Wave Period & Direction (s & deg)",
+				label: window.innerWidth >= 768 ? 'Mean Wave Period & Direction (s & deg)' : 'Mean Wave/Dir (s & deg)', // Peak Period (s)
+				backgroundColor: 'rgba(77, 168, 248, 0.7)',
+				borderColor: 'rgba(77, 168, 248, 0.5)',
+				borderWidth: 0,
+				lineTension: 0,
+				pointRadius: 35,
+				pointStyle: arrowImageBlue,
+				rotation: [],
+				fill: false,
+				yAxisID: 'y-axis-2',
+				hidden: ( includes.hasOwnProperty( 'tm' ) ) ? !includes.tm : true
+			}, 
+			dpspr: { 
+				data: [], 
+				showInChart: true, 
+				description: "Peak Wave Directional Spreading (deg)",
+			}, 
+			dmspr: { 
+				data: [], 
+				showInChart: false, 
+				description: "Mean Wave Directional Spreading (deg)",
+			},
+			sst: { 
+				data: [], 
+				showInChart: true, 
+				description: "Sea Surface Temperature (degC)",
+				label: window.innerWidth >= 768 ? 'Sea Surface Temperature (°C)' : 'Sea Surf (°C)', 
+				backgroundColor: 'rgba(194, 59, 34, 1)',
+				borderColor: 'rgba(194, 59, 34, 1)',
+				borderWidth: 0,
+				lineTension: 0,
+				pointRadius: 2,
+				fill: false,
+				yAxisID: 'y-axis-3',
+				hidden: ( includes.hasOwnProperty( 'sst' ) ) ? !includes.sst : true
+			},
+			bottomTemp: { 
+				data: [], 
+				showInChart: true, 
+				description: "Sea Bottom Temperature (degC)",
+				label: window.innerWidth ? 'Bottom Temperature (°C)' : 'Bot Temp (°C)',
+				backgroundColor: 'rgb(255, 159, 64, 0.5)',
+				borderColor: 'rgb(255, 159, 64, 1)',
+				borderWidth: 0,
+				lineTension: 0,
+				pointRadius: 2,
+				fill: false,
+				yAxisID: 'y-axis-3',
+				hidden: ( includes.hasOwnProperty( 'bottomTemp' ) ) ? !includes.bottomTemp : true
+			},
+			windspeed: { 
+				data: [], 
+				showInChart: false, 
+				description: "Wind Speed (m/s)",
+				label: window.innerWidth >= 768 ? 'Wind Speed (m/s)' : 'Wind Spd (m/s)',
+				backgroundColor: 'rgba(77, 168, 248, 0.7)',
+				borderColor: 'rgba(77, 168, 248, 0.5)',
+				borderWidth: 0,
+				lineTension: 0,
+				pointRadius: 35,
+				pointStyle: arrowImageBlue,
+				rotation: [], // winddirec
+				fill: true,
+				yAxisID: 'y-axis-1',
+				hidden: ( includes.hasOwnProperty( 'windspeed' ) ) ? !includes.windspeed : true
+			},
+			currentMag: { 
+				data: [], 
+				showInChart: false, 
+				description: "Current Mag (m/s)",
+				label: "Current Mag (m/s)",
+				backgroundColor: 'rgba(165, 223, 223, 1)',
+				borderColor: 'rgba(75, 192, 192, 1)',
+				borderWidth: 0,
+				lineTension: 0,
+				pointRadius: 2,
+				fill: true,
+				yAxisID: 'y-axis-1',
+			},
+			currentDir: { 
+				data: [], 
+				showInChart: false, 
+				description: "Current Direction (deg)",
+				label: window.innerWidth >= 768 ? "Current Direction (m/s)" : "Current Dir (m/s)",
+				backgroundColor: 'rgba(165, 223, 223, 1)',
+				borderColor: 'rgba(75, 192, 192, 1)',
+				borderWidth: 0,
+				lineTension: 0,
+				pointRadius: 2,
+				fill: true,
+				yAxisID: 'y-axis-1',
+			},
+			// qfWaves: { data: [], showInChart: false, description: "" }, 
+			// qfSst: [], 
+			// qfBottTemp: [], 
+		};
+
+		
 
 	
 		// Loop
@@ -151,13 +278,13 @@ export function wadGenerateChartData( waves ) {
 				if( parseFloatOr( waves[i]["Tp (s)"], -1 ) > 0 ) {
 					dataPoints.tp.data.push( { x: time, y: parseFloatOr( waves[i]["Tp (s)"], 0.0 ) } );
 					const dpDeg = parseIntOr( waves[i]["Dp (deg)"], 0 ); // Rotation
-					dataPoints.dp.data.push( ( dpDeg < 0 ) ? 0 : ( dpDeg + 180 ) % 360 );
+					dataPoints.tp.rotation.push( ( dpDeg < 0 ) ? 0 : ( dpDeg + 180 ) % 360 );
 				}
 				// Mean
 				if( parseFloatOr( waves[i]["Tm (s)"], -1 ) > 0 ) {
 					dataPoints.tm.data.push( { x: time, y: parseFloatOr( waves[i]["Tm (s)"], 0.0 ) } );
 					const dmDeg = parseIntOr( waves[i]["Dm (deg)"], 0 ); // Rotation
-					dataPoints.dm.data.push( ( dmDeg < 0 ) ? 0 : ( dmDeg + 180 ) % 360 );
+					dataPoints.tm.rotation.push( ( dmDeg < 0 ) ? 0 : ( dmDeg + 180 ) % 360 );
 				}
 				// Spread
 				if( parseFloatOr( waves[i]["DpSpr (deg)"], -1 ) > 0 ) {
@@ -174,7 +301,7 @@ export function wadGenerateChartData( waves ) {
 				dataPoints.bottomTemp.data.push( { x: time, y: parseFloatOr( waves[i]["Bottom Temp (degC)"], 0.0 ) } );
 			}
 			dataPoints.windspeed.data.push( { x: time, y: parseFloatOr( waves[i]["WindSpeed (m/s)"], 0.0 ) } );
-			dataPoints.winddirec.data.push( { x: time, y: parseFloatOr( waves[i]["WindDirec (deg)"], 0.0 ) } );
+			dataPoints.windspeed.rotation.push( parseFloatOr( waves[i]["WindDirec (deg)"], 0.0 ) );
 			// Only want last value
 			dataPoints.currentMag.data = [{ x: time, y: parseFloatOr( waves[i]["CurrmentMag (m/s)"], 0.0 ) }];
 			dataPoints.currentDir.data = [{ x: time, y: parseFloatOr( waves[i]["CurrentDir (deg) "], 0.0 ) }];
@@ -209,89 +336,21 @@ export function wadGenerateChartData( waves ) {
 			datasets: []
 		};
 
+		let hasItem = {};
 		let hasHSig = false;
 		let hasTp = false;
 		// let hasTm = false;
 		let hasSurfTemp = false;
 		let hasBottTemp = false;
 
-		if( dataPoints.hsig.data.length > 0 ) {
-			hasHSig = true;
-			data.datasets.push({
-				label: window.innerWidth >= 768 ? 'Significant Wave Height (m)' : 'Sig Wave (m)', // Wave Height (m)
-				backgroundColor: 'rgba(165, 223, 223, 1)',
-				borderColor: 'rgba(75, 192, 192, 1)',
-				borderWidth: 0,
-				lineTension: 0,
-				pointRadius: 2,
-				fill: true,
-				data: dataPoints.hsig.data,
-				yAxisID: 'y-axis-1',
-			});	
+		// Add each item specified
+		for (const [key, value] of Object.entries( includes )) {
+			if( dataPoints.hasOwnProperty( key ) && dataPoints[key].data.length > 0 ) {
+				hasItem[key] = true;
+				data.datasets.push( dataPoints[key] ); 
+			}
 		}
-		if( dataPoints.tp.data.length > 0 ) {
-			hasTp = true;
-			data.datasets.push({					
-				label: window.innerWidth >= 768 ? 'Peak Wave Period & Direction (s & deg)' : 'Peak Wave/Dir (s & deg)', // Peak Period (s)
-				backgroundColor: 'rgba(237, 135, 80, 1)',
-				borderColor: 'rgba(235, 127, 74, 0.5)',
-				borderWidth: 0,
-				lineTension: 0,
-				pointRadius: 35,
-				pointStyle: arrowImageOrange,
-				rotation: dataPoints.dp.data,
-				fill: false,
-				data: dataPoints.tp.data,
-				yAxisID: 'y-axis-2',
-				showLine: false
-			});
-		}
-		// if( dataPoints.tm.data.length > 0 ) {
-		// 	data.datasets.push({					
-		// 		label: window.innerWidth >= 768 ? 'Mean Wave Period & Direction (s & deg)' : 'Mean Wave/Dir (s & deg)', // Peak Period (s)
-		// 		backgroundColor: 'rgba(77, 168, 248, 0.7)',
-		// 		borderColor: 'rgba(77, 168, 248, 0.5)',
-		// 		borderWidth: 0,
-		// 		lineTension: 0,
-		// 		pointRadius: 35,
-		// 		pointStyle: arrowImageBlue,
-		// 		rotation: dataPoints.dm.data,
-		// 		fill: false,
-		// 		data: dataPoints.tm.data,
-		// 		yAxisID: 'y-axis-2',
-		// 		hidden: true
-		// 	});
-		// }
-		if( dataPoints.sst.data.length > 0 ) {
-			hasSurfTemp = true;
-			data.datasets.push({					
-				label: window.innerWidth >= 768 ? 'Sea Surface Temperature (°C)' : 'Sea Surf (°C)', 
-				backgroundColor: 'rgba(194, 59, 34, 1)',
-				borderColor: 'rgba(194, 59, 34, 1)',
-				borderWidth: 0,
-				lineTension: 0,
-				pointRadius: 2,
-				fill: false,
-				data: dataPoints.sst.data,
-				yAxisID: 'y-axis-3',
-				hidden: true
-			});
-		}
-		if( dataPoints.bottomTemp.data.length > 0 ) {
-			hasBottTemp = true;
-			data.datasets.push({					
-				label: window.innerWidth ? 'Bottom Temperature (°C)' : 'Bot Temp (°C)',
-				backgroundColor: 'rgb(255, 159, 64, 0.5)',
-				borderColor: 'rgb(255, 159, 64, 1)',
-				borderWidth: 0,
-				lineTension: 0,
-				pointRadius: 2,
-				fill: false,
-				data: dataPoints.bottomTemp.data,
-				yAxisID: 'y-axis-3',
-				// hidden: true
-			});
-		}
+		
 
 		// Time Axes (x)
 		const timeAxes = chartStyles.axesStyles.timeAxes;
@@ -306,7 +365,7 @@ export function wadGenerateChartData( waves ) {
 		// Y Axes
 		const yAxes = [ ];
 
-		if( hasHSig ) {
+		if( hasItem.hasOwnProperty( 'hsig' ) ) {
 			// Wave Height Axes
 			const waveHeightAxes = chartStyles.axesStyles.waveHeightAxes;
 			waveHeightAxes.ticks.max = ( Math.ceil( maxWaveHeight ) > 2 ) ? Math.ceil( maxWaveHeight ) : 2; 
@@ -314,24 +373,33 @@ export function wadGenerateChartData( waves ) {
 			yAxes.push( waveHeightAxes );
 		}
 		
-		if( hasTp ) {
+		if( hasItem.hasOwnProperty( 'tp' ) ) {
 			// Peak Period Axes
 			const peakPeriodAxes = chartStyles.axesStyles.peakPeriodAxes;
-			// peakPeriodAxes.ticks.min = ( minPeakPeriodSpaced > 0 ) ? minPeakPeriodSpaced : 0;
-			// peakPeriodAxes.ticks.max = Math.ceil( maxPeakPeriod / 2 ) * 2;
 			peakPeriodAxes.ticks.min = 0;
 			peakPeriodAxes.ticks.max = ( maxPeakPeriod < 25 ) ? 25 : Math.ceil( maxPeakPeriod / 2 ) * 2;
 			peakPeriodAxes.scaleLabel.display = ( window.innerWidth < 768 ) ? false : true;
+			peakPeriodAxes.position = ( yAxes.length == 0 ) ? 'left' : peakPeriodAxes.position;
 			yAxes.push( peakPeriodAxes );
 		}
 
-		if( hasSurfTemp || hasBottTemp ) {
+		if( hasItem.hasOwnProperty( 'sst' ) || hasItem.hasOwnProperty( 'bottomTemp' ) ) {
 			// Temp Axes
 			const tempAxes = chartStyles.axesStyles.tempAxes;
 			tempAxes.ticks.min = minTemp - 1;
 			tempAxes.ticks.max = maxTemp + 1;
 			tempAxes.scaleLabel.display = ( window.innerWidth < 768 ) ? false : true;
+			tempAxes.position = ( yAxes.length == 0 ) ? 'left' : tempAxes.position;
 			yAxes.push( tempAxes );
+		}
+
+		if( hasItem.hasOwnProperty( 'windspeed' ) ) {
+			// Peak Period Axes
+			const windSpeedAxes = chartStyles.axesStyles.peakPeriodAxes;
+			// peakPeriodAxes.ticks.min = 0;
+			// peakPeriodAxes.ticks.max = ( maxPeakPeriod < 25 ) ? 25 : Math.ceil( maxPeakPeriod / 2 ) * 2;
+			// peakPeriodAxes.scaleLabel.display = ( window.innerWidth < 768 ) ? false : true;
+			yAxes.push( windSpeedAxes );
 		}
 
 		const sizing = ( window.innerWidth >= 992 ) ? 'desktop' : ( window.innerWidth >= 768 ) ? 'tablet' : ( window.innerWidth >= 450 ) ? 'mobileLandscape' : 'mobilePortrait';
@@ -523,42 +591,11 @@ export function wadDrawHeading( buoyId, label, range ) {
 	}
 }
 
-export function wadDrawChart( buoyId, config ) {
-	// Draw Chart
-	if( typeof( window.myCharts ) == "undefined" ) {
-		window.myCharts = [];
+export function wadDrawChart( config, canvasContext ) {
+	if( canvasContext ) {
+		return new Chart( canvasContext, config );
 	}
-	
-	// Destroy existing chart
-	if( window.myCharts.hasOwnProperty( 'buoy' + buoyId ) ) {
-		window.myCharts['buoy' + buoyId].destroy();
-	}
-
-	const buoyWrapper = document.getElementById( 'buoy-' + buoyId );
-
-	// Load new chart
-	if( buoyWrapper.getElementsByTagName( 'canvas' ).length > 0 ) {
-		const canvasContext = buoyWrapper.getElementsByTagName( 'canvas' )[0].getContext( '2d' );
-		
-		// Hide loading message
-		if( buoyWrapper.getElementsByClassName( 'canvas-wrapper' ).length > 0 ) {
-			buoyWrapper.getElementsByClassName( 'canvas-wrapper' )[0].classList.remove( 'loading' );
-		}
-		
-		// Load chart
-		window.myCharts['buoy' + buoyId] = new Chart( canvasContext, config );
-	}
-	else {
-		console.log( 'No canvas' );
-	}
-	
-	// // Check for no data
-	// if( !hasWaves ) {
-	// 	// Hide loading message
-	// 	if( buoyWrapper.getElementsByClassName( 'canvas-wrapper' ).length > 0 ) {
-	// 		buoyWrapper.getElementsByClassName( 'canvas-wrapper' )[0].classList.remove( 'loading' );
-	// 	}
-	// }
+	return;
 }
 
 export function wadDrawChartLegend( buoyId, config ) {
@@ -572,7 +609,7 @@ export function wadDrawChartLegend( buoyId, config ) {
 				const checkbox = document.createElement( 'input' );
 				checkbox.id = 'legend-toggle-' + buoyId + '-' + i;
 				checkbox.type = "checkbox";
-				checkbox.checked = ( typeof( legend.hidden ) != "undefined" ) ? !legend.hidden : true;
+				checkbox.checked = ( typeof( legend ) != "undefined" && typeof( legend.hidden ) != "undefined" ) ? !legend.hidden : true;
 				checkbox.dataset.buoyId = buoyId;
 				checkbox.dataset.legendItem = i;
 				checkbox.style.setProperty( '--checkbox-background', legend.backgroundColor );

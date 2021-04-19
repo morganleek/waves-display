@@ -49,7 +49,21 @@ export function wadProcessBuoyData( response ) {
         // Draw chart tables
         wadDrawLatestTable( response.buoy_id, chartData.dataPoints );
         // Draw with chartData
-        wadDrawChart( response.buoy_id, chartData.config );
+        const canvasContext = document.querySelector( '#buoy-' + response.buoy_id + ' canvas' );
+        if( canvasContext ) {
+          let chart = wadDrawChart( chartData.config, canvasContext );
+          
+          // Check my Charts if needed
+          if( typeof( window.myCharts ) == "undefined" ) {
+            window.myCharts = [];
+          }
+          // Destroy existing chart
+          if( window.myCharts.hasOwnProperty( 'buoy' + response.buoy_id ) ) {
+            window.myCharts['buoy' + response.buoy_id].destroy();
+          }
+          // Save chart
+          window.myCharts['buoy' + response.buoy_id] = chart;
+        }
         // Update heading with time
         wadDrawHeading( response.buoy_id, chartData.timeLabel, chartData.timeRange );
         // Chart Appearance
@@ -90,7 +104,7 @@ export function wadRawDataToChartData( data ) {
           processed.push( JSON.parse( data[i].data_points ) );
         } catch( e ) {
           console.error(e instanceof SyntaxError);
-          console.log( data[i].data_points );
+          // console.log( data[i].data_points );
         }
       }
     }

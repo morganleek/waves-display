@@ -153,7 +153,7 @@ export function wadProcessDriftingBuoys( response ) {
 			}
 
 			for( let n = 0; n < path.length; n = n + 48 ) {
-				console.log( times[n] );
+				// console.log( times[n] );
 				const last = path.pop();
 				const lastTime = times.pop();
 				var point = new MarkerWithLabel({

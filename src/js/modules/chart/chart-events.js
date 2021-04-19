@@ -1,6 +1,7 @@
 import $ from 'jquery';
 import Litepicker from 'litepicker';
 import { wadProcessBuoyData } from './buoy-data';
+import { wadGenerateChartData, wadDrawChart } from './chart';
 
 // import stringify from 'csv-stringify';
 // const stringify = require('csv-stringify');
@@ -10,6 +11,48 @@ export function wadToggleChart( e ) {
 	// 	e.target.classList.add( 'expanded' );
 	// }
 	e.target.classList.toggle( 'expanded' );
+}
+
+export function wadExpandCharts( trigger ) {
+	if( trigger !== 'undefined' ) {
+		trigger.addEventListener( 'click', ( e ) => {
+			const buoyId = e.target.dataset.buoyId;
+			if( typeof( window.myChartData ) != "undefined" ) {
+				const canvasWrapper = document.querySelector('#buoy-' + buoyId + ' .canvas-wrapper' );
+				
+				if( canvasWrapper ) {
+					// Clear existing
+					canvasWrapper.innerHTML = '';
+					// Charts
+					const charts = [
+						{ hsig: true }, 
+						{ tp: true }, 
+						{ sst: true }, 
+						{ bottomTemp: true }
+					]; // ,  
+					for( let i = 0; i < charts.length; i++ ) {
+						// Create chart data
+						const chartData = wadGenerateChartData( window.myChartData['buoy-' + buoyId], charts[i] );
+						if( chartData.config.data.datasets.length > 0 ) {
+							// Create heading
+							const singleHeading = document.createElement( 'h4' );
+							singleHeading.className = "text-center";
+							singleHeading.innerHTML = chartData.config.data.datasets[0].label;
+							canvasWrapper.appendChild( singleHeading );
+							// Create canvas
+							const singleCanvas = document.createElement( 'canvas' );
+							// singleCanvas.className = charts[i];
+							canvasWrapper.appendChild( singleCanvas );
+							// Context
+							const canvasContext = singleCanvas.getContext( '2d' );
+							// Draw
+							wadDrawChart( chartData.config, canvasContext );
+						}
+					}
+				}	
+			}
+		} );
+	}
 }
 
 export function wadDatePicker( trigger, startDate = 'Sun Dec 01 2019' ) {
