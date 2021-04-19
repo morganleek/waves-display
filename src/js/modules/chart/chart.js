@@ -105,7 +105,6 @@ function parseFloatOr( floatVal, altVal ) {
 }
 
 export function wadGenerateChartData( waves, includes ) {
-	console.log( includes );
 	if( !includes ) {
 		includes = {
 			hsig: true,
