@@ -56,6 +56,21 @@ export default {
 				"labelString": "Peak period (s)"
 			}
 		},
+		"windSpeedAxes": {
+			"type": "linear",
+			"display": true,
+			"position": "left",
+			"id": "y-axis-1",
+			"ticks": {
+				"beginAtZero": true,
+				"min": 0,
+				"maxTicksLimit": 6
+			},
+			"scaleLabel": {
+				"display": true,
+				"labelString": "Wind speed (m/s & deg)"
+			}
+		},
 		"tempAxes": {
 			"type": "linear", 
 			"display": true,

@@ -215,7 +215,7 @@ export function wadGenerateChartData( waves, includes ) {
 				data: [], 
 				showInChart: false, 
 				description: "Wind Speed (m/s)",
-				label: window.innerWidth >= 768 ? 'Wind Speed (m/s)' : 'Wind Spd (m/s)',
+				label: window.innerWidth >= 768 ? 'Wind Speed (m/s & deg)' : 'Wind Spd (m/s & deg)',
 				backgroundColor: 'rgba(77, 168, 248, 0.7)',
 				borderColor: 'rgba(77, 168, 248, 0.5)',
 				borderWidth: 0,
@@ -223,7 +223,7 @@ export function wadGenerateChartData( waves, includes ) {
 				pointRadius: 35,
 				pointStyle: arrowImageBlue,
 				rotation: [], // winddirec
-				fill: true,
+				fill: false,
 				yAxisID: 'y-axis-1',
 				hidden: ( includes.hasOwnProperty( 'windspeed' ) ) ? !includes.windspeed : true
 			},
@@ -336,11 +336,11 @@ export function wadGenerateChartData( waves, includes ) {
 		};
 
 		let hasItem = {};
-		let hasHSig = false;
-		let hasTp = false;
+		// let hasHSig = false;
+		// let hasTp = false;
 		// let hasTm = false;
-		let hasSurfTemp = false;
-		let hasBottTemp = false;
+		// let hasSurfTemp = false;
+		// let hasBottTemp = false;
 
 		// Add each item specified
 		for (const [key, value] of Object.entries( includes )) {
@@ -349,6 +349,7 @@ export function wadGenerateChartData( waves, includes ) {
 				data.datasets.push( dataPoints[key] ); 
 			}
 		}
+		console.log( data.datasets );
 		
 
 		// Time Axes (x)
@@ -378,7 +379,8 @@ export function wadGenerateChartData( waves, includes ) {
 			peakPeriodAxes.ticks.min = 0;
 			peakPeriodAxes.ticks.max = ( maxPeakPeriod < 25 ) ? 25 : Math.ceil( maxPeakPeriod / 2 ) * 2;
 			peakPeriodAxes.scaleLabel.display = ( window.innerWidth < 768 ) ? false : true;
-			peakPeriodAxes.position = ( yAxes.length == 0 ) ? 'left' : peakPeriodAxes.position;
+			console.log( yAxes.length );
+			peakPeriodAxes.position = ( yAxes.length > 0 ) ? peakPeriodAxes.position : 'left';
 			yAxes.push( peakPeriodAxes );
 		}
 
@@ -388,13 +390,13 @@ export function wadGenerateChartData( waves, includes ) {
 			tempAxes.ticks.min = minTemp - 1;
 			tempAxes.ticks.max = maxTemp + 1;
 			tempAxes.scaleLabel.display = ( window.innerWidth < 768 ) ? false : true;
-			tempAxes.position = ( yAxes.length == 0 ) ? 'left' : tempAxes.position;
+			tempAxes.position = ( yAxes.length > 0 ) ? tempAxes.position : 'left';
 			yAxes.push( tempAxes );
 		}
 
 		if( hasItem.hasOwnProperty( 'windspeed' ) ) {
 			// Peak Period Axes
-			const windSpeedAxes = chartStyles.axesStyles.peakPeriodAxes;
+			const windSpeedAxes = chartStyles.axesStyles.windSpeedAxes;
 			// peakPeriodAxes.ticks.min = 0;
 			// peakPeriodAxes.ticks.max = ( maxPeakPeriod < 25 ) ? 25 : Math.ceil( maxPeakPeriod / 2 ) * 2;
 			// peakPeriodAxes.scaleLabel.display = ( window.innerWidth < 768 ) ? false : true;

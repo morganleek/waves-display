@@ -19,26 +19,46 @@ export function wadExpandCharts( trigger ) {
 			const buoyId = e.target.dataset.buoyId;
 			if( typeof( window.myChartData ) != "undefined" ) {
 				const canvasWrapper = document.querySelector('#buoy-' + buoyId + ' .canvas-wrapper' );
-				
 				if( canvasWrapper ) {
+					let charts;
+					if( !e.target.classList.contains( 'expanded' ) ) {
+						e.target.classList.add( 'expanded' );
+						e.target.innerHTML = '<i class="fa fa-compress" aria-hidden="true"></i> Collapse';
+					
+						// Charts
+						charts = [
+							{ hsig: true }, 
+							{ tp: true }, 
+							{ sst: true }, 
+							{ bottomTemp: true },
+							{ windspeed: true }
+						];
+					}
+					else {
+						e.target.classList.remove( 'expanded' );
+						e.target.innerHTML = '<i class="fa fa-expand" aria-hidden="true"></i> Expand';
+
+						// Charts
+						charts = [{ hsig: true,
+							tp: true,
+							sst: false, 
+							bottomTemp: false 
+						}];
+					}
+					
 					// Clear existing
 					canvasWrapper.innerHTML = '';
-					// Charts
-					const charts = [
-						{ hsig: true }, 
-						{ tp: true }, 
-						{ sst: true }, 
-						{ bottomTemp: true }
-					]; // ,  
 					for( let i = 0; i < charts.length; i++ ) {
 						// Create chart data
 						const chartData = wadGenerateChartData( window.myChartData['buoy-' + buoyId], charts[i] );
 						if( chartData.config.data.datasets.length > 0 ) {
 							// Create heading
-							const singleHeading = document.createElement( 'h4' );
-							singleHeading.className = "text-center";
-							singleHeading.innerHTML = chartData.config.data.datasets[0].label;
-							canvasWrapper.appendChild( singleHeading );
+							if( charts.length == 1 ) {
+								const singleHeading = document.createElement( 'h4' );
+								singleHeading.className = "text-center";
+								singleHeading.innerHTML = chartData.config.data.datasets[0].label;
+								canvasWrapper.appendChild( singleHeading );
+							}
 							// Create canvas
 							const singleCanvas = document.createElement( 'canvas' );
 							// singleCanvas.className = charts[i];
@@ -47,6 +67,7 @@ export function wadExpandCharts( trigger ) {
 							const canvasContext = singleCanvas.getContext( '2d' );
 							// Draw
 							wadDrawChart( chartData.config, canvasContext );
+						
 						}
 					}
 				}	
