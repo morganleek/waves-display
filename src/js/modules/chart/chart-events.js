@@ -1,7 +1,7 @@
 import $ from 'jquery';
 import Litepicker from 'litepicker';
 import { wadProcessBuoyData } from './buoy-data';
-import { wadGenerateChartData, wadDrawChart } from './chart';
+import { wadGenerateChartData, wadDrawChart, wadDrawChartLegend } from './chart';
 
 // import stringify from 'csv-stringify';
 // const stringify = require('csv-stringify');
@@ -23,11 +23,17 @@ export function wadExpandCharts( trigger ) {
 				if( buoyWrapper && canvasWrapper ) {
 					// Toggle width
 					buoyWrapper.classList.toggle('expanded');
+					// Remove legends
+					const canvasLegend = buoyWrapper.querySelector( '.canvas-legend' );
+					if( canvasLegend ) {
+						canvasLegend.innerHTML = '';
+					}
+					
 					// All new charts
 					let charts;
 					let multiplier = 1; // Adjust height for wider layouts
 					if( !e.target.classList.contains( 'expanded' ) ) {
-						multiplier = 0.75;
+						multiplier = 0.65;
 						e.target.classList.add( 'expanded' );
 						e.target.innerHTML = '<i class="fa fa-compress" aria-hidden="true"></i> Collapse';
 					
@@ -58,12 +64,16 @@ export function wadExpandCharts( trigger ) {
 						// Create chart data
 						const chartData = wadGenerateChartData( window.myChartData['buoy-' + buoyId], charts[i], multiplier );
 						if( chartData.config.data.datasets.length > 0 ) {
-							// Create heading
+							// OG Chart
 							if( charts.length == 1 ) {
+								// Create heading
 								const singleHeading = document.createElement( 'h4' );
 								singleHeading.className = "text-center";
 								singleHeading.innerHTML = chartData.config.data.datasets[0].label;
 								canvasWrapper.appendChild( singleHeading );
+
+								// Legends
+								wadDrawChartLegend( buoyId, chartData.config );
 							}
 							// Create canvas
 							const singleCanvas = document.createElement( 'canvas' );
@@ -73,7 +83,7 @@ export function wadExpandCharts( trigger ) {
 							const canvasContext = singleCanvas.getContext( '2d' );
 							// Draw
 							wadDrawChart( chartData.config, canvasContext );
-						
+
 						}
 					}
 				}	
