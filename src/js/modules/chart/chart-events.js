@@ -25,7 +25,9 @@ export function wadExpandCharts( trigger ) {
 					buoyWrapper.classList.toggle('expanded');
 					// All new charts
 					let charts;
+					let multiplier = 1; // Adjust height for wider layouts
 					if( !e.target.classList.contains( 'expanded' ) ) {
+						multiplier = 0.75;
 						e.target.classList.add( 'expanded' );
 						e.target.innerHTML = '<i class="fa fa-compress" aria-hidden="true"></i> Collapse';
 					
@@ -54,7 +56,7 @@ export function wadExpandCharts( trigger ) {
 					canvasWrapper.innerHTML = '';
 					for( let i = 0; i < charts.length; i++ ) {
 						// Create chart data
-						const chartData = wadGenerateChartData( window.myChartData['buoy-' + buoyId], charts[i] );
+						const chartData = wadGenerateChartData( window.myChartData['buoy-' + buoyId], charts[i], multiplier );
 						if( chartData.config.data.datasets.length > 0 ) {
 							// Create heading
 							if( charts.length == 1 ) {

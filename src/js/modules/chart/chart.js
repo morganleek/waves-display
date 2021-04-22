@@ -104,7 +104,7 @@ function parseFloatOr( floatVal, altVal ) {
 	return parseFloat( floatVal );
 }
 
-export function wadGenerateChartData( waves, includes ) {
+export function wadGenerateChartData( waves, includes, multiplier = 1 ) {
 	if( !includes ) {
 		includes = {
 			hsig: true,
@@ -405,11 +405,12 @@ export function wadGenerateChartData( waves, includes ) {
 
 		const sizing = ( window.innerWidth >= 992 ) ? 'desktop' : ( window.innerWidth >= 768 ) ? 'tablet' : ( window.innerWidth >= 450 ) ? 'mobileLandscape' : 'mobilePortrait';
 		const ratios = {
-			desktop: 2.15,
-			tablet: 2,
+			desktop: 2.15 / multiplier,
+			tablet: 2 / multiplier,
 			mobileLandscape: 1.75,
 			mobilePortrait: 1.5,
 		};
+		console.log( ratios[sizing] );
 		
 		// Draw Chart
 		var config = {
