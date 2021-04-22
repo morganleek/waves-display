@@ -42,6 +42,8 @@ export function wadDrawMap( buoys ) {
 
 				// Set markers
 				for(var i = 0; i < buoys.length; i++) {
+					// if( buoys[i].drifting == 0 ) {
+					// console.log( buoys[i].id + ":" + buoys[i].label + ' (' + buoys[i].lat + ', ' + buoys[i].lng + ')' );
 					var point = new MarkerWithLabel({
 						position: {
 							lat: parseFloat(buoys[i].lat), 
@@ -64,8 +66,8 @@ export function wadDrawMap( buoys ) {
 								.scrollIntoView({ behavior: 'smooth' });
 						}
 					} );
-
 				}
+				// }
 				// Drifting Buoy Data
 				wadDrifting( );
 			}).catch( (e) => {
@@ -124,6 +126,7 @@ export function wadProcessDriftingBuoys( response ) {
 
 			let path = [];
 			let times = [];
+			const buoyId = ( processed.length > 0 ) ? parseInt( processed[0].buoy_id ) : 0;
 			
 			for( let j = 0; j < processed.length; j++ ) {
 				if( !isNaN( parseFloat( processed[j]["Latitude (deg)"] ) ) && !isNaN( parseFloat( processed[j]["Longitude (deg) "] ) ) ) {
@@ -144,27 +147,53 @@ export function wadProcessDriftingBuoys( response ) {
 			const MarkerWithLabel = require( 'markerwithlabel' )( window.myGoogleMaps );
 			
 			let halfDays = [];
-			path = path.reverse();
+			// path = path.reverse();
 
-			const isVisible = ( window.myMap.getZoom() >= 7 );
+			const isVisible = ( window.myMap.getZoom() >= 8 );
 
 			if( typeof( window.driftingPoints ) == "undefined" ) {
 				window.driftingPoints = [];
 			}
 
-			for( let n = 0; n < path.length; n = n + 48 ) {
-				// console.log( times[n] );
+			for( let n = 0; n < path.length; n += 24 ) {
 				const last = path.pop();
 				const lastTime = times.pop();
+				const labelDate = new Date( times[n] * 1000).toDateString();
+				const labelTime = new Date( times[n] * 1000).toTimeString().replace(/\s\(.*/, '');
+
 				var point = new MarkerWithLabel({
 					position: path[n],
 					map: window.myMap,
-					title: new Date( times[n] * 1000).toLocaleString(),
-					labelContent: new Date( times[n] * 1000 ).toLocaleString(),
+					title: ( n === 0) ? '' : labelDate + '<br>' + labelTime,
+					labelContent: ( n === 0) ? '' : labelDate + '<br>' + labelTime,
 					visible: isVisible,
 					labelStyle: { opacity: 1 },
 					icon: 'https://maps.gstatic.com/mapfiles/transparent.png' // wad.plugin + 'dist/images/invisble-marker.png'
 				});
+			
+
+				if( n === 0 ) {
+					// Move marker to align with start
+					if( typeof( window.myMapMarkers ) != undefined ) {
+						for( const[key, value] of window.myMapMarkers.entries() ) {
+							if( key == buoyId ) { 
+								value.setPosition( path[n] )
+							}
+						}
+					}
+				}
+				
+
+				// // Push on to marker stack
+				// window.myMapMarkers.set( parseInt( buoys[i].id ), point );
+
+				// googleMaps.event.addListener( point, "click", function( e ) { 
+				// 	const buoy = this.labelClass;
+				// 	if( document.getElementById( buoy ) ) {
+				// 		document.getElementById( buoy )
+				// 			.scrollIntoView({ behavior: 'smooth' });
+				// 	}
+				// } );
 
 				window.driftingPoints.push( point );
 			}
@@ -176,7 +205,7 @@ export function wadProcessDriftingBuoys( response ) {
 
 function wadToggleDriftingLabels() {
 	if( typeof( window.myMap ) !== undefined ) {
-		const isVisible = ( window.myMap.getZoom() >= 7 );
+		const isVisible = ( window.myMap.getZoom() >= 8 );
 		if( typeof( window.driftingPoints ) !== undefined ) {
 			window.driftingPoints.forEach( element => {
 				element.setVisible( isVisible );

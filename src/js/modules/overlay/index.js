@@ -48,4 +48,4 @@ export function wadOverlayProcessBuoys( response ) {
 }
 
 
-const latLng = { lat: -35.0704, lng: 117.7756 };
+// const latLng = { lat: -35.0704, lng: 117.7756 };

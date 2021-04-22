@@ -349,7 +349,7 @@ export function wadGenerateChartData( waves, includes ) {
 				data.datasets.push( dataPoints[key] ); 
 			}
 		}
-		console.log( data.datasets );
+		// console.log( data.datasets );
 		
 
 		// Time Axes (x)
@@ -379,7 +379,7 @@ export function wadGenerateChartData( waves, includes ) {
 			peakPeriodAxes.ticks.min = 0;
 			peakPeriodAxes.ticks.max = ( maxPeakPeriod < 25 ) ? 25 : Math.ceil( maxPeakPeriod / 2 ) * 2;
 			peakPeriodAxes.scaleLabel.display = ( window.innerWidth < 768 ) ? false : true;
-			console.log( yAxes.length );
+			// console.log( yAxes.length );
 			peakPeriodAxes.position = ( yAxes.length > 0 ) ? peakPeriodAxes.position : 'left';
 			yAxes.push( peakPeriodAxes );
 		}
