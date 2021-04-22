@@ -9596,7 +9596,12 @@ body {
           padding: 10px; }
           @media (min-width: 768px) {
             body.page-template---templateswave-display-list-php main article #buoys, body.page-template---templateswave-overlay-test-php main article #buoys {
-              grid-area: 1 / 2 / 2 / 3; } }
+              grid-area: 1 / 1 / 2 / 3; }
+              body.page-template---templateswave-display-list-php main article #buoys > div[id^="buoy-"], body.page-template---templateswave-overlay-test-php main article #buoys > div[id^="buoy-"] {
+                padding-left: 50%;
+                transition: all 0.3s; }
+                body.page-template---templateswave-display-list-php main article #buoys > div[id^="buoy-"].expanded, body.page-template---templateswave-overlay-test-php main article #buoys > div[id^="buoy-"].expanded {
+                  padding-left: 25%; } }
     body.page-template---templateswave-display-list-php.admin-bar, body.page-template---templateswave-overlay-test-php.admin-bar {
       --headers-height: 112px; }
   @media (min-width: 768px) {

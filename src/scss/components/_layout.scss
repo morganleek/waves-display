@@ -33,7 +33,14 @@ body {
 					overflow: scroll;
 					padding: 10px;
 					@media (min-width: 768px) { 
-						grid-area: 1 / 2 / 2 / 3;
+						grid-area: 1 / 1 / 2 / 3;
+						& > div[id^="buoy-"] {
+							padding-left: 50%;
+							transition: all 0.3s;
+							&.expanded {
+								padding-left: 25%;
+							}
+						}
 					}
 				}
 			}

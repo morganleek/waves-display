@@ -18,8 +18,12 @@ export function wadExpandCharts( trigger ) {
 		trigger.addEventListener( 'click', ( e ) => {
 			const buoyId = e.target.dataset.buoyId;
 			if( typeof( window.myChartData ) != "undefined" ) {
+				const buoyWrapper = document.getElementById('buoy-' + buoyId);
 				const canvasWrapper = document.querySelector('#buoy-' + buoyId + ' .canvas-wrapper' );
-				if( canvasWrapper ) {
+				if( buoyWrapper && canvasWrapper ) {
+					// Toggle width
+					buoyWrapper.classList.toggle('expanded');
+					// All new charts
 					let charts;
 					if( !e.target.classList.contains( 'expanded' ) ) {
 						e.target.classList.add( 'expanded' );
