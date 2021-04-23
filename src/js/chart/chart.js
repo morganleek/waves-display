@@ -1,7 +1,7 @@
 import $ from 'jquery';
 import Chart from 'chart.js';
 import { wadToggleChart, wadDatePicker, wadCSVDownload, wadExpandCharts } from './chart-events';
-import { wadProcessBuoyData } from './buoy-data';
+// import { wadProcessBuoyData } from './buoy-data';
 import { wadMapLocator } from '../map';
 import chartStyles from './chart-style';
 import moment from 'moment';
@@ -26,6 +26,7 @@ const panelWrapper = "<div class='card card-primary mb-3'>" +
   "</div>" +
 "</div>";
 
+// Create Divs for each buoy and call Ajax for each one's data
 export function wadInitCharts( response ) {
 	const buoysWrapper = document.getElementById( 'buoys' );
 	// Save Buoy Data
@@ -70,20 +71,7 @@ export function wadInitCharts( response ) {
 	}
 }
 
-// var HourDayScale = Chart.scaleService.getScaleConstructor('time').extend({
-    
-  // generateTickLabels(ticks) {
-  //   let i, ilen, tick;
-
-  //   for (i = 0, ilen = ticks.length; i < ilen; ++i) {
-  //     tick = ticks[i];
-  //     tick.label = this._tickFormatFunction(tick.value, i, ticks);
-  //   }
-  // }
-    
-// });
-// Chart.scaleService.registerScaleType('hourdaytime', HourDayScale );
-
+// Tool for parsing Ints
 function parseIntOr( intVal, altVal ) {
 	if( isNaN( parseInt( intVal ) ) ) {
 		if( !isNaN( parseInt( altVal ) ) ) {
@@ -94,6 +82,7 @@ function parseIntOr( intVal, altVal ) {
 	return parseInt( intVal );
 }
 
+// Tool for parse Floats
 function parseFloatOr( floatVal, altVal ) {
 	if( isNaN( parseFloat( floatVal ) ) ) {
 		if( !isNaN( parseFloat( altVal ) ) ) {
@@ -104,6 +93,7 @@ function parseFloatOr( floatVal, altVal ) {
 	return parseFloat( floatVal );
 }
 
+// Process and sort data and push into chart
 export function wadGenerateChartData( waves, includes, multiplier = 1 ) {
 	if( !includes ) {
 		includes = {
@@ -258,9 +248,6 @@ export function wadGenerateChartData( waves, includes, multiplier = 1 ) {
 			// qfBottTemp: [], 
 		};
 
-		
-
-	
 		// Loop
 		for( let i = 0; i < waves.length; i++ ) {
 			// Time as moment object with offset
@@ -336,11 +323,6 @@ export function wadGenerateChartData( waves, includes, multiplier = 1 ) {
 		};
 
 		let hasItem = {};
-		// let hasHSig = false;
-		// let hasTp = false;
-		// let hasTm = false;
-		// let hasSurfTemp = false;
-		// let hasBottTemp = false;
 
 		// Add each item specified
 		for (const [key, value] of Object.entries( includes )) {
@@ -349,8 +331,6 @@ export function wadGenerateChartData( waves, includes, multiplier = 1 ) {
 				data.datasets.push( dataPoints[key] ); 
 			}
 		}
-		// console.log( data.datasets );
-		
 
 		// Time Axes (x)
 		const timeAxes = chartStyles.axesStyles.timeAxes;
@@ -410,7 +390,7 @@ export function wadGenerateChartData( waves, includes, multiplier = 1 ) {
 			mobileLandscape: 1.75,
 			mobilePortrait: 1.5,
 		};
-		console.log( ratios[sizing] );
+		// console.log( ratios[sizing] );
 		
 		// Draw Chart
 		var config = {
@@ -481,6 +461,7 @@ export function wadGenerateChartData( waves, includes, multiplier = 1 ) {
 	return false;
 } 
 
+// Draw Latest Data into a table
 export function wadDrawLatestTable( buoyId, dataPoints ) {
 	//
 	// Make work with new draw method
@@ -540,37 +521,11 @@ export function wadDrawLatestTable( buoyId, dataPoints ) {
 	chartInfo.addEventListener( 'click', wadToggleChart );
 }
 
-export function wadDrawTable( buoyId, dataPoints ) {
-	//
-	// Make work with new draw method
-	//
-	let buoyInfoHtml = "";
-	
-	for( const [key, value] of Object.entries( dataPoints ) ) {
-		// Max value
-		const max = Math.max( ...value.data.map( point => point.y ) );
-		// Append to table
-		max = ( max > 0 ) ? max : "-";
-		buoyInfoHtml += "<dt>" + value.description + "</dt>" +
-			"<dd>" + max + "</dd>";
-	}
-	
-	const buoyWrapper = document.getElementById( 'buoy-' + buoyId );
-	// Clear it
-	const chartInfo = buoyWrapper.getElementsByClassName("chart-info")[0]
-	chartInfo.innerHTML = "";
-	chartInfo.insertAdjacentHTML( 'afterbegin', "<ul>" + buoyInfoHtml + "</ul>" );
-	chartInfo.addEventListener( 'click', wadToggleChart );
-}
-
+// Render Heading for Buoy Chart
 export function wadDrawHeading( buoyId, label, range ) {
 	const buoyWrapper = document.getElementById( 'buoy-' + buoyId );
 	const panelHeading = buoyWrapper.getElementsByClassName( 'card-header' )
 	if( panelHeading.length > 0 ) {
-		// const time = panelHeading[0].getElementsByTagName( 'time' );
-		// if( time.length > 0 ) {
-		// 	time[0].innerHTML = label;
-		// }
 		// Download time range
 		const downloadTrigger = panelHeading[0].getElementsByClassName( 'download-trigger' );
 		if( downloadTrigger.length > 0 ) {
@@ -578,9 +533,6 @@ export function wadDrawHeading( buoyId, label, range ) {
 			downloadTrigger[0].dataset['end'] = range[1];
 		}
 		if( window.myPickers != undefined ) {
-			// console.log( range[0] );
-			// console.log( parseInt( range[0] ) );
-			// console.log( new Date( parseInt( range[0] ) ) );
 			window.myPickers['buoy' + buoyId].options.startDate.dateInstance = ( new Date( parseInt( range[0] ) ) );
 			window.myPickers['buoy' + buoyId].options.endDate.dateInstance = ( new Date( parseInt( range[1] ) ) );
 		}
@@ -589,10 +541,10 @@ export function wadDrawHeading( buoyId, label, range ) {
 		if( dateRangeButton.length > 0 ) {
 			dateRangeButton[0].innerHTML = label;
 		}
-
 	}
 }
 
+// Render Chart
 export function wadDrawChart( config, canvasContext ) {
 	if( canvasContext ) {
 		return new Chart( canvasContext, config );
@@ -600,6 +552,7 @@ export function wadDrawChart( config, canvasContext ) {
 	return;
 }
 
+// Render custom chart toggles
 export function wadDrawChartLegend( buoyId, config ) {
 	let labels = [];
 
@@ -634,6 +587,7 @@ export function wadDrawChartLegend( buoyId, config ) {
 	}
 }
 
+// Chart toggles event
 function wadLegendToggle( e ) {
 	const buoyId = e.target.dataset["buoyId"];
 	const legendItem = e.target.dataset["legendItem"];
@@ -641,4 +595,92 @@ function wadLegendToggle( e ) {
 		myCharts["buoy" + buoyId].getDatasetMeta( legendItem ).hidden = !e.target.checked;
 		myCharts["buoy" + buoyId].update();
 	}
+}
+
+// Create charts from individual buoy data fetches
+export function wadProcessBuoyData( response ) {
+  if( response ) {
+    if( typeof( window.myCharts ) == "undefined" ) {
+      window.myCharts = [];
+    }
+    if( typeof( window.myChartData ) == "undefined" ) {
+      window.myChartData = [];
+    }
+    const buoyDiv = document.getElementById( 'buoy-' + response.buoy_id );
+    if( buoyDiv != null ) {
+      if( response.success == "1" ) {
+        // Convert to useful chart data
+        const processed = wadRawDataToChartData( response.data );
+        // Store in Window
+        window.myChartData['buoy-' + response.buoy_id] = processed;
+        // Generate Chart.js data
+        const chartData = wadGenerateChartData( processed );
+        // Draw chart lengend
+        wadDrawChartLegend( response.buoy_id, chartData.config );
+        // Draw chart tables
+        wadDrawLatestTable( response.buoy_id, chartData.dataPoints );
+        // Draw with chartData
+        const canvasContext = document.querySelector( '#buoy-' + response.buoy_id + ' canvas' );
+        if( canvasContext ) {
+          let chart = wadDrawChart( chartData.config, canvasContext );
+          
+          // Check my Charts if needed
+          if( typeof( window.myCharts ) == "undefined" ) {
+            window.myCharts = [];
+          }
+          // Destroy existing chart
+          if( window.myCharts.hasOwnProperty( 'buoy' + response.buoy_id ) ) {
+            window.myCharts['buoy' + response.buoy_id].destroy();
+          }
+          // Save chart
+          window.myCharts['buoy' + response.buoy_id] = chart;
+        }
+        // Update heading with time
+        wadDrawHeading( response.buoy_id, chartData.timeLabel, chartData.timeRange );
+        // Chart Appearance
+        const canvasWrapper = buoyDiv.getElementsByClassName( 'canvas-wrapper' )[0]; // .innerHTML = "No results found";
+        canvasWrapper.classList.remove( 'loading' );
+        canvasWrapper.classList.remove( 'no-results' );
+      }
+      else {
+        // No data returned
+        // const buoyDiv = document.getElementById( 'buoy-' + response.buoy_id );
+        const canvasWrapper = buoyDiv.getElementsByClassName( 'canvas-wrapper' )[0]; // .innerHTML = "No results found";
+        const chartInfo = buoyDiv.getElementsByClassName( 'chart-info' )[0];
+        canvasWrapper.classList.remove( 'loading' );
+        canvasWrapper.classList.add( 'no-results' );
+        // Destroy Chart if it exists
+        if ( window.myCharts.hasOwnProperty( 'buoy' + response.buoy_id ) ) {
+          window.myCharts['buoy' + response.buoy_id].destroy();
+          // Remove chart data
+          chartInfo.classList.add( 'no-results' );
+          chartInfo.innerHTML = "";
+        }
+        else {
+          // Remove inner elements only for initial loads
+          buoyDiv.getElementsByClassName( 'chart-js-menu' )[0].remove();
+          chartInfo.remove();
+        }
+      }
+    }
+  }
+}
+
+// Convert Array of JSON values to Objects
+export function wadRawDataToChartData( data ) {
+  let processed = [];
+  if( data.length > 0 ) {
+    for( let i = 0; i < data.length; i++ ) {
+      if( data[i].data_points ) {
+        try {
+          processed.push( JSON.parse( data[i].data_points ) );
+        } catch( e ) {
+          console.error(e instanceof SyntaxError);
+          // console.log( data[i].data_points );
+        }
+      }
+    }
+  }
+
+  return processed;
 }
