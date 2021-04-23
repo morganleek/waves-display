@@ -1,6 +1,6 @@
 import $ from 'jquery';
 import Litepicker from 'litepicker';
-import { wadGenerateChartData, wadDrawChart, wadDrawChartLegend, wadProcessBuoyData } from './chart';
+import { wadGenerateChartData, wadDrawChart, wadDrawChartLegend, wadProcessBuoyData } from '../chart';
 
 // import stringify from 'csv-stringify';
 // const stringify = require('csv-stringify');

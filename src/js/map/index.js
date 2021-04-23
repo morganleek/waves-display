@@ -1,23 +1,13 @@
 import $ from 'jquery';
-import { wadRawDataToChartData } from '../chart/buoy-data';
+import { wadRawDataToChartData } from '../chart/chart';
 const loadGoogleMapsApi = require('load-google-maps-api'); // Google Maps
 
-// Map - Init
-$( function() {
-  if( document.getElementsByClassName('page-template---templateswave-overlay-test-php').length ) {
-		// Fetch all buoys
-		$.ajax({
-			type: 'POST',
-			url: wad.ajax,
-			data: { action: 'waf_rest_list_buoys' },
-			success: wadDrawMap, 
-			dataType: 'json'
-		});
-	}
-} );
+export function wadInitMap( buoys ) {
+	wadDrawMap( buoys );
+}
 
 // Map - Render + Markers
-export function wadDrawMap( buoys ) {
+function wadDrawMap( buoys ) {
 	if( wad.googleApiKey != undefined ) { // Maps API Key Setup
 		// Maps
 		if( document.getElementById( 'map' ) ) {
@@ -58,7 +48,7 @@ export function wadDrawMap( buoys ) {
 }
 
 // Markers - Render 
-export function wadDrawMarkers( buoys ) {
+function wadDrawMarkers( buoys ) {
 	// Local global 
 	let googleMaps = window.myGoogleMaps;
 
@@ -103,19 +93,16 @@ export function wadMapLocator ( trigger ) {
 	if( trigger != "undefined" ) {
 		trigger.addEventListener( 'click', ( e ) => {
 			const buoyId = parseInt( e.target.dataset.buoyId );
-			// console.log( e.target.dataset );
-			// console.log( typeof( buoyId ) );
-			// console.log( window.myMapMarkers );
 			if( window.myMapMarkers.has( buoyId ) ) {
-				// console.log( window.myMapMarkers.get( buoyId ) );
 				const marker = window.myMapMarkers.get( buoyId );
 				const center = { 
 					lat: marker.position.lat(),
 					lng: marker.position.lng()
 				};
+				// Go to centre zoom level 8
 				window.myMap.panTo( center )
 				window.myMap.setZoom( 8 );
-				// Animate
+				// Bounce Animation
 				if( marker.getAnimation() > 0 ) {
 					marker.setAnimation( undefined );
 				}
@@ -132,7 +119,7 @@ export function wadMapLocator ( trigger ) {
 }
 
 // Drifting Markers - Fetch 
-export function wadDrifting( ) {
+function wadDrifting( ) {
 	$.ajax({
     type: 'POST',
     url: wad.ajax,
@@ -143,7 +130,7 @@ export function wadDrifting( ) {
 }
 
 // Drifting Markers - Render 
-export function wadDrawDriftingMarkers( response ) {
+function wadDrawDriftingMarkers( response ) {
 	if( window.myGoogleMaps ) {
 		for( let i = 0; i < response.length; i++ ) {
 			const processed = wadRawDataToChartData( response[i].data );
