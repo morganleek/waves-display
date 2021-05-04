@@ -35,6 +35,7 @@ export function wadProcessBuoyData( response ) {
     if( typeof( window.myChartData ) == "undefined" ) {
       window.myChartData = [];
     }
+    // Comment
     const buoyDiv = document.getElementById( 'buoy-' + response.buoy_id );
     if( buoyDiv != null ) {
       if( response.success == "1" ) {

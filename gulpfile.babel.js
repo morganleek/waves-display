@@ -16,6 +16,12 @@ import config from "./config.json";
 // import wpPot from "gulp-wp-pot";
 const PRODUCTION = yargs.argv.prod;
 const server = browserSync.create();
+
+// Plugins
+// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const MomentLocalesPlugin = require('moment-locales-webpack-plugin');
+
+
 export const serve = done => {
   server.init({
     proxy: config.browserSync.proxy,
@@ -65,13 +71,13 @@ export const scripts = () => {
   .pipe(named())
   .pipe(webpack({
     module: {
-    rules: [
-      {
-        test: /\.js$/,
-        use: {
-          loader: 'babel-loader',
-          options: {
-            presets: []
+      rules: [
+        {
+          test: /\.js$/,
+          use: {
+            loader: 'babel-loader',
+            options: {
+              presets: []
             }
           }
         }
@@ -85,6 +91,14 @@ export const scripts = () => {
     externals: {
       jquery: 'jQuery'
     },
+    plugins: [
+      new MomentLocalesPlugin()
+      // new BundleAnalyzerPlugin({ 
+      //   analyzerMode: 'static',
+      //   analyzerHost: "192.168.8.200",
+      //   analyzerPort: 8880
+      // })
+    ]
   }))
   .pipe(dest('dist/js'));
 }
