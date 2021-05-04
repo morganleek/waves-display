@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import { wadRawDataToChartData } from '../chart/chart';
+import { wadRawDataToChartData } from '../chart';
 const loadGoogleMapsApi = require('load-google-maps-api'); // Google Maps
 
 export function wadInitMap( buoys ) {
@@ -196,8 +196,6 @@ function wadDrawDriftingMarkers( response ) {
 
 				window.driftingPoints.push( point );
 			}
-
-
 		}
 	}
 }

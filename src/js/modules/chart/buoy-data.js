@@ -35,6 +35,7 @@ export function wadProcessBuoyData( response ) {
     if( typeof( window.myChartData ) == "undefined" ) {
       window.myChartData = [];
     }
+    // Comment
     const buoyDiv = document.getElementById( 'buoy-' + response.buoy_id );
     if( buoyDiv != null ) {
       if( response.success == "1" ) {
@@ -44,7 +45,6 @@ export function wadProcessBuoyData( response ) {
         window.myChartData['buoy-' + response.buoy_id] = processed;
         // Generate Chart.js data
         const chartData = wadGenerateChartData( processed );
-        console.log( 'wadGenerateChartData' );
         // Draw chart lengend
         wadDrawChartLegend( response.buoy_id, chartData.config );
         // Draw chart tables

@@ -10,7 +10,7 @@ import { panelWrapper, generateDataPoints } from './objects';
 // Create Divs for each buoy and call Ajax for each one's data
 export function wadInitCharts( response ) {
 	const buoysWrapper = document.getElementById( 'buoys' );
-	// Save Buoy Data
+	// Save Buoy Data 
 	if( window.buoysData == undefined ) {
 		window.buoysData = new Map();
 	}
@@ -202,8 +202,7 @@ export function wadGenerateChartData( waves, includes, multiplier = 1 ) {
 			peakPeriodAxes.ticks.min = 0;
 			peakPeriodAxes.ticks.max = ( maxPeakPeriod < 25 ) ? 25 : Math.ceil( maxPeakPeriod / 2 ) * 2;
 			peakPeriodAxes.scaleLabel.display = ( window.innerWidth < 768 ) ? false : true;
-			// console.log( yAxes.length );
-			peakPeriodAxes.position = ( yAxes.length > 0 ) ? peakPeriodAxes.position : 'left';
+			peakPeriodAxes.position = ( yAxes.length == 0 ) ? 'left' : 'right';
 			yAxes.push( peakPeriodAxes );
 		}
 
@@ -213,7 +212,7 @@ export function wadGenerateChartData( waves, includes, multiplier = 1 ) {
 			tempAxes.ticks.min = minTemp - 1;
 			tempAxes.ticks.max = maxTemp + 1;
 			tempAxes.scaleLabel.display = ( window.innerWidth < 768 ) ? false : true;
-			tempAxes.position = ( yAxes.length > 0 ) ? tempAxes.position : 'left';
+			tempAxes.position = ( yAxes.length == 0 ) ? 'left' : 'right';
 			yAxes.push( tempAxes );
 		}
 
@@ -233,7 +232,6 @@ export function wadGenerateChartData( waves, includes, multiplier = 1 ) {
 			mobileLandscape: 1.75,
 			mobilePortrait: 1.5,
 		};
-		// console.log( ratios[sizing] );
 		
 		// Draw Chart
 		var config = {
@@ -258,10 +256,6 @@ export function wadGenerateChartData( waves, includes, multiplier = 1 ) {
 					xAxes: xAxes,
 					yAxes: yAxes,
 				},
-				// plugins: {
-				// 	legend: {
-				// 	},
-				// },
 				legend: {
 					display: false,
 					labels: {

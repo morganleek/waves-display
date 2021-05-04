@@ -410,7 +410,6 @@ export function wadGenerateChartData( waves, includes, multiplier = 1 ) {
 			mobileLandscape: 1.75,
 			mobilePortrait: 1.5,
 		};
-		console.log( ratios[sizing] );
 		
 		// Draw Chart
 		var config = {

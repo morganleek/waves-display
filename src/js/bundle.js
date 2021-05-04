@@ -4,7 +4,7 @@ import { wadInitCharts } from './chart'; // Load Charts
 import { wadInitMap } from './map'; // Load Maps
 
 // Init
-$( function() {
+$( function() { 
   if( document.getElementsByClassName('page-template---templateswave-display-list-php').length ) {
     // Fetch all buoys
     $.ajax({
