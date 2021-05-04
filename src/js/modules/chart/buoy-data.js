@@ -44,6 +44,7 @@ export function wadProcessBuoyData( response ) {
         window.myChartData['buoy-' + response.buoy_id] = processed;
         // Generate Chart.js data
         const chartData = wadGenerateChartData( processed );
+        console.log( 'wadGenerateChartData' );
         // Draw chart lengend
         wadDrawChartLegend( response.buoy_id, chartData.config );
         // Draw chart tables

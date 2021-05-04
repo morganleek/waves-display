@@ -1762,7 +1762,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) *
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("module.exports = __webpack_require__(/*! /Users/morganleek/Sites/wawa.ernie/wp-content/plugins/waves-display/src/js/bundle.js */\"./src/js/bundle.js\");\n\n\n//# sourceURL=webpack:///multi_./src/js/bundle.js?");
+eval("module.exports = __webpack_require__(/*! /var/www/wpw/wp-content/plugins/waves-display/src/js/bundle.js */\"./src/js/bundle.js\");\n\n\n//# sourceURL=webpack:///multi_./src/js/bundle.js?");
 
 /***/ }),
 

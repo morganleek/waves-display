@@ -1,6 +1,6 @@
 {
 	"browserSync": {
-		"proxy": "https://wawa.ernie",
+		"proxy": "https://wpw.scooter",
     "port": 3010,
     "https": true
 	}
