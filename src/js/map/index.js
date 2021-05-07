@@ -99,9 +99,20 @@ export function wadMapLocator ( trigger ) {
 					lat: marker.position.lat(),
 					lng: marker.position.lng()
 				};
-				// Go to centre zoom level 8
+
+				const bounds = {
+					east: ( marker.position.lng() + 0.3 ),
+					north: ( marker.position.lat() + 0.1 ),
+					south: ( marker.position.lat() - 0.1 ),
+					west: ( marker.position.lng() - 0.1 )
+				};
+
+				// Centre
 				window.myMap.panTo( center )
+				// Go to centre zoom level 8
 				window.myMap.setZoom( 8 );
+				// Ajdust because map covers entire page but only half is visible
+				window.myMap.panBy( window.innerWidth / 4, 0 );
 				// Bounce Animation
 				if( marker.getAnimation() > 0 ) {
 					marker.setAnimation( undefined );
