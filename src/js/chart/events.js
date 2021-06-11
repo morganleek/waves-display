@@ -1,6 +1,6 @@
 import $ from 'jquery';
 import Litepicker from 'litepicker';
-import { wadGenerateChartData, wadDrawChart, wadDrawChartLegend, wadProcessBuoyData } from '../chart';
+import { wadGenerateChartData, wadDrawChart, wadDrawChartLegend, wadProcessBuoyData, wadProcessMemplots } from '../chart';
 
 // import stringify from 'csv-stringify';
 // const stringify = require('csv-stringify');
@@ -138,7 +138,21 @@ export function wadDatePicker( trigger, startDate = 'Sun Dec 01 2019' ) {
 					},
 					success: wadProcessBuoyData,
 					dataType: 'json'
-				})
+				});
+
+				// Memplot
+				$.ajax({
+					type: 'POST',
+					url: wad.ajax,
+					data: { 
+						action: 'waf_rest_list_buoy_datapoints',
+						id: buoyId,
+						start: start,
+						end: end
+					},
+					success: wadProcessMemplots,
+					dataType: 'json'
+				});
 			},
 		} );
 		// Store Picker

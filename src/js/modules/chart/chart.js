@@ -605,6 +605,7 @@ export function wadDrawChartLegend( buoyId, config ) {
 	// Label and Buoy
 	if( config.data.datasets ) {
 		const buoyCanvasLegend = document.querySelector( "#buoy-" + buoyId + " .canvas-legend" );
+		buoyCanvasLegend.innerHTML = "";
 		if( buoyCanvasLegend ) {
 			config.data.datasets.forEach( ( legend, i ) => {
 				const checkbox = document.createElement( 'input' );

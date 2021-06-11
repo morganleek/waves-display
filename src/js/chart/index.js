@@ -16,7 +16,6 @@ export function wadInitCharts( response ) {
 	}
 	// Setup boxes
 	for( let i = 0; i < response.length; i++ ) {
-		console.log( response[i] );
 		// Push on to stack
 		window.buoysData.set( parseInt( response[i].id ), response[i] );
 		// Setup visuals
@@ -50,6 +49,22 @@ export function wadInitCharts( response ) {
 			success: wadProcessBuoyData,
 			dataType: 'json'
 		});
+
+		// // Clear memplots
+		// if( document.querySelector( "#buoy-" + response[i].id + " .memplot img" ) ) {
+		// 	document.querySelector( "#buoy-" + response[i].id + " .memplot img" ).remove(); // Clear existing 
+		// }
+		// // Fetch memplots
+		// $.ajax({
+		// 	type: 'POST',
+		// 	url: wad.ajax,
+		// 	data: { 
+		// 		action: 'waf_rest_list_buoys_memplots',
+		// 		id: response[i].id
+		// 	},
+		// 	success: wadProcessMemplots,
+		// 	dataType: 'json'
+		// });
 	}
 }
 
@@ -375,8 +390,9 @@ export function wadDrawChartLegend( buoyId, config ) {
 	// Label and Buoy
 	if( config.data.datasets ) {
 		const buoyCanvasLegend = document.querySelector( "#buoy-" + buoyId + " .canvas-legend" );
-
+		
 		if( buoyCanvasLegend ) {
+			buoyCanvasLegend.innerHTML = "";
 			config.data.datasets.forEach( ( legend, i ) => {
 				const checkbox = document.createElement( 'input' );
 				checkbox.id = 'legend-toggle-' + buoyId + '-' + i;
@@ -418,26 +434,31 @@ function wadLegendToggle( e ) {
 export function wadProcessMemplots( response ) {
 	if( response ) {
 		if( response.data.length > 0 ) {
-			const buoy = response.data[response.data.length - 1];
-			// Fetch memplot path
-			$.ajax({
-				type: 'POST',
-				url: wad.ajax,
-				data: { 
-					action: 'waf_get_file_path',
-					id: buoy.id,
-					buoy_id: buoy.buoy_id
-				},
-				success: wadProcessMemplot,
-				dataType: 'json'
-			});
+			// Three most recent
+			// const buoy = response.data.slice(-3);
+			// Most recent
+			const buoy = response.data.slice(-1);
+			for( let i = 0; i < buoy.length; i++ ) {
+				// Fetch memplot path
+				$.ajax({
+					type: 'POST',
+					url: wad.ajax,
+					data: { 
+						action: 'waf_get_file_path',
+						id: buoy[i].id,
+						buoy_id: buoy[i].buoy_id
+					},
+					success: wadProcessMemplot,
+					dataType: 'json'
+				});
+			}
 		}
 	}
 }
 
 function wadProcessMemplot( response ) {
 	if( response ) {
-		console.log( response );
+		// console.log( response );
 
 		const image = new Image();
 		image.src = response.path;
@@ -491,18 +512,6 @@ export function wadProcessBuoyData( response ) {
         const canvasWrapper = buoyDiv.getElementsByClassName( 'canvas-wrapper' )[0]; // .innerHTML = "No results found";
         canvasWrapper.classList.remove( 'loading' );
         canvasWrapper.classList.remove( 'no-results' );
-
-				// Memplots
-				$.ajax({
-					type: 'POST',
-					url: wad.ajax,
-					data: { 
-						action: 'waf_rest_list_buoys_memplots',
-						id: response.buoy_id
-					},
-					success: wadProcessMemplots,
-					dataType: 'json'
-				});
       }
       else {
         // No data returned
