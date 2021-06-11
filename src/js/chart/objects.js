@@ -1,8 +1,8 @@
 // Appearance for each datapoint type
 export function generateDataPoints( includes ) {
 	// Arrows
-	let arrowImageOrange = new Image( 28, 28 );
-	arrowImageOrange.src = wad.plugin + "dist/images/arrow-orange-g@2x.png";
+	let arrowImageOrange = new Image( 20, 20 );
+	arrowImageOrange.src = wad.plugin + "dist/images/arrow-grad-orange@2x.png";
 	let arrowImageBlue = new Image( 28, 28 );
 	arrowImageBlue.src = wad.plugin + "dist/images/arrow-blue-g@2x.png";
 	let arrowImagePink = new Image( 28, 28 );
@@ -17,9 +17,9 @@ export function generateDataPoints( includes ) {
 			description: "Significant Wave Height (m)",
 			backgroundColor: 'rgba(165, 223, 223, 1)',
 			borderColor: 'rgba(75, 192, 192, 1)',
-			borderWidth: 0,
+			borderWidth: 2,
 			lineTension: 0,
-			pointRadius: 2,
+			pointRadius: 0,
 			fill: true,
 			yAxisID: 'y-axis-1',
 			hidden: ( includes.hasOwnProperty( 'hsig' ) ) ? !includes.hsig : true
@@ -161,6 +161,12 @@ export const panelWrapper = "<div class='card card-primary mb-3'>" +
       "<canvas></canvas>" +
     "</div>" +
     "<h5 class='latest-observations'>Latest Observations <time></time></h5>" +
-		"<div class='chart-info'></div>" +
+		"<div class='buoy-description is-hidden'>" + 
+			"<div class='decription'></div>" +
+			"<div class='image'></div>" +
+			"<div class='memplot'></div>" +
+		"</div>" + 
+		"<div class='chart-info'>" + 
+		"</div>" +
   "</div>" +
 "</div>";

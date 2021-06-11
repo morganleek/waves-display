@@ -7,12 +7,30 @@
     margin: 0 -40px;
   }
 }
+.buoy-description {
+  display: none;
+  .expanded & {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    column-gap: 15px;
+  }
+  & > * {
+    padding: 0.25em 0.5em;
+  }
+  .image,
+  .memplot {
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+  }
+}
 .chart-info {
   margin: 0.3em ​0 1em;
-  // height: 68px;
   position: relative;
-  // overflow: hidden;
   padding: 0 10px;
+  // height: 68px;
+  // overflow: hidden;
   // &:not(.no-results) {
   //   &:before {
   //     content: 'Expand';
