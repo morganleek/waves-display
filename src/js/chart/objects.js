@@ -161,7 +161,7 @@ export const panelWrapper = "<div class='card card-primary mb-3'>" +
       "<canvas></canvas>" +
     "</div>" +
     "<h5 class='latest-observations'>Latest Observations <time></time></h5>" +
-		"<div class='buoy-description is-hidden'>" + 
+		"<div class='buoy-description'>" + 
 			"<div class='decription'></div>" +
 			"<div class='image'></div>" +
 			"<div class='memplot'></div>" +

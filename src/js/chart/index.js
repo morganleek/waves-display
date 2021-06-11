@@ -50,21 +50,21 @@ export function wadInitCharts( response ) {
 			dataType: 'json'
 		});
 
-		// // Clear memplots
-		// if( document.querySelector( "#buoy-" + response[i].id + " .memplot img" ) ) {
-		// 	document.querySelector( "#buoy-" + response[i].id + " .memplot img" ).remove(); // Clear existing 
-		// }
-		// // Fetch memplots
-		// $.ajax({
-		// 	type: 'POST',
-		// 	url: wad.ajax,
-		// 	data: { 
-		// 		action: 'waf_rest_list_buoys_memplots',
-		// 		id: response[i].id
-		// 	},
-		// 	success: wadProcessMemplots,
-		// 	dataType: 'json'
-		// });
+		// Clear memplots
+		if( document.querySelector( "#buoy-" + response[i].id + " .memplot img" ) ) {
+			document.querySelector( "#buoy-" + response[i].id + " .memplot img" ).remove(); // Clear existing 
+		}
+		// Fetch memplots
+		$.ajax({
+			type: 'POST',
+			url: wad.ajax,
+			data: { 
+				action: 'waf_rest_list_buoys_memplots',
+				id: response[i].id
+			},
+			success: wadProcessMemplots,
+			dataType: 'json'
+		});
 	}
 }
 
