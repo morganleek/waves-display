@@ -12,8 +12,8 @@ function App() {
   </>;
 }
 
-document.addEventListener("DOMContentLoaded", function(event) { 
-  if( document.getElementsByClassName('page-template-wave-display-react').length ) {
+document.addEventListener( "DOMContentLoaded", function( event ) { 
+  if( document.getElementsByClassName( 'page-template-wave-display-react' ).length ) {
     render( <App />, document.getElementById( "root" ) );
   }
 } );
