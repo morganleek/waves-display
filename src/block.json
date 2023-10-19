@@ -1,0 +1,20 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "waves/display",
+	"version": "0.1.0",
+	"title": "Waves Display",
+	"category": "widgets",
+	"icon": "admin-site-alt2",
+	"description": "Waves Display maps and charts",
+	"example": {},
+	"supports": {
+		"html": false,
+		"align": [ "wide", "full" ]
+	},
+	"textdomain": "waves-display",
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css",
+	"viewScript": "file:./view.js"
+}

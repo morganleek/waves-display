@@ -1,7 +1,0 @@
-{
-	"browserSync": {
-		"proxy": "https://wpw.scooter",
-    "port": 3010,
-    "https": true
-	}
-}
