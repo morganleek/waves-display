@@ -22,6 +22,7 @@
 	.maps {
 		&::before {
 			content: "Map";
+			color: #fff;
 		}
 		background: #588da8;
 	} 
@@ -30,5 +31,8 @@
 			content: "Charts";
 		}
 		background: #f0f0f0;
+		@media (min-width: 768px) {
+			grid-area: 1 / 2 / 2 / 3;
+		}
 	}
 }
