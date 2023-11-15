@@ -1,24 +1,14 @@
 <?php
-/**
- * Plugin Name:       Waves Display
- * Description:       Example block scaffolded with Create Block tool.
- * Requires at least: 6.1
- * Requires PHP:      7.0
- * Version:           2.3.0
- * Author:            The WordPress Contributors
- * License:           GPL-2.0-or-later
- * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain:       waves-display
- *
- * @package           create-block
- */
-
-/**
- * Registers the block using the metadata loaded from the `block.json` file.
- * Behind the scenes, it registers also all assets so they can be enqueued
- * through the block editor in the corresponding context.
- *
- * @see https://developer.wordpress.org/reference/functions/register_block_type/
+/** 
+ * Plugin Name:  Waves Display 
+ * Plugin URI:   https://github.com/morganleek/waves-fetch
+ * Description:  Buoy data display tool to be used with the Waves Fetch plugin
+ * Version:      2.0.0
+ * Author:       https://morganleek.me/ 
+ * Author URI:   https://morganleek.me/ 
+ * License:      GPL2 
+ * License URI:  https://www.gnu.org/licenses/gpl-2.0.html 
+ * Text Domain:  waves-display 
  */
 
 // Security
