@@ -16,5 +16,14 @@
 	"editorScript": "file:./index.js",
 	"editorStyle": "file:./index.css",
 	"style": "file:./style-index.css",
-	"viewScript": "file:./view.js"
+	"viewScript": "file:./view.js",
+	"attributes": {
+		"buoys": {
+			"type": "array",
+			"default": [ 
+				{ "id": 2, "label": "Tantabiddi" },
+				{ "id": 3, "label": "Exmouth Gulf" }
+			]
+		}
+	}
 }
