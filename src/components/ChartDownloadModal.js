@@ -64,7 +64,6 @@ export const ChartDownloadUserForm = ( { download, buoyId } ) => {
       fetch( wad.ajax + "?action=waf_collect_user_data&buoy_id=" + buoyId + "&nonce=" + wad.user_data_nonce + "&form_data=" + form_data, init ) 
         .then( response => {
           if( !response.ok ) throw Error( response.statusText );
-          // console.log( 'Form submitted successfully' );
         } );
       
       // Trigger download

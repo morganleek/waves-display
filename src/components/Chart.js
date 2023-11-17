@@ -46,7 +46,6 @@ export class Charts extends Component {
     const { buoys } = this.state;
     let chartsLoopRender;
     if( buoys.length > 0 ) {
-      console.log( this.state.buoys );
 			chartsLoopRender = buoys.map( ( row, index ) => {    
         // <div className={ classNames( ['card', 'card-primary', 'mb-3'] ) } key={ index }> 
         if( parseInt( row.is_enabled ) == 1 ) {
