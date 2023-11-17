@@ -273,7 +273,7 @@ export class Chart extends Component {
           close={ this.handleModalClose }
           download={ this.handleDownloadClick }
           downloadEnabled={ downloadEnabled }
-          downloadRequiresDetails={ downloadRequiresDetails }
+          downloadRequiresDetails={ parseInt( downloadRequiresDetails ) }
           // ref={ ref }
         />;
       }
