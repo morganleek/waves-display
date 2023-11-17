@@ -378,6 +378,7 @@ export class ChartPhoto extends Component {
   componentDidMount() {
 		if( this.props.buoyId ) {
 			getBuoyImage( this.props.buoyId ).then( json => {	
+        console.log( json.path );
 			  this.setState( {
 			    path: json.path
 			  } );
@@ -398,6 +399,7 @@ export class ChartPhoto extends Component {
     return (
       <div className="chart-image">
         { content }
+        { path }
       </div>
     )
   }
