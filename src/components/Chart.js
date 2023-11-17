@@ -1,4 +1,4 @@
-import React, { Component, forwardRef } from "@wordpress/element";
+import React, { Component, forwardRef, useRef } from "@wordpress/element";
 import { Line } from 'react-chartjs-2';
 import DatePicker from "react-datepicker";
 import { DateTime } from 'luxon'; 
@@ -137,9 +137,8 @@ export class Chart extends Component {
     window.location = downloadPath;
     this.setState( { downloadPath: '' } );
     // Record in analytics
-    if( gtag ) {
+    if( typeof( gtag ) !== 'undefined' ) {
       gtag( 'event', 'csvExport', { 'method': downloadPath } );
-      // ga( 'send', 'event', 'ExportData', 'download', downloadPath );
     }
   }
 
@@ -243,7 +242,8 @@ export class Chart extends Component {
 
 
       if( downloadPath.length > 0 ) {
-        const ref = React.createRef();
+        // const ref = React.createRef();
+        // const ref = useRef();
         chartModal = <ChartDownloadModal 
           title="Terms and Conditions"
           buoyId={ this.props.buoyId }
@@ -252,7 +252,7 @@ export class Chart extends Component {
           download={ this.handleDownloadClick }
           downloadEnabled={ downloadEnabled }
           downloadRequiresDetails={ downloadRequiresDetails }
-          ref={ ref }
+          // ref={ ref }
         />;
       }
     }
