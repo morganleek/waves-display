@@ -53,7 +53,7 @@ function waves_display_enqueue_object() {
 			'googleApiKey' => $options['maps_key'],
 			'googleLat' => $options['maps_lat'],
 			'googleLng' => $options['maps_lng'],
-			'googleShowAllBuoys' => $options['maps_show_all_buoys'],
+			'googleShowAllBuoys' => isset( $options['maps_show_all_buoys'] ) ? $options['maps_show_all_buoys'] : true,
 			'obs_table_fields' => $obsTableFields,
 			'buoy_display_key' => isset( $options['buoy_display_key'] ) ? $options['buoy_display_key'] : "0",
 			'buoy_display_init_current' => isset( $options['buoy_display_init_current'] ) ? $options['buoy_display_init_current'] : "0",

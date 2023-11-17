@@ -1,4 +1,4 @@
-import React, { Component, forwardRef, useRef } from "@wordpress/element";
+import React, { Component, forwardRef } from "@wordpress/element"; // , useEffect
 import { Line } from 'react-chartjs-2';
 import DatePicker from "react-datepicker";
 import { DateTime } from 'luxon'; 
@@ -47,18 +47,20 @@ export class Charts extends Component {
         // <div className={ classNames( ['card', 'card-primary', 'mb-3'] ) } key={ index }> 
         if( parseInt( row.is_enabled ) == 1 ) {
           return (
-            <Chart buoyId={ row.id } 
-                  buoyLabel={ row.web_display_name } 
-                  buoyLastUpdated={ row.last_update } 
-                  buoyLat={ row.lat } 
-                  buoyLng={ row.lng }
-                  buoyDescription={ row.description }
-                  buoyDownloadText={ row.download_text }
-                  updateCenter={ this.props.updateCenter }
-                  updateZoom={ this.props.updateZoom }
-                  downloadEnabled={ parseInt( row.download_enabled ) }
-                  downloadRequiresDetails={ parseInt( row.download_requires_details ) }
-                  key={ index }
+            <Chart
+              buoy={ row }
+              buoyId={ row.id } 
+              buoyLabel={ row.web_display_name } 
+              buoyLastUpdated={ row.last_update } 
+              buoyLat={ row.lat } 
+              buoyLng={ row.lng }
+              buoyDescription={ row.description }
+              buoyDownloadText={ row.download_text }
+              updateCenter={ this.props.updateCenter }
+              updateZoom={ this.props.updateZoom }
+              downloadEnabled={ parseInt( row.download_enabled ) }
+              downloadRequiresDetails={ parseInt( row.download_requires_details ) }
+              key={ index }
             />
           )
         }
@@ -108,20 +110,22 @@ export class Chart extends Component {
   }
 
 	handleExportClick() {
-    const { buoyId } = this.props;
+    const { buoy } = this.props;
+    // const { buoyId } = this.props;
     const { timeRange } = this.state.data;
     if( timeRange.length == 2 ) {
       const start = parseInt( timeRange[0] ) / 1000;
       const end = parseInt( timeRange[1] ) / 1000;
-      const path = "?action=waf_rest_list_buoy_datapoints_csv&id=" + buoyId + "&start=" + start + "&end=" + end;
+      const path = "?action=waf_rest_list_buoy_datapoints_csv&id=" + buoy.id + "&start=" + start + "&end=" + end;
       this.setState( { downloadPath: wad.ajax + path } );
     }
 	}
 
 	handleDateChanged() {
+    const { buoy } = this.props;
     const { dateRange } = this.state;
     
-		getBuoyByDate( this.props.buoyId, dateRange[0].getTime() / 1000, dateRange[1].getTime() / 1000 ).then( json => {
+		getBuoyByDate( buoy.id, dateRange[0].getTime() / 1000, dateRange[1].getTime() / 1000 ).then( json => {
       if( json.success == 1 ) {
         const data = wadGenerateChartData( wadRawDataToChartData( json.data ) );
         this.setState( {
@@ -147,14 +151,14 @@ export class Chart extends Component {
   }
   
   componentDidMount() {
-    getBuoy( this.props.buoyId ).then( json => {
+    const { buoy } = this.props;
+    getBuoy( buoy.id ).then( json => {
       if( json.success == 1 ) {
         const data = wadGenerateChartData( wadRawDataToChartData( json.data ) );
         this.setState( {
           data: data,
           dateRange: [ new Date( parseInt( data.timeRange[0] ) ), new Date( parseInt( data.timeRange[1] ) ) ],
         } );
-        // const [startDate, setStartDate] = useState( 0 );
       }      
     } );
   }
@@ -165,7 +169,25 @@ export class Chart extends Component {
     const { data, isExpanded, dateRange, needsUpdating, downloadPath } = this.state;
     const [ startDate, endDate ] = dateRange;
     const expandedLabel = ( isExpanded ) ? 'Collapse' : 'Expand';
-    const { buoyLabel, downloadEnabled, downloadRequiresDetails } = this.props;
+    const { buoy } = this.props;
+
+    // buoyId={ row.id } 
+    // buoyLabel={ row.web_display_name } 
+    // buoyLastUpdated={ row.last_update } 
+    // buoyLat={ row.lat } 
+    // buoyLng={ row.lng }
+    // buoyDescription={ row.description }
+    // buoyDownloadText={ row.download_text }
+    // updateCenter={ this.props.updateCenter }
+    // updateZoom={ this.props.updateZoom }
+    // downloadEnabled={ parseInt( row.download_enabled ) }
+    // downloadRequiresDetails={ parseInt( row.download_requires_details ) }
+    // const { buoyLabel, downloadEnabled, downloadRequiresDetails } = this.props;
+    const { 
+      web_display_name: buoyLabel, 
+      download_enabled: downloadEnabled, 
+      download_requires_details: downloadRequiresDetails 
+    } = buoy;
     
     if( startDate && endDate && needsUpdating ) {
       this.setState( { needsUpdating: false } );
@@ -209,7 +231,7 @@ export class Chart extends Component {
 
         // Expanded buoy details 
         chartBuoyDetails = <div className={ classNames( ['buoy-details'] ) }>
-          <ChartPhoto buoyId={ this.props.buoyId } />
+          <ChartPhoto buoy={ buoy } />
           <div className="chart-description"><p>{ this.props.buoyDescription }</p></div>
           <Memplot buoyId={ this.props.buoyId } startDate={ startDate } endDate={ endDate } />
         </div>;
@@ -276,24 +298,11 @@ export class Chart extends Component {
   }
 }
 
-// const ChartDownloadTrigger = forwardRef( ( props, ref ) => (
-//   <button className={ classNames( ['btn', 'btn-outline-secondary' ] ) } onClick={ () => this.handleExportClick() }>
-//     <i className={ classNames( ['fa'], ['fa-floppy-o'] ) }></i> Export Data
-//   </button>
-// ) );
-
 const ChartDatePicker = forwardRef( ( { value, onClick }, ref ) => (
   <button className={ classNames( ['btn', 'btn-outline-secondary', 'btn-datepicker' ] ) } onClick={ onClick } ref={ ref }>
     <i className={ classNames( ['fa'], ['fa-calendar'] ) }></i> { value } <i className={ classNames( ['fa'], ['fa-caret-down'] ) }></i>
   </button>
 ) );
-
-// const ChartDownloadModal = ( props ) => <h1>Hello world!</h1>;
-// function ChartDownloadModal ( props ) {
-//   return <h1>{ props.license }</h1>;
-// } 
-
-
 
 export class ChartTable extends Component {
   constructor( props ) {
@@ -365,42 +374,14 @@ export class ChartTable extends Component {
   }
 }
 
-// 
-export class ChartPhoto extends Component {
-  constructor( props ) {
-    super( props );
-    
-    this.state = {
-      path: ''
-    }
-  }
-
-  componentDidMount() {
-		if( this.props.buoyId ) {
-			getBuoyImage( this.props.buoyId ).then( json => {	
-        console.log( json.path );
-			  this.setState( {
-			    path: json.path
-			  } );
-			} );	
-		}
-  }
-
-  render() {
-		const { path } = this.state;
-
-    let content = '';
-		if( path.length == 0 ) {
-		 content = <div className="chart-photo-placeholder"></div>
-		}
-    else {
-      content = <img src={ path } />
-    }
-    return (
-      <div className="chart-image">
-        { content }
-        { path }
-      </div>
-    )
-  }
+const ChartPhoto = ( props ) => {
+  return (
+    <div className="chart-image">
+      { 
+        ( props?.buoy?.image && props.buoy.image.length > 0 )
+        ? <img src={ props.buoy.image } />
+        : <div className="chart-photo-placeholder" />
+      }
+    </div>
+  );
 }

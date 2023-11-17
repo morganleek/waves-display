@@ -10,3 +10,12 @@
 @use './scss/chart';
 @use './scss/map';
 @use './scss/news';
+
+.clearfix {
+	&::before,
+	&::after {
+		content: '';
+		display: block;
+		clear: both;
+	}
+}
