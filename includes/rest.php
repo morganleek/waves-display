@@ -18,7 +18,7 @@
 		$buoys_array = array_map( function( $buoy ) {
 			return array(
 				"id" => $buoy->id,
-				"label" => $buoy->web_display_name
+				"label" => $buoy->web_display_name . " [" . $buoy->id . "]"
 			);
 		}, $buoys );
 

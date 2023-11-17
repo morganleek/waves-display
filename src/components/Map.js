@@ -57,20 +57,20 @@ export class Map extends Component {
 
 	// Init
 	componentDidMount() {
-		
+		console.log( 'Map::componentDidMount' );
 		// Check for Current and Historic Settings
 		const live = ( wad.buoy_display_init_current ) ? parseInt( wad.buoy_display_init_current ) : true;
 		const historic = ( wad.buoy_display_init_historic ) ? parseInt( wad.buoy_display_init_historic ) : false;
 		
-		// Zoom
-		const zoom = this.props.zoom;
+		// Zoom + Buoy Restrictions
+		const { zoom, restrict } = this.props;
 
 		// Set stataes
 		this.setState( () => ( { liveData: live, historicData: historic, currentZoom: zoom } ) );
 
 		// Map Data Fetch
 		// Get buoys
-    getBuoys().then( json => {
+    getBuoys( restrict ).then( json => {
 			// Bounds
 			let bounds = {
 				minLat: 90,
@@ -123,6 +123,7 @@ export class Map extends Component {
 			this.setState( () => ( { boundsSet: true } ) );
 			this.setBounds();
     } );
+
 		// Get drifting
 		getDriftingBuoys().then( json => {
 			if( json.length > 0 ) {

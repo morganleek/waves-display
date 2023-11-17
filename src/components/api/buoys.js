@@ -1,9 +1,12 @@
-export function getBuoys() {
+export function getBuoys( restrict = [] ) {
   if( typeof( wad ) != "undefined" ) {
     const init = {
       method: 'POST'
     }
-    return fetch( wad.ajax + "?action=waf_rest_list_buoys", init ) 
+    // Restrict to certain buoys
+    const restrictQuery = ( restrict.length > 0 ) ? "&restrict=" + restrict.join(",") : "";
+
+    return fetch( wad.ajax + "?action=waf_rest_list_buoys" + restrictQuery, init ) 
       .then( response => {
         if( !response.ok ) throw Error( response.statusText );
         // console.log( response );

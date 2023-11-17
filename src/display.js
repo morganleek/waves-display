@@ -6,7 +6,7 @@ import { Map } from './components/Map';
 // import "../scss/bundle.scss";
 
 const App = ( props ) => {
-	// States
+  // States
   const [showAll, setShowAll] = useState( ( wad.googleShowAllBuoys ) ? wad.googleShowAllBuoys : false );
   const [center, setCenter] = useState( 
     {
@@ -18,6 +18,7 @@ const App = ( props ) => {
   const [focus, setFocus] = useState( null );
 
   useEffect( ( props ) => {
+    console.log( 'App::useEffect' );
     // Props loaded via javascript globals 
     // No need to setup anything but reload 
     // when zoom and center change.
@@ -44,11 +45,13 @@ const App = ( props ) => {
         center={ center } 
         zoom={ zoom } 
         updateFocus={ updateFocus } 
+        restrict={ props.restrict }
       />
       <Charts 
         updateCenter={ updateMapCenter } 
         updateZoom={ updateMapZoom } 
         buoyFocus={ focus } 
+        restrict={ props.restrict }
       />
     </>
   );
