@@ -138,6 +138,7 @@
         // border-color: #fff;
         background: #f0f0f0;
         color: #111;
+        font-size: 0.75rem;
         // font-size: min(12px, 0.75rem);
         &.btn-datepicker {
           min-width: 190px;
@@ -278,7 +279,20 @@
 }
 
 .modal-header {
-  --bs-modal-header-padding: 1rem 0.5rem;
+  --bs-modal-header-padding: 0.65rem 1rem;
+}
+.modal-body {
+  p {
+    font-size: 1rem;
+  }
+  label {
+    font-size: 1rem;
+    display: block;
+    margin-bottom: 0.2em;
+  }
+  .form-control {
+    border-radius: var(--bs-border-radius);
+  }
 }
 
 .modal-dialog {

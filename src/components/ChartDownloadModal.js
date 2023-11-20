@@ -2,9 +2,9 @@ import React from "react";
 import { useFormik } from 'formik';
 const classNames = require('classnames');
 
-
 export const ChartDownloadModal = ( { close, download, downloadEnabled, downloadRequiresDetails, title, license, buoyId } ) => {
-  const downloadButton = ( downloadEnabled && !downloadRequiresDetails ) ? <button type="button" className={ classNames( 'btn', 'btn-primary', 'btn-download' ) } onClick={ download } >Download</button> : '';
+  console.log( downloadEnabled ? 'true' : 'false' );
+  console.log( typeof( downloadEnabled ) );
   const downloadForm = ( downloadRequiresDetails ) ? <ChartDownloadUserForm download={ download } buoyId={ buoyId }></ChartDownloadUserForm> : '';
   return (
     <div className={ classNames( 'modal', 'fade', 'show' ) } id="chartModal" tabindex="-1" aria-labelledby="chartModalLabel" >
@@ -16,11 +16,20 @@ export const ChartDownloadModal = ( { close, download, downloadEnabled, download
           </div>
           <div className={ classNames( 'modal-body' ) }>
             <p>{ license }</p>
-            { downloadForm }
+            { downloadEnabled ? downloadForm : undefined }
           </div>
           <div className={ classNames( 'modal-footer' ) }>
             <button type="button" className={ classNames( 'btn' , 'btn-secondary', 'btn-cancel' ) } onClick={ close } >Close</button>
-            { downloadButton }
+            { 
+              downloadEnabled && !downloadRequiresDetails
+                ? <button 
+                    type="button" 
+                    className={ classNames( 'btn', 'btn-primary', 'btn-download' ) } 
+                    onClick={ download } >
+                    Download
+                  </button> 
+                : undefined 
+            }
           </div>
         </div>
       </div>
@@ -75,44 +84,44 @@ export const ChartDownloadUserForm = ( { download, buoyId } ) => {
   return (
     <form id="chart-download-user-form" className="form-vertical" onSubmit={formik.handleSubmit}>
       <div className="form-group">
-        <label htmlFor="fullName">Full Name *</label><br />
+        <label htmlFor="fullName">Full Name *</label>
         <input 
           type="text"
           className="form-control"
           name="fullName"
           onChange={ formik.handleChange }
           value={ formik.values.fullName } />
-        { formik.touched.fullName && formik.errors.fullName ? <div>{ formik.errors.fullName }</div> : null }
+        { formik.touched.fullName && formik.errors.fullName ? <div className="has-errors">{ formik.errors.fullName }</div> : null }
       </div>
       <div className="form-group">
-        <label className="form-label" htmlFor="company">Company *</label><br />
+        <label className="form-label" htmlFor="company">Company *</label>
         <input 
           type="text"
           className="form-control"
           name="company"
           onChange={ formik.handleChange }
           value={ formik.values.company } />
-        { formik.touched.company && formik.errors.company ? <div>{ formik.errors.company }</div> : null }
+        { formik.touched.company && formik.errors.company ? <div className="has-errors">{ formik.errors.company }</div> : null }
       </div>
       <div className="form-group">
-        <label htmlFor="state">State/Provence *</label><br />
+        <label htmlFor="state">State/Provence *</label>
         <input 
           type="text"
           className="form-control"
           name="state"
           onChange={ formik.handleChange }
           value={ formik.values.state } />
-        { formik.touched.state && formik.errors.state ? <div>{ formik.errors.state }</div> : null }
+        { formik.touched.state && formik.errors.state ? <div className="has-errors">{ formik.errors.state }</div> : null }
       </div>
       <div className="form-group">
-        <label htmlFor="country">Country *</label><br />
+        <label htmlFor="country">Country *</label>
         <input 
           type="text"
           className="form-control"
           name="country"
           onChange={ formik.handleChange }
           value={ formik.values.country } />
-        { formik.touched.country && formik.errors.country ? <div>{ formik.errors.country }</div> : null }
+        { formik.touched.country && formik.errors.country ? <div className="has-errors">{ formik.errors.country }</div> : null }
       </div>
       <div className="form-group">
         <label htmlFor="howWillYou">How will you use the data: *</label>
@@ -129,7 +138,7 @@ export const ChartDownloadUserForm = ( { download, buoyId } ) => {
           <option value="navigation">Navigation </option>
           <option value="other">Other (specify)</option>
         </select>
-        { formik.touched.howWillYou && formik.errors.howWillYou ? <div>{ formik.errors.howWillYou }</div> : null }
+        { formik.touched.howWillYou && formik.errors.howWillYou ? <div className="has-errors">{ formik.errors.howWillYou }</div> : null }
         { formik.values.howWillYou == "other" ? ( 
           <input 
             type="text"
@@ -141,7 +150,7 @@ export const ChartDownloadUserForm = ( { download, buoyId } ) => {
         ) : null }
       </div>
       {/* <div className="form-group">
-        <label htmlFor="howWillYouCheckbox">Let us know where this data will be used: *</label><br />
+        <label htmlFor="howWillYouCheckbox">Let us know where this data will be used: *</label>
         <input 
           type="checkbox"
           name="howWillYouCheckbox[government]"
@@ -178,7 +187,7 @@ export const ChartDownloadUserForm = ( { download, buoyId } ) => {
           <option value="word">Word of mouth</option>
           <option value="other">Other (specify)</option>
         </select>
-        { formik.touched.howDidYou && formik.errors.howDidYou ? <div>{ formik.errors.howDidYou }</div> : null }
+        { formik.touched.howDidYou && formik.errors.howDidYou ? <div className="has-errors">{ formik.errors.howDidYou }</div> : null }
         { formik.values.howDidYou == "other" ? (
           <input 
             type="text"

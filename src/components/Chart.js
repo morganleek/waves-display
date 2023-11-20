@@ -275,7 +275,7 @@ export class Chart extends Component {
           license={ this.props.buoyDownloadText }
           close={ this.handleModalClose }
           download={ this.handleDownloadClick }
-          downloadEnabled={ downloadEnabled }
+          downloadEnabled={ parseInt( downloadEnabled ) }
           downloadRequiresDetails={ parseInt( downloadRequiresDetails ) }
           // ref={ ref }
         />;
