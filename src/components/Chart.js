@@ -1,15 +1,12 @@
-import React, { Component, forwardRef } from "@wordpress/element"; // , useEffect
-import { Line } from 'react-chartjs-2';
+import React, { Component, forwardRef } from "@wordpress/element";
 import DatePicker from "react-datepicker";
-import { DateTime } from 'luxon'; 
+import { Line } from 'react-chartjs-2';
 import 'chartjs-adapter-luxon';
-// import { DateTime } from 'luxon'; 
-
 import { wadRawDataToChartData, wadGenerateChartData, wadGetAspectRatio } from './api/chart';
-import { getBuoys, getBuoy, getBuoyByDate, getBuoyImage } from './api/buoys';
-// import { getMemplot } from './api/memplots';
-import { Memplot } from './/Memplot';
+import { getBuoys, getBuoy, getBuoyByDate } from './api/buoys';
+import { Memplot } from './Memplot';
 import { ChartDownloadModal } from "./ChartDownloadModal";
+import { ChartTable } from "./chart/ChartTable";
 
 const classNames = require('classnames');
 
@@ -73,15 +70,15 @@ export class Charts extends Component {
     return (
       <div className="charts">
         <div>{ chartsLoopRender }</div>
-        <p><small>Waves v2.0.2</small></p>
+        <p><small>Waves v2.0.3</small></p>
       </div>
     );
   }
 }
 
-function timeCallback( tickValue, index, ticks ) {
-  return tickValue.split(" ");
-}
+// function timeCallback( tickValue, index, ticks ) {
+//   return tickValue.split(" ");
+// }
 
 export class Chart extends Component {
   constructor( props ) {
@@ -114,7 +111,6 @@ export class Chart extends Component {
 
 	handleExportClick() {
     const { buoy } = this.props;
-    // const { buoyId } = this.props;
     const { timeRange } = this.state.data;
     if( timeRange.length == 2 ) {
       const start = parseInt( timeRange[0] ) / 1000;
@@ -174,18 +170,6 @@ export class Chart extends Component {
     const expandedLabel = ( isExpanded ) ? 'Collapse' : 'Expand';
     const { buoy } = this.props;
 
-    // buoyId={ row.id } 
-    // buoyLabel={ row.web_display_name } 
-    // buoyLastUpdated={ row.last_update } 
-    // buoyLat={ row.lat } 
-    // buoyLng={ row.lng }
-    // buoyDescription={ row.description }
-    // buoyDownloadText={ row.download_text }
-    // updateCenter={ this.props.updateCenter }
-    // updateZoom={ this.props.updateZoom }
-    // downloadEnabled={ parseInt( row.download_enabled ) }
-    // downloadRequiresDetails={ parseInt( row.download_requires_details ) }
-    // const { buoyLabel, downloadEnabled, downloadRequiresDetails } = this.props;
     const { 
       web_display_name: buoyLabel, 
       download_enabled: downloadEnabled, 
@@ -244,7 +228,8 @@ export class Chart extends Component {
         chartGraph = <Line data={ data.config.data } options={ data.config.options } />;
       }
 
-      chartTable = <ChartTable dataPoints={ data.dataPoints } lastUpdated={ this.props.lastUpdated } />;
+      chartTable = <ChartTable data={ data } show={ wad.obs_table_fields } { ...this.props } />;
+      
       downloadButton = <button className={ classNames( ['btn', 'btn-outline-secondary' ] ) } onClick={ () => this.handleExportClick() } ><i className={ classNames( ['fa'], ['fa-floppy-o'] ) }></i> Export Data</button>;
 			buttonGroup = <div className={ classNames( ['btn-group', 'pull-right'] ) } >
         <button className={ classNames( ['btn', 'btn-outline-secondary' ] ) } onClick={ () => this.handleExpandClick() }><i className={ classNames( ['fa'], ['fa-expand'] ) }></i> { expandedLabel }</button>
@@ -294,6 +279,7 @@ export class Chart extends Component {
 						{ chartGraph }
             { chartBuoyDetails }
             { chartTable }
+            
           </div>
         </div>
       </div>
@@ -306,76 +292,6 @@ const ChartDatePicker = forwardRef( ( { value, onClick }, ref ) => (
     <i className={ classNames( ['fa'], ['fa-calendar'] ) }></i> { value } <i className={ classNames( ['fa'], ['fa-caret-down'] ) }></i>
   </button>
 ) );
-
-export class ChartTable extends Component {
-  constructor( props ) {
-    super( props );
-    
-    this.state = {
-      active: false
-    }
-  }
-
-  render( ) {
-    // Iterate through chart table items
-    let lineTableRender = [];
-    let last = 0;
-    let dateTime = '';
-    // Each property
-    for( const [key, value] of Object.entries( this.props.dataPoints ) ) {
-      let showItem = true;
-      if( wad.obs_table_fields ) {
-        showItem = wad.obs_table_fields.indexOf( key ) >= 0;
-      }
-      
-      // Properties data length
-      if( showItem && value.data.length > 0 ) {
-        // Search for biggest date value (not ordered by date always)
-        const biggest = value.data.reduce( ( prev, current ) => {
-          return ( prev.x > current.x ) ? prev : current;
-        } );
-        
-        // Check is the lastest of all data points
-        if( biggest.x > last ) {
-          last = biggest.x;
-        }
-
-        // Check valid data  
-        if( biggest.y >= 0 ) {
-          lineTableRender.push( <li key={ key }>
-            { value.description }
-            <span>{ biggest.y }</span>
-          </li> );
-        }
-      }
-    }
-
-    // Create date string
-    let hasRecentData = false;
-    if( last > 0 ) {
-      const diff = 4 * 60 * 60 * 1000; // 4 hours
-      const lastTime = DateTime.fromMillis( last );
-      // Mark if last record is more than 4 hours
-      hasRecentData = last + diff > Date.now();
-      dateTime = <span className={ 
-        classNames( 
-          { 
-            "recent-date": hasRecentData, 
-            "out-of-date": !hasRecentData 
-          } 
-        ) 
-      }>{ lastTime.toFormat( 'd LLL y h:mma' ) }<span className="epoch">{ last }</span></span>
-    }
-
-    return (
-      <div className={ classNames( "chart-info", { "expanded": this.state.active } ) }
-        onClick={ () => this.setState( { active: !this.state.active } ) } >
-        <h5 className='latest-observations'>Latest Observations { dateTime }</h5>
-        <ul>{ lineTableRender }</ul>
-      </div>
-    );
-  }
-}
 
 const ChartPhoto = ( props ) => {
   return (
