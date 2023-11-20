@@ -138,7 +138,7 @@
         // border-color: #fff;
         background: #f0f0f0;
         color: #111;
-        font-size: min(12px, 0.75rem);
+        // font-size: min(12px, 0.75rem);
         &.btn-datepicker {
           min-width: 190px;
           text-align: left;
@@ -277,6 +277,10 @@
   padding: 0.1em 0.25em;
 }
 
+.modal-header {
+  --bs-modal-header-padding: 1rem 0.5rem;
+}
+
 .modal-dialog {
   .modal-content {
     .btn {
@@ -349,6 +353,18 @@
     background: transparent;
     &:hover {
       opacity: 0.6;
+    }
+  }
+}
+
+form {
+  .form-group {
+    margin-bottom: 0.5em;
+  }
+  
+  .form-select {
+    & + .form-control {
+      margin-top: 0.5;
     }
   }
 }

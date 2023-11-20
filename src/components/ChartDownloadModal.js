@@ -73,57 +73,58 @@ export const ChartDownloadUserForm = ( { download, buoyId } ) => {
   });
 
   return (
-    <form id="chart-download-user-form" onSubmit={formik.handleSubmit}>
-      <div class="form-group">
+    <form id="chart-download-user-form" className="form-vertical" onSubmit={formik.handleSubmit}>
+      <div className="form-group">
         <label htmlFor="fullName">Full Name *</label><br />
         <input 
           type="text"
-          class="form-control"
+          className="form-control"
           name="fullName"
           onChange={ formik.handleChange }
           value={ formik.values.fullName } />
         { formik.touched.fullName && formik.errors.fullName ? <div>{ formik.errors.fullName }</div> : null }
       </div>
-      <div class="form-group">
-        <label htmlFor="company">Company *</label><br />
+      <div className="form-group">
+        <label className="form-label" htmlFor="company">Company *</label><br />
         <input 
           type="text"
-          class="form-control"
+          className="form-control"
           name="company"
           onChange={ formik.handleChange }
           value={ formik.values.company } />
         { formik.touched.company && formik.errors.company ? <div>{ formik.errors.company }</div> : null }
       </div>
-      <div class="form-group">
+      <div className="form-group">
         <label htmlFor="state">State/Provence *</label><br />
         <input 
           type="text"
-          class="form-control"
+          className="form-control"
           name="state"
           onChange={ formik.handleChange }
           value={ formik.values.state } />
         { formik.touched.state && formik.errors.state ? <div>{ formik.errors.state }</div> : null }
       </div>
-      <div class="form-group">
+      <div className="form-group">
         <label htmlFor="country">Country *</label><br />
         <input 
           type="text"
-          class="form-control"
+          className="form-control"
           name="country"
           onChange={ formik.handleChange }
           value={ formik.values.country } />
         { formik.touched.country && formik.errors.country ? <div>{ formik.errors.country }</div> : null }
       </div>
-      <div class="form-group">
+      <div className="form-group">
         <label htmlFor="howWillYou">How will you use the data: *</label>
         <select 
-          class="form-control" 
+          className="form-select" 
           name="howWillYou" 
           onChange={ formik.handleChange }
           >
           <option>&nbsp;</option>
-          <option value="education">Education </option>
           <option value="research">Research </option>
+          <option value="education">Education </option>
+          <option value="government">Government </option>
           <option value="recreation">Recreation </option>
           <option value="navigation">Navigation </option>
           <option value="other">Other (specify)</option>
@@ -132,17 +133,40 @@ export const ChartDownloadUserForm = ( { download, buoyId } ) => {
         { formik.values.howWillYou == "other" ? ( 
           <input 
             type="text"
-            class="form-control"
+            className="form-control"
             name="howWillYouOther"
             onChange={ formik.handleChange }
             placeholder="Please specify"
             value={ formik.values.howWillYouOther } />
         ) : null }
       </div>
-      <div class="form-group">
+      {/* <div className="form-group">
+        <label htmlFor="howWillYouCheckbox">Let us know where this data will be used: *</label><br />
+        <input 
+          type="checkbox"
+          name="howWillYouCheckbox[government]"
+          value="1"
+        /> Government <br />
+        <input 
+          type="checkbox"
+          name="howWillYouCheckbox[research-education]"
+          value="1"
+        /> Research/Education <br />
+        <input 
+          type="checkbox"
+          name="howWillYouCheckbox[commercial-industry]"
+          value="1"
+        /> Commercial/Industry <br />
+        <input 
+          type="checkbox"
+          name="howWillYouCheckbox[recreation]"
+          value="1"
+        /> Recreation
+      </div> */}
+      <div className="form-group">
         <label htmlFor="howDidYou">How did you hear about us: *</label>
         <select 
-          class="form-control" 
+          className="form-select" 
           name="howDidYou"
           onChange={ formik.handleChange }
           >
@@ -158,14 +182,14 @@ export const ChartDownloadUserForm = ( { download, buoyId } ) => {
         { formik.values.howDidYou == "other" ? (
           <input 
             type="text"
-            class="form-control"
+            className="form-control"
             name="howDidYouOther"
             onChange={ formik.handleChange }
             placeholder="Please specify"
             value={ formik.values.howDidYouOther } />
         ) : null }
       </div>
-      <button type="submit" class="btn btn-primary">Download</button>
+      <button type="submit" className="btn btn-primary">Download</button>
     </form>
   )
 };
