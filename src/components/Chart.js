@@ -216,7 +216,7 @@ export class Chart extends Component {
         <button className={ classNames( ['btn', 'btn-outline-secondary' ] ) } onClick={ () => this.handleExpandClick() }><i className={ classNames( ['fa'], ['fa-expand'] ) }></i> { expandedLabel }</button>
 				<button className={ classNames( ['btn', 'btn-outline-secondary' ] ) } onClick={ () => this.handleCentreClick() }><i className={ classNames( ['fa'], ['fa-crosshairs'] ) }></i> Centre</button>
 				{ downloadButton }
-				<DatePicker
+        <DatePicker
           selectsRange={ true }
           startDate={ startDate }
           endDate={ endDate }
@@ -226,7 +226,6 @@ export class Chart extends Component {
               this.setState( { needsUpdating: true } );
             }
           } }
-          customInput={ <ChartDatePicker /> }
           dateFormat="dd/MM/yyyy"
         />
 			</div>;
@@ -267,12 +266,6 @@ export class Chart extends Component {
     );
   }
 }
-
-const ChartDatePicker = forwardRef( ( { value, onClick }, ref ) => (
-  <button className={ classNames( ['btn', 'btn-outline-secondary', 'btn-datepicker' ] ) } onClick={ onClick } ref={ ref }>
-    <i className={ classNames( ['fa'], ['fa-calendar'] ) }></i> { value } <i className={ classNames( ['fa'], ['fa-caret-down'] ) }></i>
-  </button>
-) );
 
 const ChartPhoto = ( props ) => {
   return (
