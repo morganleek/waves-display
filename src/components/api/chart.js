@@ -53,6 +53,8 @@ export function wadGenerateChartData( waves, includes, multiplier = 1 ) {
 			sst: true, 
 			bottomTemp: true,
 			hsig: true,
+			hsigSwell: true,
+			hsigSea: true
 		};
 	}
 
@@ -111,7 +113,34 @@ export function wadGenerateChartData( waves, includes, multiplier = 1 ) {
 			// Only want last value
 			dataPoints.currentMag.data = [{ x: time, y: parseFloatOr( wave["CurrmentMag (m/s)"], 0.0 ) }];
 			dataPoints.currentDir.data = [{ x: time, y: parseFloatOr( wave["CurrentDir (deg) "], 0.0 ) }];
+			// Extras
+			if( typeof( wave["Hsig_swell (m)"] ) !== "undefined" && parseInt( wave["Hsig_swell (m)"] ) !== -9999 ) {
+				dataPoints.hsigSwell.data.push( { x: time, y: parseFloatOr( wave["Hsig_swell (m)"], 0.0 ) } );
+			}
+			if( typeof( wave["Hsig_sea (m)"] ) !== "undefined" && parseInt( wave["Hsig_sea (m)"] ) !== -9999 ) {
+				dataPoints.hsigSea.data.push( { x: time, y: parseFloatOr( wave["Hsig_sea (m)"], 0.0 ) } );
+			}
+			if( typeof( wave["Tm_swell (s)"] ) !== "undefined" && parseInt( wave["Tm_swell (s)"] ) !== -9999 ) {
+				dataPoints.tmSwell.data.push( { x: time, y: parseFloatOr( wave["Tm_swell (s)"], 0.0 ) } );
+			}
+			if( typeof( wave["Tm_sea (s)"] ) !== "undefined" && parseInt( wave["Tm_sea (s)"] ) !== -9999 ) {
+				dataPoints.tmSea.data.push( { x: time, y: parseFloatOr( wave["Tm_sea (s)"], 0.0 ) } );
+			}
+			if( typeof( wave["Dm_swell (deg)"] ) !== "undefined" && parseInt( wave["Dm_swell (deg)"] ) !== -9999 ) {
+				dataPoints.dmSwell.data.push( { x: time, y: parseFloatOr( wave["Dm_swell (deg)"], 0.0 ) } );
+			}
+			if( typeof( wave["Dm_sea (deg)"] ) !== "undefined" && parseInt( wave["Dm_sea (deg)"] ) !== -9999 ) {
+				dataPoints.dmSea.data.push( { x: time, y: parseFloatOr( wave["Dm_sea (deg)"], 0.0 ) } );
+			}
+			if( typeof( wave["DmSpr_swell (deg)"] ) !== "undefined" && parseInt( wave["DmSpr_swell (deg)"] ) !== -9999 ) {
+				dataPoints.dmSprSwell.data.push( { x: time, y: parseFloatOr( wave["DmSpr_swell (deg)"], 0.0 ) } );
+			}
+			if( typeof( wave["DmSpr_sea (deg)"] ) !== "undefined" && parseInt( wave["DmSpr_sea (deg)"] ) !== -9999 ) {
+				dataPoints.dmSprSea.data.push( { x: time, y: parseFloatOr( wave["DmSpr_sea (deg)"], 0.0 ) } );
+			}
 		} );
+
+		console.log( dataPoints.hsigSwell );
 		
 		const startTime = Math.min(...waves.map( ( wave ) => wave['Time (UNIX/UTC)'] ) ) * 1000;
 		const endTime = Math.max(...waves.map( ( wave ) => wave['Time (UNIX/UTC)'] ) ) * 1000;
@@ -251,67 +280,6 @@ export function wadGenerateChartData( waves, includes, multiplier = 1 ) {
 	return false;
 } 
 
-// Draw Latest Data into a table
-// export function wadDrawLatestTable( buoyId, dataPoints ) {
-// 	//
-// 	// Make work with new draw method
-// 	//
-// 	let buoyInfoHtml = "";
-	
-// 	for( const [key, value] of Object.entries( dataPoints ) ) {
-// 		// Show only if wanted
-// 		if( value.showInChart ) {
-// 			// Max value
-// 			const recent = value.data[0];
-			
-// 			if( typeof( recent ) != "undefined" ) {
-// 				let recentValue;
-				
-// 				switch ( typeof( recent ) ) {
-// 					case "object": // { x, y }
-// 						if( recent.hasOwnProperty( 'y' ) && recent.y > 0 ) {
-// 							recentValue = recent.y;
-// 						}
-// 						break;
-// 					case "number": // y - direction values
-// 						recentValue = ( recent + 180 ) % 360;
-// 						// recentValue = recent;
-// 					default:
-// 						break;
-// 				}
-				
-// 				// Append value to table
-// 				if( recentValue ) {
-// 					buoyInfoHtml += "<li>" + value.description + 
-// 						"<span class='value'>" + recentValue + "</span></li>";
-// 				}
-// 			}
-// 		}
-// 	}
-	
-// 	const buoyWrapper = document.getElementById( 'buoy-' + buoyId );
-// 	// Time
-// 	let time = "";
-// 	if( window.buoysData != undefined && window.buoysData.has( parseInt( buoyId ) ) ) {
-// 		const lastUpdate = moment( window.buoysData.get( parseInt( buoyId ) ).last_update * 1000 );
-// 		const queryTime = moment( window.buoysData.get( parseInt( buoyId ) ).now * 1000 );
-		
-// 		const timeDiff = queryTime.diff( lastUpdate, 'hours' );
-// 		const hasWarning = ( timeDiff >= 3 ) ? true : false;
-// 		const formattedTime = ( timeDiff >= 3 ) ? lastUpdate.format( 'h:mma DD/MM/YYYY' ) + ' (' + timeDiff + ' hours ago)' : lastUpdate.format( 'h:mma DD/MM/YYYY' );
-
-// 		const latestObservations = buoyWrapper.getElementsByClassName( 'latest-observations' )[0];
-// 		latestObservations.getElementsByTagName( 'time' )[0].innerHTML = formattedTime;
-// 		latestObservations.getElementsByTagName( 'time' )[0].classList.toggle( 'warning', hasWarning );
-// 	}
-
-// 	// Clear it
-// 	const chartInfo = buoyWrapper.getElementsByClassName("chart-info")[0];
-// 	chartInfo.innerHTML = "";
-// 	chartInfo.insertAdjacentHTML( 'afterbegin', "<ul>" + buoyInfoHtml + "</ul>" );
-// 	chartInfo.addEventListener( 'click', wadToggleChart );
-// }
-
 // Render Heading for Buoy Chart
 export function wadDrawHeading( buoyId, label, range ) {
 	const buoyWrapper = document.getElementById( 'buoy-' + buoyId );
@@ -344,51 +312,51 @@ export function wadDrawChart( config, canvasContext ) {
 }
 
 // Render custom chart toggles
-export function wadDrawChartLegend( buoyId, config ) {
-	let labels = [];
+// export function wadDrawChartLegend( buoyId, config ) {
+// 	let labels = [];
 
-	// Label and Buoy
-	if( config.data.datasets ) {
-		const buoyCanvasLegend = document.querySelector( "#buoy-" + buoyId + " .canvas-legend" );
+// 	// Label and Buoy
+// 	if( config.data.datasets ) {
+// 		const buoyCanvasLegend = document.querySelector( "#buoy-" + buoyId + " .canvas-legend" );
 		
-		if( buoyCanvasLegend ) {
-			buoyCanvasLegend.innerHTML = "";
-			config.data.datasets.forEach( ( legend, i ) => {
-				const checkbox = document.createElement( 'input' );
-				checkbox.id = 'legend-toggle-' + buoyId + '-' + i;
-				checkbox.type = "checkbox";
-				checkbox.checked = ( typeof( legend ) != "undefined" && typeof( legend.hidden ) != "undefined" ) ? !legend.hidden : true;
-				checkbox.dataset.buoyId = buoyId;
-				checkbox.dataset.legendItem = i;
-				checkbox.style.setProperty( '--checkbox-background', legend.backgroundColor );
-				checkbox.addEventListener( 'click', wadLegendToggle );
+// 		if( buoyCanvasLegend ) {
+// 			buoyCanvasLegend.innerHTML = "";
+// 			config.data.datasets.forEach( ( legend, i ) => {
+// 				const checkbox = document.createElement( 'input' );
+// 				checkbox.id = 'legend-toggle-' + buoyId + '-' + i;
+// 				checkbox.type = "checkbox";
+// 				checkbox.checked = ( typeof( legend ) != "undefined" && typeof( legend.hidden ) != "undefined" ) ? !legend.hidden : true;
+// 				checkbox.dataset.buoyId = buoyId;
+// 				checkbox.dataset.legendItem = i;
+// 				checkbox.style.setProperty( '--checkbox-background', legend.backgroundColor );
+// 				checkbox.addEventListener( 'click', wadLegendToggle );
 
-				const labelSpan = document.createElement( 'span' );
-				labelSpan.innerHTML = legend.label;
+// 				const labelSpan = document.createElement( 'span' );
+// 				labelSpan.innerHTML = legend.label;
 
-				const label = document.createElement( 'label' );
-				// label.innerHTML = legend.label;
-				label.htmlFor = 'legend-toggle-' + buoyId + '-' + i;
+// 				const label = document.createElement( 'label' );
+// 				// label.innerHTML = legend.label;
+// 				label.htmlFor = 'legend-toggle-' + buoyId + '-' + i;
 
-				// Add checkbox to label
-				label.insertAdjacentElement( 'afterbegin', labelSpan );
-				label.insertAdjacentElement( 'afterbegin', checkbox );
-				// Add label to legend
-				buoyCanvasLegend.insertAdjacentElement( 'beforeend', label );
-			});
-		}
-	}
-}
+// 				// Add checkbox to label
+// 				label.insertAdjacentElement( 'afterbegin', labelSpan );
+// 				label.insertAdjacentElement( 'afterbegin', checkbox );
+// 				// Add label to legend
+// 				buoyCanvasLegend.insertAdjacentElement( 'beforeend', label );
+// 			});
+// 		}
+// 	}
+// }
 
 // Chart toggles event
-function wadLegendToggle( e ) {
-	const buoyId = e.target.dataset["buoyId"];
-	const legendItem = e.target.dataset["legendItem"];
-	if( myCharts.hasOwnProperty( "buoy" + buoyId ) ) {
-		myCharts["buoy" + buoyId].getDatasetMeta( legendItem ).hidden = !e.target.checked;
-		myCharts["buoy" + buoyId].update();
-	}
-}
+// function wadLegendToggle( e ) {
+// 	const buoyId = e.target.dataset["buoyId"];
+// 	const legendItem = e.target.dataset["legendItem"];
+// 	if( myCharts.hasOwnProperty( "buoy" + buoyId ) ) {
+// 		myCharts["buoy" + buoyId].getDatasetMeta( legendItem ).hidden = !e.target.checked;
+// 		myCharts["buoy" + buoyId].update();
+// 	}
+// }
 
 // Get memplots
 export function wadProcessMemplots( response ) {
@@ -406,24 +374,11 @@ export function wadProcessMemplots( response ) {
 				fetch( wad.ajax + "?action=waf_get_file_path&id=" + buoy[i].id + "&buoy_id=" + buoy[i].buoy_id, init ) 
 					.then( response => {
 						if( !response.ok ) throw Error( response.statusText );
-						// console.log( response );
 						return response.json();
 					} )
 					.then( json => {
 						wadProcessMemplot( json );
 					} );
-
-				// $.ajax({
-				// 	type: 'POST',
-				// 	url: wad.ajax,
-				// 	data: { 
-				// 		action: '',
-				// 		id: buoy[i].id,
-				// 		buoy_id: buoy[i].buoy_id
-				// 	},
-				// 	success: wadProcessMemplot,
-				// 	dataType: 'json'
-				// });
 			}
 		}
 	}
@@ -668,39 +623,60 @@ export function generateDataPoints( includes ) {
 			fill: true,
 			yAxisID: 'y-axis-1',
 		},
-		// qfWaves: { data: [], showInChart: false, description: "" }, 
-		// qfSst: [], 
-		// qfBottTemp: [], 
+		hsigSwell: {
+			data: [],
+			label: window.innerWidth >= 768 ? 'Significant Wave Height Swell (m)' : 'Sig Wave Swell (m)',
+			description: "Significant Wave Height Swell (m)",
+			backgroundColor: 'rgba(197, 132, 204, 0.4)',
+			borderColor: 'rgba(198, 60, 213, 1)',
+			borderWidth: 1,
+			lineTension: 0,
+			pointRadius: 1,
+			fill: true,
+			yAxisID: 'y-axis-1',
+			hidden: ( includes.hasOwnProperty( 'hsigSwell' ) ) ? !includes.hsigSwell : true
+		},
+		hsigSea: {
+			data: [],
+			label: window.innerWidth >= 768 ? 'Significant Wave Height Sea (m)' : 'Sig Wave Sea (m)',
+			description: "Significant Wave Height Sea (m)",
+			backgroundColor: 'rgba(254, 240, 39, 0.4)',
+			borderColor: 'rgba(254, 240, 39, 1)',
+			borderWidth: 1,
+			lineTension: 0,
+			pointRadius: 1,
+			fill: true,
+			yAxisID: 'y-axis-1',
+			hidden: ( includes.hasOwnProperty( 'hsigSea' ) ) ? !includes.hsigSea : true
+		},
+		tmSwell: {
+			data: [],
+			description: "Tm_swell (s)"
+		},
+		tmSea: {
+			data: [],
+			description: "Tm_sea (s)"
+		},
+		dmSwell: {
+			data: [],
+			description: "Dm_swell (deg)"
+		},
+		dmSea: {
+			data: [],
+			description: "Dm_sea (deg)"
+		},
+		dmSprSwell: {
+			data: [],
+			description: "DmSpr_swell (deg)"
+		},
+		dmSprSea: {
+			data: [],
+			description: "DmSpr_sea (deg)"
+		}
 	};
 
 	return dataPoints;
 }
-
-// export const panelWrapper = "<div class='card card-primary mb-3'>" +
-//   "<div class='card-header'>" +
-// 		"<h6 class='pull-left text-white'>{{ buoyLabel }} <span style='opacity: 0.35;'>#{{ buoyId }}</span><time></time></h6>" + 
-// 		"<div class='btn-group chart-js-menu pull-right' role='group' aria-label='Chart Tools'>" + 
-// 			"<button class='expand-trigger btn btn-outline-secondary' data-buoy-id='{{ buoyId }}'><i class='fa fa-expand' aria-hidden='true'></i>&nbsp;&nbsp;Expand</button>" +
-// 			"<button class='maps-trigger btn btn-outline-secondary' data-buoy-id='{{ buoyId }}' data-buoy-lat='{{ buoyLat }}' data-buoy-lng='{{ buoyLng }}'><i class='fa fa-crosshairs' aria-hidden='true'></i>&nbsp;&nbsp;Centre</button>" +
-// 			"<button class='download-trigger btn btn-outline-secondary' data-buoy-id='{{ buoyId }}'><i class='fa fa-floppy-o' aria-hidden='true'></i>&nbsp;&nbsp;Export Data</button>" +
-// 			"<button class='calendars-trigger btn btn-outline-secondary' data-buoy-id='{{ buoyId }}' data-buoy-start='{{ buoyStartTime }}' data-buoy-end='{{ buoyEndTime }}'><i class='fa fa-calendar' aria-hidden='true'></i>&nbsp;&nbsp;<span class='dateRangeButtonLabel'>Date Range</span> <i class='fa fa-caret-down' aria-hidden='true'></i></button>" +
-// 		"</div>" +
-// 	"</div>" + 
-// 	"<div class='card-body'>" + 
-// 		"<div class='canvas-legend'></div>" +
-//     "<div class='canvas-wrapper loading'>" +
-//       "<canvas></canvas>" +
-//     "</div>" +
-//     "<h5 class='latest-observations'>Latest Observations <time></time></h5>" +
-// 		"<div class='buoy-description'>" + 
-// 			"<div class='decription'></div>" +
-// 			"<div class='image'></div>" +
-// 			"<div class='memplot'></div>" +
-// 		"</div>" + 
-// 		"<div class='chart-info'>" + 
-// 		"</div>" +
-//   "</div>" +
-// "</div>";
 
 export const wadGetAspectRatio = ( multiplier = 1 ) => {
 	const sizing = ( window.innerWidth >= 992 ) ? 'desktop' : ( window.innerWidth >= 768 ) ? 'tablet' : ( window.innerWidth >= 450 ) ? 'mobileLandscape' : 'mobilePortrait';

@@ -57,7 +57,6 @@ export class Map extends Component {
 
 	// Init
 	componentDidMount() {
-		console.log( 'Map::componentDidMount' );
 		// Check for Current and Historic Settings
 		const live = ( wad.buoy_display_init_current ) ? parseInt( wad.buoy_display_init_current ) : true;
 		const historic = ( wad.buoy_display_init_historic ) ? parseInt( wad.buoy_display_init_historic ) : false;

@@ -18,7 +18,6 @@ function App(props) {
   const [focus, setFocus] = useState(null);
 
   useEffect((props) => {
-    console.log('App::useEffect');
     // Props loaded via javascript globals 
     // No need to setup anything but reload 
     // when zoom and center change.

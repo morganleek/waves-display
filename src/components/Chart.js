@@ -1,4 +1,4 @@
-import React, { Component, forwardRef } from "@wordpress/element";
+import React, { Component, forwardRef, useEffect, useState } from "@wordpress/element";
 import DatePicker from "react-datepicker";
 import { Line } from 'react-chartjs-2';
 import 'chartjs-adapter-luxon';
@@ -10,75 +10,56 @@ import { ChartTable } from "./chart/ChartTable";
 
 const classNames = require('classnames');
 
-export class Charts extends Component {
-  constructor( props ) {
-    super( props );
-    
-    this.state = {
-      buoys: [],
-    }
-  }
-
-  componentDidMount() {
+export function Charts ( {restrict, buoyFocus, updateCenter, updateZoom} ) {
+  const [buoys, setBuoys] = useState([]);
+  
+  useEffect( () => {
     // console.log( 'Chart::componentDidMount' );
-    const { restrict } = this.props;
-
+    // const { restrict } = props;
+  
     getBuoys( restrict ).then( json => {
-      this.setState( {
-        buoys: json
-      } );
+      setBuoys( json );
     } );
-  } 
 
-  componentDidUpdate( prevProps ) {
-    const { buoyFocus } = this.props;
-    if( buoyFocus != prevProps.buoyFocus ) {
+    if( buoyFocus ) {
       if( document.querySelector('[data-buoy-id="' + buoyFocus + '"]') ) {
         document.querySelector('[data-buoy-id="' + buoyFocus + '"]').scrollIntoView( { block: "start" } );
       }
     }
-  }
+  }, [buoyFocus] );
 
-  render() {
-    const { buoys } = this.state;
-    let chartsLoopRender;
-    if( buoys.length > 0 ) {
-			chartsLoopRender = buoys.map( ( row, index ) => {    
-        // <div className={ classNames( ['card', 'card-primary', 'mb-3'] ) } key={ index }> 
-        if( parseInt( row.is_enabled ) == 1 ) {
-          return (
-            <Chart
-              buoy={ row }
-              buoyId={ row.id } 
-              buoyLabel={ row.web_display_name } 
-              buoyLastUpdated={ row.last_update } 
-              buoyLat={ row.lat } 
-              buoyLng={ row.lng }
-              buoyDescription={ row.description }
-              buoyDownloadText={ row.download_text }
-              updateCenter={ this.props.updateCenter }
-              updateZoom={ this.props.updateZoom }
-              downloadEnabled={ parseInt( row.download_enabled ) }
-              downloadRequiresDetails={ parseInt( row.download_requires_details ) }
-              key={ index }
-            />
-          )
+  return (
+    <div className="charts">
+      <div>
+        { 
+          ( buoys.length > 0 ) 
+            ? ( buoys
+              .filter( row => row.is_enabled )
+              .map( ( row, index ) => (
+                <Chart
+                  buoy={ row }
+                  buoyId={ row.id } 
+                  buoyLabel={ row.web_display_name } 
+                  buoyLastUpdated={ row.last_update } 
+                  buoyLat={ row.lat } 
+                  buoyLng={ row.lng }
+                  buoyDescription={ row.description }
+                  buoyDownloadText={ row.download_text }
+                  updateCenter={ updateCenter }
+                  updateZoom={ updateZoom }
+                  downloadEnabled={ parseInt( row.download_enabled ) }
+                  downloadRequiresDetails={ parseInt( row.download_requires_details ) }
+                  key={ index }
+                />
+              ) ) 
+            ) 
+            : undefined 
         }
-			} );
-    }
-
-    return (
-      <div className="charts">
-        <div>{ chartsLoopRender }</div>
-        <p><small>Waves v2.0.3</small></p>
       </div>
-    );
-  }
+      <p><small>Waves v2.0.3</small></p>
+    </div>
+  ); 
 }
-
-// function timeCallback( tickValue, index, ticks ) {
-//   return tickValue.split(" ");
-// }
 
 export class Chart extends Component {
   constructor( props ) {
