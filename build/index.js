@@ -248,7 +248,7 @@ module.exports = window["wp"]["i18n"];
   \************************/
 /***/ (function(module) {
 
-module.exports = JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"waves/display","version":"0.1.0","title":"Waves Display","category":"widgets","icon":"admin-site-alt2","description":"Waves Display maps and charts","example":{},"supports":{"html":false,"align":["wide","full"]},"textdomain":"waves-display","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css","viewScript":"file:./view.js","attributes":{"buoys":{"type":"array","default":[{"id":2,"label":"Tantabiddi"},{"id":3,"label":"Exmouth Gulf"}]}}}');
+module.exports = JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"waves/display","version":"0.1.0","title":"Waves Display","category":"widgets","icon":"admin-site-alt2","description":"Waves Display maps and charts","example":{},"supports":{"html":false,"align":["wide","full"]},"textdomain":"waves-display","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":["file:./style-index.css","https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap"],"viewScript":"file:./view.js","attributes":{"buoys":{"type":"array","default":[{"id":2,"label":"Tantabiddi"},{"id":3,"label":"Exmouth Gulf"}]}}}');
 
 /***/ })
 

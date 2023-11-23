@@ -1,0 +1,22 @@
+.card {
+	--border-radius: 0.375rem;
+	border-radius: var(--border-radius);
+	border: 1px solid;
+	overflow: hidden;
+	.card-header {
+		padding: 6px;
+		
+		@media (min-width: 768px) {
+			padding: 6px 16px;
+		}
+	}	
+	.card-body {
+		padding: 16px;
+		
+	}
+}
+
+.btn-group {
+	display: flex;
+	align-items: center;
+}

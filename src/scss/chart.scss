@@ -86,12 +86,13 @@
 
 .react-datepicker-wrapper {
   margin-left: 5px;
-  padding-left: 5px;
   display: flex;
   align-items: center;
   background: #f0f0f0;
   position: relative;
-  border: 1px solid #111;
+  border: 1px solid #6f6f6f;
+  padding: 2px 0 2px 5px;
+  font-family: var(--waves-display--font-family);
   &::before {
     content: "\f133";
     font-family: "FontAwesome";
@@ -108,7 +109,7 @@
     transform: translate(0, -50%);
   }
   input[type="text"] {
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     min-width: 160px;
     color: #111;
     background: transparent;
@@ -121,15 +122,42 @@
   }
 }
 
+button.btn {
+  font-family: var(--waves-display--font-family);
+  white-space: nowrap;
+  border-radius: 0;
+  padding: 4px 6px;
+  border: 1px solid #6f6f6f;
+  background: #f0f0f0;
+  color: #111;
+  font-size: 0.8rem;
+  &:before {
+    font-family: 'FontAwesome';
+    margin-right: 3px;
+  }        
+  &.btn-datepicker {
+    min-width: 190px;
+    text-align: left;
+    .fa.fa-caret-down {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translate(0, -50%);
+    }
+  }
+}
+
 .card {
   .btn-group {
+    
     & > button.btn {
-      font-family: 'Lato', sans-serif;
-      white-space: nowrap;
-      border-radius: 0;
-      &:before {
+      & + button.btn {
+        border-left: 0 none;
+      }
+      &::before {
         font-family: 'FontAwesome';
         margin-right: 3px;
+        font-weight: normal;
       }
     }
   }
@@ -166,20 +194,7 @@
       button.btn {
         // color: #fff;
         // border-color: #fff;
-        background: #f0f0f0;
-        color: #111;
-        font-size: 0.75rem;
-        // font-size: min(12px, 0.75rem);
-        &.btn-datepicker {
-          min-width: 190px;
-          text-align: left;
-          .fa.fa-caret-down {
-            position: absolute;
-            right: 8px;
-            top: 50%;
-            transform: translate(0, -50%);
-          }
-        }
+        
       }
     }
     .card-body {
@@ -410,5 +425,51 @@ form {
     & + .form-control {
       margin-top: 0.5;
     }
+  }
+}
+
+.chart-filter {
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
+  .chart-filter-list {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: -12px;
+    border: 0 none;
+    padding: 12px 12px;
+    list-style: none;
+    background: #fff;
+    margin: 0;
+    font-size: 0.9rem;
+    filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.25));
+    border-radius: 5px;
+    & > li {
+      &:not(:last-child) {
+        padding-bottom: 0.5em;
+        margin-bottom: 0.5em;
+        border-bottom: 1px solid #f0f0f0;
+      }
+    }
+    input {
+      margin: 0 8px 0 0 ;
+    }
+    h6 {
+      margin: 0 0 0.25em;
+    }
+    ul {
+      margin: 0;
+      list-style: none;
+      padding-left: 0;
+      ul {
+        margin: 0 0 0.5em;
+        padding-left: 5px;
+      }
+    }
+    // li {
+    //   & + li {
+    //     margin-top: 3px;
+    //   }
+    // }
   }
 }

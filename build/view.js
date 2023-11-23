@@ -12199,7 +12199,6 @@ var Autocomplete = /** @class */ (function (_super) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   Chart: function() { return /* binding */ Chart; },
 /* harmony export */   Charts: function() { return /* binding */ Charts; }
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
@@ -12266,264 +12265,359 @@ function Charts({
     key: index
   })) : undefined), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("small", null, "Waves v2.0.3")));
 }
-class Chart extends _wordpress_element__WEBPACK_IMPORTED_MODULE_1__.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      data: [],
-      isExpanded: false,
-      dateRange: [null, null],
-      needsUpdating: false,
-      downloadPath: ''
-    };
-    this.handleModalClose = this.handleModalClose.bind(this);
-    this.handleDownloadClick = this.handleDownloadClick.bind(this);
-  }
-  handleExpandClick() {
-    this.setState({
-      isExpanded: !this.state.isExpanded
+const Chart = props => {
+  const {
+    buoyId,
+    buoy,
+    buoyLat,
+    buoyLng,
+    buoyDescription,
+    buoyDownloadText,
+    updateCenter,
+    updateZoom,
+    timeRange
+  } = props;
+  const [data, setData] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)([]);
+  const [isExpanded, setIsExpanded] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
+  const [dateRange, setDateRange] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)([null, null]);
+  // const [needsUpdating, setNeedsUpdating] = useState(false);
+  const [downloadPath, setDownloadPath] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)('');
+  const [includes, setIncludes] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)({
+    tp: true,
+    sst: true,
+    bottomTemp: true,
+    hsig: true,
+    hsigSwell: true,
+    hsigSea: true
+  });
+  const [groupedIncludes, setGroupedIncludes] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)([{
+    label: "Peak Wave Period & Direction (s & deg)",
+    items: [{
+      id: "tp",
+      label: "Total ",
+      visible: true
+    }]
+  }, {
+    label: "Significant Wave Height (m)",
+    items: [{
+      id: "hsig",
+      label: "Total",
+      visible: true
+    }, {
+      id: "hsigSea",
+      label: "Sea",
+      visible: false
+    }, {
+      id: "hsigSwell",
+      label: "Swell",
+      visible: false
+    }]
+  }, {
+    label: "Temperature",
+    items: [{
+      id: "sst",
+      label: "Sea Surface",
+      visible: true
+    }, {
+      id: "bottomTemp",
+      label: "Bottom",
+      visible: true
+    }]
+  }]);
+  const [showFilters, setShowFitlers] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
+
+  // constructor( props ) {
+  //   this.handleModalClose = this.handleModalClose.bind( this );
+  //   this.handleDownloadClick = this.handleDownloadClick.bind( this );
+  // }
+
+  // Can't include date range dependancy because it is set on load
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
+    (0,_api_buoys__WEBPACK_IMPORTED_MODULE_4__.getBuoy)(buoy.id).then(json => {
+      if (json.success == 1) {
+        const data = (0,_api_chart__WEBPACK_IMPORTED_MODULE_3__.wadGenerateChartData)((0,_api_chart__WEBPACK_IMPORTED_MODULE_3__.wadRawDataToChartData)(json.data), formatGroupedIncludes());
+        setData(data);
+        setDateRange([new Date(parseInt(data.timeRange[0])), new Date(parseInt(data.timeRange[1]))]);
+      }
     });
-  }
-  handleCentreClick() {
+  }, [groupedIncludes]);
+  const handleDateChanged = () => {
+    (0,_api_buoys__WEBPACK_IMPORTED_MODULE_4__.getBuoyByDate)(buoy.id, dateRange[0].getTime() / 1000, dateRange[1].getTime() / 1000).then(json => {
+      if (json.success == 1) {
+        const data = (0,_api_chart__WEBPACK_IMPORTED_MODULE_3__.wadGenerateChartData)((0,_api_chart__WEBPACK_IMPORTED_MODULE_3__.wadRawDataToChartData)(json.data), formatGroupedIncludes());
+        setData(data);
+        setDateRange([new Date(parseInt(data.timeRange[0])), new Date(parseInt(data.timeRange[1]))]);
+      }
+    });
+  };
+  const handleExpandClick = () => {
+    setIsExpanded(!isExpanded);
+  };
+  const handleCentreClick = () => {
     const center = {
-      lat: parseFloat(this.props.buoyLat),
-      lng: parseFloat(this.props.buoyLng)
+      lat: parseFloat(buoyLat),
+      lng: parseFloat(buoyLng)
     };
-    this.props.updateCenter(center);
-    this.props.updateZoom(10);
-  }
-  handleExportClick() {
-    const {
-      buoy
-    } = this.props;
-    const {
-      timeRange
-    } = this.state.data;
+    updateCenter(center);
+    updateZoom(10);
+  };
+  const handleExportClick = () => {
     if (timeRange.length == 2) {
       const start = parseInt(timeRange[0]) / 1000;
       const end = parseInt(timeRange[1]) / 1000;
       const path = "?action=waf_rest_list_buoy_datapoints_csv&id=" + buoy.id + "&start=" + start + "&end=" + end;
-      this.setState({
-        downloadPath: wad.ajax + path
-      });
+      setDownloadPath(wad.ajax + path);
     }
-  }
-  handleDateChanged() {
-    const {
-      buoy
-    } = this.props;
-    const {
-      dateRange
-    } = this.state;
-    (0,_api_buoys__WEBPACK_IMPORTED_MODULE_4__.getBuoyByDate)(buoy.id, dateRange[0].getTime() / 1000, dateRange[1].getTime() / 1000).then(json => {
-      if (json.success == 1) {
-        const data = (0,_api_chart__WEBPACK_IMPORTED_MODULE_3__.wadGenerateChartData)((0,_api_chart__WEBPACK_IMPORTED_MODULE_3__.wadRawDataToChartData)(json.data));
-        this.setState({
-          data: data,
-          dateRange: [new Date(parseInt(data.timeRange[0])), new Date(parseInt(data.timeRange[1]))]
-        });
-      }
-    });
-  }
-  handleDownloadClick() {
-    const {
-      downloadPath
-    } = this.state;
+  };
+  const handleDownloadClick = () => {
     window.location = downloadPath;
-    this.setState({
-      downloadPath: ''
-    });
+    setDownloadPath('');
     // Record in analytics
     if (typeof gtag !== 'undefined') {
       gtag('event', 'csvExport', {
         'method': downloadPath
       });
     }
-  }
-  handleModalClose() {
-    this.setState({
-      downloadPath: ''
-    });
-  }
-  componentDidMount() {
-    const {
-      buoy
-    } = this.props;
-    (0,_api_buoys__WEBPACK_IMPORTED_MODULE_4__.getBuoy)(buoy.id).then(json => {
-      if (json.success == 1) {
-        const data = (0,_api_chart__WEBPACK_IMPORTED_MODULE_3__.wadGenerateChartData)((0,_api_chart__WEBPACK_IMPORTED_MODULE_3__.wadRawDataToChartData)(json.data));
-        this.setState({
-          data: data,
-          dateRange: [new Date(parseInt(data.timeRange[0])), new Date(parseInt(data.timeRange[1]))]
-        });
-      }
-    });
-  }
-  render() {
-    let chartGraph = (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, "Loading \u2026");
-    let chartModal, chartTable, buttonGroup, chartBuoyDetails, downloadButton;
-    const {
-      data,
-      isExpanded,
-      dateRange,
-      needsUpdating,
-      downloadPath
-    } = this.state;
-    const [startDate, endDate] = dateRange;
-    const expandedLabel = isExpanded ? 'Collapse' : 'Expand';
-    const {
-      buoy
-    } = this.props;
-    const {
-      web_display_name: buoyLabel,
-      download_enabled: downloadEnabled,
-      download_requires_details: downloadRequiresDetails
-    } = buoy;
-    if (startDate && endDate && needsUpdating) {
-      this.setState({
-        needsUpdating: false
+  };
+  const handleModalClose = () => {
+    setDownloadPath('');
+  };
+  let chartGraph = (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, "Loading \u2026");
+  let chartModal, chartTable, buttonGroup, chartBuoyDetails, downloadButton;
+  // const { data, isExpanded, dateRange, needsUpdating, downloadPath, includes } = this.state;
+  const [startDate, endDate] = dateRange;
+  const expandedLabel = isExpanded ? 'Collapse' : 'Expand';
+  const {
+    web_display_name: buoyLabel,
+    download_enabled: downloadEnabled,
+    download_requires_details: downloadRequiresDetails
+  } = buoy;
+
+  // if( startDate && endDate && needsUpdating ) {
+  //   this.setState( { needsUpdating: false } );
+  //   this.handleDateChanged();
+  // }
+
+  const formatGroupedIncludes = () => {
+    let fIncludes = {};
+    groupedIncludes.forEach(g => {
+      g.items.forEach(({
+        id,
+        visible
+      }) => {
+        fIncludes[id] = visible;
       });
-      this.handleDateChanged();
+    });
+    return fIncludes;
+  };
+  const updateGroupIncludes = toggledId => {
+    setGroupedIncludes(groupedIncludes.map(({
+      label,
+      items
+    }) => ({
+      label,
+      items: items.map(item => {
+        return item.id === toggledId ? {
+          ...item,
+          visible: !item.visible
+        } : item;
+      })
+    })));
+  };
+  const groupedIncludesListItems = groupedIncludes ? groupedIncludes.map((include, i) => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("li", {
+    key: i
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h6", {
+    className: "label"
+  }, include.label), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("ul", {
+    className: "items"
+  }, include.items ? include.items.map(({
+    id,
+    label,
+    visible
+  }, j) => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("li", {
+    key: j
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    type: "checkbox",
+    checked: visible,
+    onChange: () => {
+      updateGroupIncludes(id);
     }
-    if (Object.keys(data).length > 0) {
-      if (isExpanded) {
-        // Split apart
-        let chartGraphTemp = [];
-        data.config.data.datasets.forEach((dataset, j) => {
-          // Create dateset from grouped dataset
-          const datasetClone = {
-            ...dataset
-          };
-          datasetClone.hidden = false;
+  }), label))) : undefined))) : undefined;
+  const includesListItems = data?.config ? data.config.data.datasets.filter(d => d.hasOwnProperty('hidden')).map(({
+    id,
+    hidden,
+    label
+  }) => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("li", {
+    key: id
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    type: "checkbox",
+    checked: !hidden,
+    onChange: () => {
+      console.log({
+        ...includes,
+        [id]: !includes[id]
+      });
+      // Toggle value
+      setIncludes({
+        ...includes,
+        [id]: !includes[id]
+      });
+    }
+  }), label))) : undefined;
+  if (Object.keys(data).length > 0) {
+    if (isExpanded) {
+      // Split apart
+      let chartGraphTemp = [];
+      data.config.data.datasets.forEach((dataset, j) => {
+        // Create dateset from grouped dataset
+        const datasetClone = {
+          ...dataset
+        };
+        datasetClone.hidden = false;
 
-          // Create scales with only necessary ones
-          const currentY = datasetClone.yAxisID; // Current y-axis
-          const currentScales = {}; // New axis'
-          currentScales['x'] = {
-            ...data.config.options.scales['x']
-          };
-          currentScales[currentY] = {
-            ...data.config.options.scales[currentY]
-          };
-          currentScales[currentY].position = "left"; // Make position left
+        // Create scales with only necessary ones
+        const currentY = datasetClone.yAxisID; // Current y-axis
+        const currentScales = {}; // New axis'
+        currentScales['x'] = {
+          ...data.config.options.scales['x']
+        };
+        currentScales[currentY] = {
+          ...data.config.options.scales[currentY]
+        };
+        currentScales[currentY].position = "left"; // Make position left
 
-          // Clone options with updated options
-          const optionsClone = {
-            ...data.config.options
-          };
-          optionsClone.plugins = {}; // Not legend title
-          optionsClone.aspectRatio = (0,_api_chart__WEBPACK_IMPORTED_MODULE_3__.wadGetAspectRatio)(0.5); // Half aspect ratio
+        // Clone options with updated options
+        const optionsClone = {
+          ...data.config.options
+        };
+        optionsClone.plugins = {}; // Not legend title
+        optionsClone.aspectRatio = (0,_api_chart__WEBPACK_IMPORTED_MODULE_3__.wadGetAspectRatio)(0.5); // Half aspect ratio
 
-          // Assign
-          optionsClone.scales = currentScales;
-          chartGraphTemp.unshift((0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_chartjs_2__WEBPACK_IMPORTED_MODULE_8__.Line, {
-            data: {
-              labels: data.config.data.labels,
-              datasets: [datasetClone]
-            },
-            options: optionsClone,
-            key: j
-          }));
-        });
-        chartGraph = chartGraphTemp;
-
-        // Expanded buoy details 
-        chartBuoyDetails = (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-          className: classNames(['buoy-details'])
-        }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(ChartPhoto, {
-          buoy: buoy
-        }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-          className: "chart-description"
-        }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, this.props.buoyDescription)), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Memplot__WEBPACK_IMPORTED_MODULE_5__.Memplot, {
-          buoyId: this.props.buoyId,
-          startDate: startDate,
-          endDate: endDate
+        // Assign
+        optionsClone.scales = currentScales;
+        chartGraphTemp.unshift((0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_chartjs_2__WEBPACK_IMPORTED_MODULE_8__.Line, {
+          data: {
+            labels: data.config.data.labels,
+            datasets: [datasetClone]
+          },
+          options: optionsClone,
+          key: j
         }));
-      } else {
-        // All in one
-        chartGraph = (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_chartjs_2__WEBPACK_IMPORTED_MODULE_8__.Line, {
-          data: data.config.data,
-          options: data.config.options
-        });
-      }
-      chartTable = (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_chart_ChartTable__WEBPACK_IMPORTED_MODULE_7__.ChartTable, {
-        data: data,
-        show: wad.obs_table_fields,
-        ...this.props
       });
-      downloadButton = (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
-        className: classNames(['btn', 'btn-outline-secondary']),
-        onClick: () => this.handleExportClick()
-      }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("i", {
-        className: classNames(['fa'], ['fa-floppy-o'])
-      }), " Export Data");
-      buttonGroup = (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-        className: classNames(['btn-group', 'pull-right'])
-      }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
-        className: classNames(['btn', 'btn-outline-secondary']),
-        onClick: () => this.handleExpandClick()
-      }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("i", {
-        className: classNames(['fa'], ['fa-expand'])
-      }), " ", expandedLabel), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
-        className: classNames(['btn', 'btn-outline-secondary']),
-        onClick: () => this.handleCentreClick()
-      }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("i", {
-        className: classNames(['fa'], ['fa-crosshairs'])
-      }), " Centre"), downloadButton, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)((react_datepicker__WEBPACK_IMPORTED_MODULE_9___default()), {
-        selectsRange: true,
-        startDate: startDate,
-        endDate: endDate,
-        onChange: update => {
-          this.setState({
-            dateRange: update
-          });
-          if (update[0] && update[1]) {
-            this.setState({
-              needsUpdating: true
-            });
-          }
-        },
-        dateFormat: "dd/MM/yyyy"
-      }));
-      if (downloadPath.length > 0) {
-        // const ref = React.createRef();
-        // const ref = useRef();
-        chartModal = (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_ChartDownloadModal__WEBPACK_IMPORTED_MODULE_6__.ChartDownloadModal, {
-          title: "Terms and Conditions",
-          buoyId: this.props.buoyId,
-          license: this.props.buoyDownloadText,
-          close: this.handleModalClose,
-          download: this.handleDownloadClick,
-          downloadEnabled: parseInt(downloadEnabled),
-          downloadRequiresDetails: parseInt(downloadRequiresDetails)
-          // ref={ ref }
-        });
-      }
-    }
+      chartGraph = chartGraphTemp;
 
+      // Expanded buoy details 
+      chartBuoyDetails = (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+        className: classNames(['buoy-details'])
+      }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(ChartPhoto, {
+        buoy: buoy
+      }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+        className: "chart-description"
+      }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, buoyDescription)), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Memplot__WEBPACK_IMPORTED_MODULE_5__.Memplot, {
+        buoyId: buoyId,
+        startDate: startDate,
+        endDate: endDate
+      }));
+    } else {
+      // All in one
+      chartGraph = (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_chartjs_2__WEBPACK_IMPORTED_MODULE_8__.Line, {
+        data: data.config.data,
+        options: data.config.options
+      });
+    }
+    chartTable = (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_chart_ChartTable__WEBPACK_IMPORTED_MODULE_7__.ChartTable, {
+      data: data,
+      show: wad.obs_table_fields,
+      ...props
+    });
+    downloadButton = (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+      className: classNames(['btn', 'btn-outline-secondary']),
+      onClick: () => handleExportClick()
+    }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("i", {
+      className: classNames(['fa'], ['fa-floppy-disk'])
+    }), " Export Data");
+    buttonGroup = (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: classNames(['btn-group', 'pull-right'])
+    }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+      className: classNames(['btn', 'btn-outline-secondary']),
+      onClick: () => handleExpandClick()
+    }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("i", {
+      className: classNames(['fa'], ['fa-expand'])
+    }), " ", expandedLabel), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+      className: classNames(['btn', 'btn-outline-secondary']),
+      onClick: () => handleCentreClick()
+    }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("i", {
+      className: classNames(['fa'], ['fa-crosshairs'])
+    }), " Centre"), downloadButton, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)((react_datepicker__WEBPACK_IMPORTED_MODULE_9___default()), {
+      selectsRange: true,
+      startDate: startDate,
+      endDate: endDate,
+      onChange: update => {
+        setDateRange(update);
+        // Ensure both values are set and then refresh chart
+        if (update.length === 2 && update[0] !== null && update[1] !== null) {
+          handleDateChanged();
+        }
+      },
+      dateFormat: "dd/MM/yyyy"
+    }));
+    if (downloadPath.length > 0) {
+      chartModal = (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_ChartDownloadModal__WEBPACK_IMPORTED_MODULE_6__.ChartDownloadModal, {
+        title: "Terms and Conditions",
+        buoyId: buoyId,
+        license: buoyDownloadText,
+        close: handleModalClose,
+        download: handleDownloadClick,
+        downloadEnabled: parseInt(downloadEnabled),
+        downloadRequiresDetails: parseInt(downloadRequiresDetails)
+      });
+    }
     return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: classNames(['card', 'card-primary', 'mb-3'], {
         expanded: isExpanded
       }),
-      "data-buoy-id": this.props.buoyId
+      "data-buoy-id": buoyId
     }, chartModal, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: classNames(['card-header', 'clearfix'])
+      className: "card-header clearfix"
     }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h6", {
       className: "pull-left"
     }, buoyLabel), buttonGroup), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "card-body"
     }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: classNames(['canvas-wrapper', {
-        'is-updating': needsUpdating
+      className: "canvas-wrapper"
+    }, groupedIncludesListItems ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "chart-filter"
+    }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+      className: "btn",
+      onClick: () => setShowFitlers(!showFilters)
+    }, "Filter Chart ", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("i", {
+      className: classNames(["fa-solid", {
+        "fa-chevron-down": !showFilters,
+        "fa-chevron-up": showFilters
       }])
-    }, chartGraph, chartBuoyDetails, chartTable)));
+    })), showFilters ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("ul", {
+      className: "chart-filter-list"
+    }, groupedIncludesListItems) : undefined) : undefined, chartGraph, chartBuoyDetails, chartTable)));
   }
-}
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "card card-primary mb-3"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "card-header clearfix"
+  }, buoyLabel ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h6", {
+    className: "pull-left"
+  }, buoyLabel) : undefined), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "card-body"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "canvas-wrapper"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", {
+    className: "loading"
+  }, "Loading\u2026"))));
+};
 const ChartPhoto = props => {
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "chart-image"
-  }, props?.buoy?.image && props.buoy.image.length > 0 ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
-    src: props.buoy.image
+  }, props?.buoy?.image && buoy.image.length > 0 ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
+    src: buoy.image
   }) : (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "chart-photo-placeholder"
   }));
@@ -13849,7 +13943,6 @@ function wadGenerateChartData(waves, includes, multiplier = 1) {
         });
       }
     });
-    console.log(dataPoints.hsigSwell);
     const startTime = Math.min(...waves.map(wave => wave['Time (UNIX/UTC)'])) * 1000;
     const endTime = Math.max(...waves.map(wave => wave['Time (UNIX/UTC)'])) * 1000;
     const startTimeRounded = (Math.ceil(startTime / 3600000) + 1) * 3600000;
@@ -13877,7 +13970,10 @@ function wadGenerateChartData(waves, includes, multiplier = 1) {
     for (const [key, value] of Object.entries(includes)) {
       if (dataPoints.hasOwnProperty(key) && dataPoints[key].data.length > 0) {
         hasItem[key] = true;
-        data.datasets.push(dataPoints[key]);
+        data.datasets.push({
+          ...dataPoints[key],
+          id: key
+        });
       }
     }
 
@@ -13947,39 +14043,29 @@ function wadGenerateChartData(waves, includes, multiplier = 1) {
         stacked: false,
         // animation: false,
         plugins: {
-          title: {
-            display: true,
-            text: 'Click legend labels to toggle their appearance',
-            fontSize: 10,
-            fontStyle: 'normal',
-            fontFamily: "'Lato', sans-serif",
-            padding: 0,
-            lineHeight: 1.1,
-            fontColor: '#989898'
-          },
+          // title: {
+          // 	display: true,
+          // 	text: 'Click legend labels to toggle their appearance',
+          // 	fontSize: 10,
+          // 	fontStyle: 'normal',
+          // 	fontFamily: "'Lato', sans-serif",
+          // 	padding: 0,
+          // 	lineHeight: 1.1,
+          // 	fontColor: '#989898'
+          // },
           tooltip: {
             callbacks: {
               title: titleTooltip,
               label: labelTooltip
             }
+          },
+          legend: {
+            display: false
           }
         },
-        scales: axes,
-        legend: {
-          display: false,
-          labels: {
-            boxWidth: 15,
-            fontColor: '#000000'
-          }
-        }
-        // tooltips: {
-        // 	callbacks: {
-        // 		label: wadTempToolTip 
-        // 	}
-        // }
+        scales: axes
       }
     };
-
     return {
       config: config,
       dataPoints: dataPoints,
@@ -14019,53 +14105,6 @@ function wadDrawChart(config, canvasContext) {
   }
   return;
 }
-
-// Render custom chart toggles
-// export function wadDrawChartLegend( buoyId, config ) {
-// 	let labels = [];
-
-// 	// Label and Buoy
-// 	if( config.data.datasets ) {
-// 		const buoyCanvasLegend = document.querySelector( "#buoy-" + buoyId + " .canvas-legend" );
-
-// 		if( buoyCanvasLegend ) {
-// 			buoyCanvasLegend.innerHTML = "";
-// 			config.data.datasets.forEach( ( legend, i ) => {
-// 				const checkbox = document.createElement( 'input' );
-// 				checkbox.id = 'legend-toggle-' + buoyId + '-' + i;
-// 				checkbox.type = "checkbox";
-// 				checkbox.checked = ( typeof( legend ) != "undefined" && typeof( legend.hidden ) != "undefined" ) ? !legend.hidden : true;
-// 				checkbox.dataset.buoyId = buoyId;
-// 				checkbox.dataset.legendItem = i;
-// 				checkbox.style.setProperty( '--checkbox-background', legend.backgroundColor );
-// 				checkbox.addEventListener( 'click', wadLegendToggle );
-
-// 				const labelSpan = document.createElement( 'span' );
-// 				labelSpan.innerHTML = legend.label;
-
-// 				const label = document.createElement( 'label' );
-// 				// label.innerHTML = legend.label;
-// 				label.htmlFor = 'legend-toggle-' + buoyId + '-' + i;
-
-// 				// Add checkbox to label
-// 				label.insertAdjacentElement( 'afterbegin', labelSpan );
-// 				label.insertAdjacentElement( 'afterbegin', checkbox );
-// 				// Add label to legend
-// 				buoyCanvasLegend.insertAdjacentElement( 'beforeend', label );
-// 			});
-// 		}
-// 	}
-// }
-
-// Chart toggles event
-// function wadLegendToggle( e ) {
-// 	const buoyId = e.target.dataset["buoyId"];
-// 	const legendItem = e.target.dataset["legendItem"];
-// 	if( myCharts.hasOwnProperty( "buoy" + buoyId ) ) {
-// 		myCharts["buoy" + buoyId].getDatasetMeta( legendItem ).hidden = !e.target.checked;
-// 		myCharts["buoy" + buoyId].update();
-// 	}
-// }
 
 // Get memplots
 function wadProcessMemplots(response) {
@@ -14153,31 +14192,6 @@ function labelTooltip(tooltipItem) {
       return '';
   }
 }
-
-// Combining Temp Tooltips
-// function wadTempToolTip( tooltipItem, data ) {
-//   if( ( tooltipItem.datasetIndex == 2 || tooltipItem.datasetIndex == 3 ) && data.datasets.hasOwnProperty( 3 ) ) {
-//     // Temp data and Bottom Temp Exists
-//     const otherIndex = ( tooltipItem.datasetIndex == 2 ) ? 3 : 2;
-//     const firstValue = Math.round(tooltipItem.yLabel * 100) / 100;
-//     const secondValue = Math.round(data.datasets[otherIndex].data[tooltipItem.index].y * 100) / 100;
-//     if( firstValue != secondValue ) {
-//       let firstLabel = data.datasets[tooltipItem.datasetIndex].label || '';
-//       let secondLabel = data.datasets[otherIndex].label || '';
-//       firstLabel = ( firstLabel ) ? firstLabel + ': ' + firstValue : firstValue;
-//       secondLabel = ( secondLabel ) ? secondLabel + ': ' + secondValue : secondValue;
-//       return [ firstLabel, secondLabel ];
-//     }
-//   }
-//   // Everything else
-//   var label = data.datasets[tooltipItem.datasetIndex].label || '';
-
-//   if (label) {
-//     label += ': ';
-//   }
-//   label += Math.round(tooltipItem.yLabel * 100) / 100;
-//   return label;
-// }
 
 // Appearance for each datapoint type
 function generateDataPoints(includes) {
@@ -14321,7 +14335,9 @@ function generateDataPoints(includes) {
       pointRadius: 2,
       fill: true,
       yAxisID: 'y-axis-1'
+      // hidden: ( includes.hasOwnProperty( 'currentMag' ) ) ? !includes.currentMag : true
     },
+
     currentDir: {
       data: [],
       // showInChart: false, 
@@ -14334,7 +14350,9 @@ function generateDataPoints(includes) {
       pointRadius: 2,
       fill: true,
       yAxisID: 'y-axis-1'
+      // hidden: ( includes.hasOwnProperty( 'currentDir' ) ) ? !includes.currentDir : true
     },
+
     hsigSwell: {
       data: [],
       label: window.innerWidth >= 768 ? 'Significant Wave Height Swell (m)' : 'Sig Wave Swell (m)',

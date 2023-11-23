@@ -15,7 +15,7 @@
 	"textdomain": "waves-display",
 	"editorScript": "file:./index.js",
 	"editorStyle": "file:./index.css",
-	"style": "file:./style-index.css",
+	"style": ["file:./style-index.css", "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap"],
 	"viewScript": "file:./view.js",
 	"attributes": {
 		"buoys": {

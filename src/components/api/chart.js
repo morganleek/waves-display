@@ -139,8 +139,6 @@ export function wadGenerateChartData( waves, includes, multiplier = 1 ) {
 				dataPoints.dmSprSea.data.push( { x: time, y: parseFloatOr( wave["DmSpr_sea (deg)"], 0.0 ) } );
 			}
 		} );
-
-		console.log( dataPoints.hsigSwell );
 		
 		const startTime = Math.min(...waves.map( ( wave ) => wave['Time (UNIX/UTC)'] ) ) * 1000;
 		const endTime = Math.max(...waves.map( ( wave ) => wave['Time (UNIX/UTC)'] ) ) * 1000;
@@ -172,7 +170,7 @@ export function wadGenerateChartData( waves, includes, multiplier = 1 ) {
 		for (const [key, value] of Object.entries( includes )) {
 			if( dataPoints.hasOwnProperty( key ) && dataPoints[key].data.length > 0 ) {
 				hasItem[key] = true;
-				data.datasets.push( dataPoints[key] ); 
+				data.datasets.push( { ...dataPoints[key], id: key } ); 
 			}
 		}
 		
@@ -243,36 +241,27 @@ export function wadGenerateChartData( waves, includes, multiplier = 1 ) {
 				stacked: false,
 				// animation: false,
 				plugins: {
-					title: {
-						display: true,
-						text: 'Click legend labels to toggle their appearance',
-						fontSize: 10,
-						fontStyle: 'normal',
-						fontFamily: "'Lato', sans-serif",
-						padding: 0,
-						lineHeight: 1.1,
-						fontColor: '#989898'
-					},
+					// title: {
+					// 	display: true,
+					// 	text: 'Click legend labels to toggle their appearance',
+					// 	fontSize: 10,
+					// 	fontStyle: 'normal',
+					// 	fontFamily: "'Lato', sans-serif",
+					// 	padding: 0,
+					// 	lineHeight: 1.1,
+					// 	fontColor: '#989898'
+					// },
 					tooltip: {
 						callbacks: {
 							title: titleTooltip,
 							label: labelTooltip,
 						}
 					},
+					legend: {
+						display: false
+					}
 				},
 				scales: axes,
-				legend: {
-					display: false,
-					labels: {
-						boxWidth: 15,
-						fontColor: '#000000'
-					},
-				},
-				// tooltips: {
-				// 	callbacks: {
-				// 		label: wadTempToolTip 
-				// 	}
-				// }
 			}
 		};
 		return { config: config, dataPoints: dataPoints, timeLabel: scaleLabel, timeRange: timeRange };
@@ -310,53 +299,6 @@ export function wadDrawChart( config, canvasContext ) {
 	}
 	return;
 }
-
-// Render custom chart toggles
-// export function wadDrawChartLegend( buoyId, config ) {
-// 	let labels = [];
-
-// 	// Label and Buoy
-// 	if( config.data.datasets ) {
-// 		const buoyCanvasLegend = document.querySelector( "#buoy-" + buoyId + " .canvas-legend" );
-		
-// 		if( buoyCanvasLegend ) {
-// 			buoyCanvasLegend.innerHTML = "";
-// 			config.data.datasets.forEach( ( legend, i ) => {
-// 				const checkbox = document.createElement( 'input' );
-// 				checkbox.id = 'legend-toggle-' + buoyId + '-' + i;
-// 				checkbox.type = "checkbox";
-// 				checkbox.checked = ( typeof( legend ) != "undefined" && typeof( legend.hidden ) != "undefined" ) ? !legend.hidden : true;
-// 				checkbox.dataset.buoyId = buoyId;
-// 				checkbox.dataset.legendItem = i;
-// 				checkbox.style.setProperty( '--checkbox-background', legend.backgroundColor );
-// 				checkbox.addEventListener( 'click', wadLegendToggle );
-
-// 				const labelSpan = document.createElement( 'span' );
-// 				labelSpan.innerHTML = legend.label;
-
-// 				const label = document.createElement( 'label' );
-// 				// label.innerHTML = legend.label;
-// 				label.htmlFor = 'legend-toggle-' + buoyId + '-' + i;
-
-// 				// Add checkbox to label
-// 				label.insertAdjacentElement( 'afterbegin', labelSpan );
-// 				label.insertAdjacentElement( 'afterbegin', checkbox );
-// 				// Add label to legend
-// 				buoyCanvasLegend.insertAdjacentElement( 'beforeend', label );
-// 			});
-// 		}
-// 	}
-// }
-
-// Chart toggles event
-// function wadLegendToggle( e ) {
-// 	const buoyId = e.target.dataset["buoyId"];
-// 	const legendItem = e.target.dataset["legendItem"];
-// 	if( myCharts.hasOwnProperty( "buoy" + buoyId ) ) {
-// 		myCharts["buoy" + buoyId].getDatasetMeta( legendItem ).hidden = !e.target.checked;
-// 		myCharts["buoy" + buoyId].update();
-// 	}
-// }
 
 // Get memplots
 export function wadProcessMemplots( response ) {
@@ -443,31 +385,6 @@ function labelTooltip( tooltipItem ) {
 			return '';
 	}
 }
-
-// Combining Temp Tooltips
-// function wadTempToolTip( tooltipItem, data ) {
-//   if( ( tooltipItem.datasetIndex == 2 || tooltipItem.datasetIndex == 3 ) && data.datasets.hasOwnProperty( 3 ) ) {
-//     // Temp data and Bottom Temp Exists
-//     const otherIndex = ( tooltipItem.datasetIndex == 2 ) ? 3 : 2;
-//     const firstValue = Math.round(tooltipItem.yLabel * 100) / 100;
-//     const secondValue = Math.round(data.datasets[otherIndex].data[tooltipItem.index].y * 100) / 100;
-//     if( firstValue != secondValue ) {
-//       let firstLabel = data.datasets[tooltipItem.datasetIndex].label || '';
-//       let secondLabel = data.datasets[otherIndex].label || '';
-//       firstLabel = ( firstLabel ) ? firstLabel + ': ' + firstValue : firstValue;
-//       secondLabel = ( secondLabel ) ? secondLabel + ': ' + secondValue : secondValue;
-//       return [ firstLabel, secondLabel ];
-//     }
-//   }
-//   // Everything else
-//   var label = data.datasets[tooltipItem.datasetIndex].label || '';
-
-//   if (label) {
-//     label += ': ';
-//   }
-//   label += Math.round(tooltipItem.yLabel * 100) / 100;
-//   return label;
-// }
 
 // Appearance for each datapoint type
 export function generateDataPoints( includes ) {
@@ -609,6 +526,7 @@ export function generateDataPoints( includes ) {
 			pointRadius: 2,
 			fill: true,
 			yAxisID: 'y-axis-1',
+			// hidden: ( includes.hasOwnProperty( 'currentMag' ) ) ? !includes.currentMag : true
 		},
 		currentDir: { 
 			data: [], 
@@ -622,6 +540,7 @@ export function generateDataPoints( includes ) {
 			pointRadius: 2,
 			fill: true,
 			yAxisID: 'y-axis-1',
+			// hidden: ( includes.hasOwnProperty( 'currentDir' ) ) ? !includes.currentDir : true
 		},
 		hsigSwell: {
 			data: [],
