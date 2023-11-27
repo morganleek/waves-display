@@ -1,0 +1,239 @@
+// stylelint-disable function-disallowed-list
+
+// .modal-open      - body class for killing the scroll
+// .modal           - container to scroll within
+// .modal-dialog    - positioning shell for the actual modal
+// .modal-content   - actual modal w/ bg and corners and stuff
+
+
+// Container that the modal scrolls within
+.modal {
+  // scss-docs-start modal-css-vars
+  --waves-display-modal-zindex: 999;
+  --waves-display-modal-width: 500px;
+  --waves-display-modal-padding: 20px;
+  --waves-display-modal-margin: 20px;
+  --waves-display-modal-color: #000;
+  --waves-display-modal-bg: rgba(255,255,255,0.5);
+	--waves-display-modal-body-bg: rgba(255,255,255,0.5);
+  --waves-display-modal-border-color: #588da8;
+  --waves-display-modal-border-width: 1px;
+  --waves-display-modal-border-radius: 5px;
+  --waves-display-modal-box-shadow: 2px 2px 2px #000;
+  --waves-display-modal-inner-border-radius: 5px;
+  --waves-display-modal-header-padding-x: 10px;
+  --waves-display-modal-header-padding-y: 10px;
+  --waves-display-modal-header-padding: 5px 10px; // Todo in v6: Split this padding into x and y
+  --waves-display-modal-header-border-color: #588da8;
+  --waves-display-modal-header-border-width: 1px;
+  --waves-display-modal-title-line-height: auto;
+  --waves-display-modal-footer-gap: 5px;
+  --waves-display-modal-footer-bg: #fff;
+  --waves-display-modal-footer-border-color: #588da8;
+  --waves-display-modal-footer-border-width: 1px;
+  // scss-docs-end modal-css-vars
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: var(--waves-display-modal-zindex);
+  display: none;
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  outline: 0;
+	background: var(--waves-display-modal-bg);
+}
+
+// Shell div to position the modal with bottom padding
+.modal-dialog {
+  position: relative;
+  width: 100%;
+  margin: var(--waves-display-modal-margin);
+  // allow clicks to pass through for custom click handling to close modal
+  pointer-events: none;
+	max-width: min(500px, 90vw);
+
+  // When fading in the modal, animate it to slide down
+  // .modal.fade & {
+  //   // @include transition($modal-transition);
+  //   transform: $modal-fade-transform;
+  // }
+  // .modal.show & {
+  //   transform: $modal-show-transform;
+  // }
+
+  // // When trying to close, animate focus to scale
+  // .modal.modal-static & {
+  //   // transform: $modal-scale-transform;
+  // }
+}
+
+.modal-dialog-scrollable {
+  height: calc(100% - var(--waves-display-modal-margin) * 2);
+
+  .modal-content {
+    max-height: 100%;
+    overflow: hidden;
+  }
+
+  .modal-body {
+    overflow-y: auto;
+  }
+}
+
+.modal-dialog-centered {
+  display: flex;
+  align-items: center;
+  min-height: calc(100% - var(--waves-display-modal-margin) * 2);
+}
+
+// Actual modal
+.modal-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%; // Ensure `.modal-content` extends the full width of the parent `.modal-dialog`
+  // counteract the pointer-events: none; in the .modal-dialog
+  color: var(--waves-display-modal-color);
+  pointer-events: auto;
+  background-color: var(--waves-display-modal-body-bg);
+  background-clip: padding-box;
+  border: var(--waves-display-modal-border-width) solid var(--waves-display-modal-border-color);
+	border-radius: 5px;
+  // @include border-radius(var(--waves-display-modal-border-radius));
+  // @include box-shadow(var(--waves-display-modal-box-shadow));
+  // Remove focus outline from opened modal
+  outline: 0;
+}
+
+// Modal background
+.modal-backdrop {
+  // scss-docs-start modal-backdrop-css-vars
+  // --waves-display-backdrop-zindex: #{$zindex-modal-backdrop};
+  // --waves-display-backdrop-bg: #{$modal-backdrop-bg};
+  // --waves-display-backdrop-opacity: #{$modal-backdrop-opacity};
+  // scss-docs-end modal-backdrop-css-vars
+
+  // @include overlay-backdrop(var(--waves-display-backdrop-zindex), var(--waves-display-backdrop-bg), var(--waves-display-backdrop-opacity));
+}
+
+// Modal header
+// Top section of the modal w/ title and dismiss
+.modal-header {
+	background: #588da8;
+	color: #fff;
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: space-between; // Put modal header elements (title and dismiss) on opposite ends
+  padding: var(--waves-display-modal-header-padding);
+  border-bottom: var(--waves-display-modal-header-border-width) solid var(--waves-display-modal-header-border-color);
+	* {
+		margin: 0;
+	}
+  .btn-close {
+    padding: calc(var(--waves-display-modal-header-padding-y) * .5) calc(var(--waves-display-modal-header-padding-x) * .5);
+    margin: calc(-.5 * var(--waves-display-modal-header-padding-y)) calc(-.5 * var(--waves-display-modal-header-padding-x)) calc(-.5 * var(--waves-display-modal-header-padding-y)) auto;
+  }
+}
+
+// Title text within header
+.modal-title {
+  margin-bottom: 0;
+  line-height: var(--waves-display-modal-title-line-height);
+}
+
+// Modal body
+// Where all modal content resides (sibling of .modal-header and .modal-footer)
+.modal-body {
+  position: relative;
+  // Enable `flex-grow: 1` so that the body take up as much space as possible
+  // when there should be a fixed height on `.modal-dialog`.
+  flex: 1 1 auto;
+  padding: var(--waves-display-modal-padding);
+	background: #fff;
+}
+
+// Footer (for actions)
+.modal-footer {
+  display: flex;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+  align-items: center; // vertically center
+  justify-content: flex-end; // Right align buttons with flex property because text-align doesn't work on flex items
+  padding: 10px 10px;
+  background-color: var(--waves-display-modal-footer-bg);
+  border-top: var(--waves-display-modal-footer-border-width) solid var(--waves-display-modal-footer-border-color);
+  // @include border-bottom-radius(var(--waves-display-modal-inner-border-radius));
+
+  // Place margin between footer elements
+  // This solution is far from ideal because of the universal selector usage,
+  // but is needed to fix https://github.com/twbs/bootstrap/issues/24800
+  > * {
+    margin: calc(var(--waves-display-modal-footer-gap) * .5); // Todo in v6: replace with gap on parent class
+  }
+}
+
+// Scale up the modal
+// @include media-breakpoint-up(sm) {
+//   .modal {
+//     --waves-display-modal-margin: #{$modal-dialog-margin-y-sm-up};
+//     --waves-display-modal-box-shadow: #{$modal-content-box-shadow-sm-up};
+//   }
+
+//   // Automatically set modal's width for larger viewports
+//   .modal-dialog {
+//     max-width: var(--waves-display-modal-width);
+//     margin-right: auto;
+//     margin-left: auto;
+//   }
+
+//   .modal-sm {
+//     --waves-display-modal-width: #{$modal-sm};
+//   }
+// }
+
+// @include media-breakpoint-up(lg) {
+//   .modal-lg,
+//   .modal-xl {
+//     --waves-display-modal-width: #{$modal-lg};
+//   }
+// }
+
+// @include media-breakpoint-up(xl) {
+//   .modal-xl {
+//     --waves-display-modal-width: #{$modal-xl};
+//   }
+// }
+
+// // scss-docs-start modal-fullscreen-loop
+// @each $breakpoint in map-keys($grid-breakpoints) {
+//   $infix: breakpoint-infix($breakpoint, $grid-breakpoints);
+//   $postfix: if($infix != "", $infix + "-down", "");
+
+//   @include media-breakpoint-down($breakpoint) {
+//     .modal-fullscreen#{$postfix} {
+//       width: 100vw;
+//       max-width: none;
+//       height: 100%;
+//       margin: 0;
+
+//       .modal-content {
+//         height: 100%;
+//         border: 0;
+//         @include border-radius(0);
+//       }
+
+//       .modal-header,
+//       .modal-footer {
+//         @include border-radius(0);
+//       }
+
+//       .modal-body {
+//         overflow-y: auto;
+//       }
+//     }
+//   }
+// }

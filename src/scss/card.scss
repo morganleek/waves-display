@@ -3,6 +3,13 @@
 	border-radius: var(--border-radius);
 	border: 1px solid;
 	overflow: hidden;
+	background: #fff;
+	z-index: 10;
+	position: relative;
+	margin-top: 5px;
+	& + .card {
+		margin-top: 20px;
+	}
 	.card-header {
 		padding: 6px;
 		

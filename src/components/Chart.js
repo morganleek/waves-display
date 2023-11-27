@@ -3,7 +3,7 @@ import DatePicker from "react-datepicker";
 import { Line } from 'react-chartjs-2';
 import 'chartjs-adapter-luxon';
 import { wadRawDataToChartData, wadGenerateChartData, wadGetAspectRatio } from './api/chart';
-import { getBuoys, getBuoy, getBuoyByDate } from './api/buoys';
+import { getBuoys, getBuoy, getBuoyData, getBuoyByDate } from './api/buoys';
 import { Memplot } from './Memplot';
 import { ChartDownloadModal } from "./ChartDownloadModal";
 import { ChartTable } from "./chart/ChartTable";
@@ -70,13 +70,14 @@ const Chart = ( props ) => {
     buoyDescription,
     buoyDownloadText,
     updateCenter,
-    updateZoom,
-    timeRange
+    updateZoom
    } = props;
 
   const [data, setData] = useState([]);
   const [isExpanded, setIsExpanded] = useState(false);
+  // const [timeRange, setTimeRange] = useState(null);
   const [dateRange, setDateRange] = useState([null, null]);
+  const [searchDateRange, setSearchDateRange] = useState(null);
   // const [needsUpdating, setNeedsUpdating] = useState(false);
   const [downloadPath, setDownloadPath] = useState('');
   const [includes, setIncludes] = useState({
@@ -90,58 +91,60 @@ const Chart = ( props ) => {
 
   const [groupedIncludes, setGroupedIncludes] = useState([
     { 
-      label: "Peak Wave Period & Direction (s & deg)",
+      label: "Significant Wave Height (m)",
       items: [
-        { id: "tp", label: "Total ", visible: true }
+        { id: "hsig", label: "Total", visible: true, enabled: true },
+        { id: "hsigSea", label: "Sea", visible: false, enabled: true },
+        { id: "hsigSwell", label: "Swell", visible: false, enabled: true }
       ]
     },
     { 
-      label: "Significant Wave Height (m)",
+      label: "Peak Wave Period & Direction (s & deg)",
       items: [
-        { id: "hsig", label: "Total", visible: true },
-        { id: "hsigSea", label: "Sea", visible: false },
-        { id: "hsigSwell", label: "Swell", visible: false }
+        { id: "tp", label: "Total ", visible: true, enabled: true }
       ]
     },
     {
-      label: "Temperature",
+      label: "Temperature (°C)",
       items: [
-        { id: "sst", label: "Sea Surface", visible: true },
-        { id: "bottomTemp", label: "Bottom", visible: true }
+        { id: "sst", label: "Sea Surface", visible: true, enabled: true },
+        { id: "bottomTemp", label: "Bottom", visible: true, enabled: true }
       ]
     }
   ]);
 
   const [showFilters, setShowFitlers] = useState(false);
 
-  // constructor( props ) {
-  //   this.handleModalClose = this.handleModalClose.bind( this );
-  //   this.handleDownloadClick = this.handleDownloadClick.bind( this );
-  // }
-
   // Can't include date range dependancy because it is set on load
   useEffect( () => {
-    getBuoy( buoy.id ).then( json => {
-      if( json.success == 1 ) {
-        const data = wadGenerateChartData( wadRawDataToChartData( json.data ), formatGroupedIncludes() );
-        setData( data );
-        setDateRange( [ 
-          new Date( parseInt( data.timeRange[0] ) ), 
-          new Date( parseInt( data.timeRange[1] ) ) 
-        ] );
-      }      
-    } );
-  }, [groupedIncludes] );
+    const params = { id: buoy.id };
+    // Custom start and end dates
+    if( searchDateRange !== null  ) {
+      params.start = searchDateRange[0].getTime() / 1000;
+      params.end = searchDateRange[1].getTime() / 1000;
+    }
 
-  const handleDateChanged = () => {
-    getBuoyByDate( buoy.id, dateRange[0].getTime() / 1000, dateRange[1].getTime() / 1000 ).then( json => {
-      if( json.success == 1 ) {
-        const data = wadGenerateChartData( wadRawDataToChartData( json.data ), formatGroupedIncludes() );
-        setData( data );
-        setDateRange( [ new Date( parseInt( data.timeRange[0] ) ), new Date( parseInt( data.timeRange[1] ) ) ] );
-      }      
-    } );
-  }
+    getBuoyData( params )
+      .then( json => {
+        if( json.success === 1 ) {
+          const data = wadGenerateChartData( 
+            wadRawDataToChartData( json.data ), 
+            formatGroupedIncludes(), 
+            0.8 
+          );
+          
+          // Set data
+          setData( data );
+          setDateRange([ 
+            new Date( parseInt( data.timeRange[0] ) ), 
+            new Date( parseInt( data.timeRange[1] ) ) 
+          ]);
+        }
+        else {
+          console.log( json.success );
+        }
+      } );
+  }, [groupedIncludes, searchDateRange] );
 
   const handleExpandClick = () => {
     setIsExpanded( !isExpanded );
@@ -157,14 +160,13 @@ const Chart = ( props ) => {
   }
 
 	const handleExportClick = () => {
-    if( timeRange.length == 2 ) {
-      const start = parseInt( timeRange[0] ) / 1000;
-      const end = parseInt( timeRange[1] ) / 1000;
+    if( data.timeRange && data.timeRange.length === 2 ) {
+      const start = parseInt( data.timeRange[0] ) / 1000;
+      const end = parseInt( data.timeRange[1] ) / 1000;
       const path = "?action=waf_rest_list_buoy_datapoints_csv&id=" + buoy.id + "&start=" + start + "&end=" + end;
       setDownloadPath( wad.ajax + path );
     }
 	}
-
 
   const handleDownloadClick = () => {
     window.location = downloadPath;
@@ -181,21 +183,14 @@ const Chart = ( props ) => {
   
   let chartGraph = <p>Loading &hellip;</p>;
   let chartModal, chartTable, buttonGroup, chartBuoyDetails, downloadButton;
-  // const { data, isExpanded, dateRange, needsUpdating, downloadPath, includes } = this.state;
   const [ startDate, endDate ] = dateRange;
   const expandedLabel = ( isExpanded ) ? 'Collapse' : 'Expand';
   
-
   const { 
     web_display_name: buoyLabel, 
     download_enabled: downloadEnabled, 
     download_requires_details: downloadRequiresDetails 
   } = buoy;
-  
-  // if( startDate && endDate && needsUpdating ) {
-  //   this.setState( { needsUpdating: false } );
-  //   this.handleDateChanged();
-  // }
 
   const formatGroupedIncludes = () => {
     let fIncludes = {};
@@ -220,6 +215,23 @@ const Chart = ( props ) => {
     ) ) );
   }
 
+  
+  // setGroupedIncludes( groupedIncludes.map( ( {label, items} ) => (
+  //   { 
+  //     label,
+  //     items: items.map( item => ( 
+  //       { ...item, enabled: available.includes( item.id ) } 
+  //     ) )
+  //   }
+  // ) ) );
+
+  // Disable unused filters
+  const available = [];
+  for( const key in data.dataPoints ) {
+    if( data.dataPoints[key].data.length > 0 ) {
+      available.push(key);
+    }
+  }
   const groupedIncludesListItems = ( groupedIncludes ) ? (
     groupedIncludes.map( ( include, i ) => (
       <li key={i}>
@@ -227,47 +239,28 @@ const Chart = ( props ) => {
         <ul className="items">
           { include.items 
             ? (
-              include.items.map( ( {id, label, visible}, j ) => (
-                <li key={j}>
-                  <label>
-                    <input 
-                      type="checkbox" 
-                      checked={ visible } 
-                      onChange={ () => {
-                        updateGroupIncludes( id );
-                      } }
-                    />
-                    { label }
-                  </label>
-                </li>
-              ) )
+              include.items
+                .filter( ( { id } ) => available.includes( id ) )
+                .map( ( {id, label, visible}, j ) => (
+                  <li key={j}>
+                    <label>
+                      <input 
+                        type="checkbox" 
+                        checked={ visible } 
+                        onChange={ () => {
+                          updateGroupIncludes( id );
+                        } }
+                      />
+                      { label }
+                    </label>
+                  </li>
+                ) )
             )
             : undefined
           }
         </ul>
       </li>
     ) )
-  ) : undefined;
-
-  const includesListItems = ( data?.config ) ? (
-    data.config.data.datasets
-      .filter( d => d.hasOwnProperty('hidden') )
-      .map( ( { id, hidden, label } ) => (
-        <li key={id}>
-          <label>
-            <input 
-              type="checkbox" 
-              checked={ !hidden } 
-              onChange={ () => {
-                console.log( { ...includes, [id]: !includes[id] } );
-                // Toggle value
-                setIncludes( { ...includes, [id]: !includes[id] } );
-              } }
-            />
-            { label }
-          </label>
-        </li>
-      ) )
   ) : undefined;
 
   if( Object.keys( data ).length > 0 ) {
@@ -307,7 +300,7 @@ const Chart = ( props ) => {
 
       // Expanded buoy details 
       chartBuoyDetails = <div className={ classNames( ['buoy-details'] ) }>
-        <ChartPhoto buoy={ buoy } />
+        <ChartPhoto buoy={ props } />
         <div className="chart-description"><p>{ buoyDescription }</p></div>
         <Memplot buoyId={ buoyId } startDate={ startDate } endDate={ endDate } />
       </div>;
@@ -332,7 +325,7 @@ const Chart = ( props ) => {
           setDateRange( update );
           // Ensure both values are set and then refresh chart
           if( update.length === 2 && update[0] !== null && update[1] !== null ) {
-            handleDateChanged();
+            setSearchDateRange([update[0], update[1]]);
           }
         } }
         dateFormat="dd/MM/yyyy"
@@ -360,10 +353,10 @@ const Chart = ( props ) => {
         </div>
         <div className='card-body'> 
           <div className="canvas-wrapper">
-            { groupedIncludesListItems
+            { groupedIncludesListItems && !isExpanded
               ? ( 
                 <div className="chart-filter">
-                  <button className="btn" onClick={ () => setShowFitlers( !showFilters ) }>Filter Chart <i className={ classNames( ["fa-solid", { "fa-chevron-down": !showFilters, "fa-chevron-up": showFilters } ] ) }></i></button>
+                  <button className="btn" onClick={ () => setShowFitlers( !showFilters ) }>Filter <i className={ classNames( ["fa-solid", { "fa-chevron-down": !showFilters, "fa-chevron-up": showFilters } ] ) }></i></button>
                   { showFilters ? ( <ul className="chart-filter-list">{ groupedIncludesListItems }</ul> ) : undefined }
                 </div>
               ) 

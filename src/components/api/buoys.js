@@ -16,6 +16,31 @@ export function getBuoys( restrict = [] ) {
   }
 }
 
+export function getBuoyData( { id, start, end } ) {
+  if( typeof( wad ) !== "undefined" ) {
+    const url = [ wad.ajax + "?action=waf_rest_list_buoy_datapoints" ];
+    
+    // Append arguments
+    // const args = [];
+    if( id ) {
+      url.push("id=" + id);
+    }
+    if( start ) {
+      url.push("start=" + start);
+    }
+    if( end ) {
+      url.push("end=" + end);
+    }
+  
+    return fetch( url.join('&'), { method: 'GET' } ) 
+      .then( response => {
+        if( !response.ok ) throw Error( response.statusText );
+        return response.json();
+      } )
+      .then( json => json );
+  }
+}
+
 export function getBuoy( buoyId ) {
   if( typeof( wad ) != "undefined" ) {
     const init = {
