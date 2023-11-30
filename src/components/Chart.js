@@ -93,22 +93,22 @@ const Chart = ( props ) => {
     { 
       label: "Significant Wave Height (m)",
       items: [
-        { id: "hsig", label: "Total", visible: true, enabled: true },
-        { id: "hsigSea", label: "Sea", visible: false, enabled: true },
-        { id: "hsigSwell", label: "Swell", visible: false, enabled: true }
+        { id: "hsig", label: "Total", visible: true, enabled: true, order: 1 },
+        { id: "hsigSea", label: "Sea", visible: false, enabled: true, order: 2 },
+        { id: "hsigSwell", label: "Swell", visible: false, enabled: true, order: 3 }
       ]
     },
     { 
       label: "Peak Wave Period & Direction (s & deg)",
       items: [
-        { id: "tp", label: "Total ", visible: true, enabled: true }
+        { id: "tp", label: "Total ", visible: true, enabled: true, order: 0 }
       ]
     },
     {
       label: "Temperature (°C)",
       items: [
-        { id: "sst", label: "Sea Surface", visible: true, enabled: true },
-        { id: "bottomTemp", label: "Bottom", visible: true, enabled: true }
+        { id: "sst", label: "Sea Surface", visible: true, enabled: true, order: 4 },
+        { id: "bottomTemp", label: "Bottom", visible: true, enabled: true, order: 5 }
       ]
     }
   ]);
@@ -193,13 +193,21 @@ const Chart = ( props ) => {
   } = buoy;
 
   const formatGroupedIncludes = () => {
+    let orderedIncludes = [];
     let fIncludes = {};
+    // Sort by 'order' attribute
     groupedIncludes.forEach( g => {
-      g.items.forEach( ({id, visible}) => { 
-        fIncludes[id] = visible;
+      g.items.forEach( ( item ) => { 
+        orderedIncludes[item.order] = item;
       } );
     } );
+    // Translate to form { ...id: isVisible }
+    orderedIncludes.forEach( ( {id, visible} ) => {
+      fIncludes[id] = visible;
+    } );
+    
     return fIncludes;
+    
   }
 
   const updateGroupIncludes = toggledId => {
@@ -312,11 +320,91 @@ const Chart = ( props ) => {
 
     chartTable = <ChartTable data={ data } show={ wad.obs_table_fields } { ...props } />;
     
-    downloadButton = <button className={ classNames( ['btn', 'btn-outline-secondary' ] ) } onClick={ () => handleExportClick() } ><i className={ classNames( ['fa'], ['fa-floppy-disk'] ) }></i> Export Data</button>;
-    buttonGroup = <div className={ classNames( ['btn-group', 'pull-right'] ) } >
-      <button className={ classNames( ['btn', 'btn-outline-secondary' ] ) } onClick={ () => handleExpandClick() }><i className={ classNames( ['fa'], ['fa-expand'] ) }></i> { expandedLabel }</button>
-      <button className={ classNames( ['btn', 'btn-outline-secondary' ] ) } onClick={ () => handleCentreClick() }><i className={ classNames( ['fa'], ['fa-crosshairs'] ) }></i> Centre</button>
-      { downloadButton }
+    console.log( data.dataPoints );
+
+    const chartGauges = (
+      wad.buoy_display_gauge_wind_direction === "1" ||
+      wad.buoy_display_gauge_sea_surface === "1" ||
+      wad.buoy_display_gauge_sea_state === "1"
+    ) ? (
+      <div className="chart-gauges">
+        { (
+          wad.buoy_display_gauge_wind_direction === "1" 
+          && data.dataPoints.hasOwnProperty( 'winddirect' )
+        )
+          ? (
+            <div className="gauge">
+              <h6>Wind Direction</h6>
+              <div className="gauge-wind-direction" data-level={ ( data.dataPoints.winddirect.data.filter( t => t.y > 0 ).pop().y + 180 ) % 360 }>
+                <div className="needle"></div>
+              </div>
+              <p>
+                { data.dataPoints.winddirect.data.filter( t => t.y > 0 ).pop().y }°
+              </p>
+            </div>
+          )
+          : undefined
+        }
+        { (
+          wad.buoy_display_gauge_sea_surface === "1" 
+          && data.dataPoints.hasOwnProperty( 'sst' )
+        )
+        ? (
+          <div className="gauge">
+            <h6>Sea Surface Temp</h6>
+            <div className="gauge-sea-temp" data-level={ Math.ceil( ( data.dataPoints.sst.data.filter( t => t.y > 0 ).pop().y / 50 ) * 120 ) }>
+              <div className="needle"></div>
+            </div>
+            <p>
+              { data.dataPoints.sst.data.filter( t => t.y > 0 ).pop().y }°C
+            </p>
+          </div>
+        )
+        : undefined
+        }
+        { wad.buoy_display_gauge_sea_state === "1" 
+          ? (
+            <div className="gauge">
+              <h6>Sea State</h6>
+              <div className="gauge-sea-state" data-level={ 8 / 10 * 180 - 90 }>
+                <div className="needle"></div>
+              </div>
+            </div>
+          )
+          : undefined
+        }
+      </div>
+    ) : undefined;
+    
+    buttonGroup = <div className="tools">
+      <div className={ classNames( ['btn-group'] ) } >
+        <button 
+          className={ classNames( ['btn', 'btn-outline-secondary' ] ) } 
+          onClick={ handleExpandClick }
+          title="Expand chart"
+        >
+          <span className="label">{ expandedLabel }</span>
+          <i className={ classNames( ['fa'], ['fa-expand'] ) }></i>
+        </button>
+        <button 
+          className={ classNames( ['btn', 'btn-outline-secondary' ] ) } 
+          onClick={ handleCentreClick }
+          title="Centre on map"
+        >
+          <span className="label">Centre</span>
+          <i className={ classNames( ['fa'], ['fa-crosshairs'] ) }></i>
+        </button>
+        <button 
+          className={ 
+            classNames( ['btn', 'btn-outline-secondary' ] ) 
+          } 
+          onClick={ () => handleExportClick() }
+          title="Export data"
+        >
+          <span className="label">Export Data</span>
+          <i className={ classNames( ['fa'], ['fa-floppy-disk'] ) }></i>
+        </button>
+      </div>
       <DatePicker
         selectsRange={ true }
         startDate={ startDate }
@@ -347,16 +435,19 @@ const Chart = ( props ) => {
     return (
       <div className={ classNames( ['card', 'card-primary', 'mb-3'], { expanded: isExpanded } ) } data-buoy-id={ buoyId } >
         { chartModal }
-        <div className="card-header clearfix">
-          <h6 className='pull-left'>{ buoyLabel }</h6>
+        <div className="card-header">
+          <h6>{ buoyLabel }</h6>
 					{ buttonGroup }
         </div>
         <div className='card-body'> 
           <div className="canvas-wrapper">
+            { chartGauges }
             { groupedIncludesListItems && !isExpanded
               ? ( 
                 <div className="chart-filter">
-                  <button className="btn" onClick={ () => setShowFitlers( !showFilters ) }>Filter <i className={ classNames( ["fa-solid", { "fa-chevron-down": !showFilters, "fa-chevron-up": showFilters } ] ) }></i></button>
+                  <div className="btn-group">
+                    <button className="btn" onClick={ () => setShowFitlers( !showFilters ) }>Filter <i className={ classNames( ["fa-solid", { "fa-chevron-down": !showFilters, "fa-chevron-up": showFilters } ] ) }></i></button>
+                  </div>
                   { showFilters ? ( <ul className="chart-filter-list">{ groupedIncludesListItems }</ul> ) : undefined }
                 </div>
               ) 

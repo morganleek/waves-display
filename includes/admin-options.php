@@ -47,6 +47,26 @@
 								)
 							),
 							array(
+								'title' => 'Gauge Visibility',
+								'fields' => array(
+									array(
+										'label' => 'Show Wind Direction Gauge',
+										'name' => 'buoy_display_gauge_wind_direction',
+										'type' => 'checkbox'
+									),
+									array(
+										'label' => 'Show Sea Surface Temperature Gauge',
+										'name' => 'buoy_display_gauge_sea_surface',
+										'type' => 'checkbox'
+									),
+									array( 
+										'label' => 'Show Sea State Gauge',
+										'name' => 'buoy_display_gauge_sea_state',
+										'type' => 'checkbox'
+									)
+								)
+							),
+							array(
 								'title' => 'Historic Data',
 								'fields' => array(
 									array(

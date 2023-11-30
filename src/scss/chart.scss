@@ -55,7 +55,7 @@
 }
 
 .chart-info {
-  margin: 0.3em ​0 1em;
+  margin: 0.3em 0 0;
   position: relative;
   padding: 0 10px;
   dl {
@@ -86,37 +86,53 @@
 }
 
 .react-datepicker-wrapper {
+  background: var(--button);
+  border: 1px solid var(--button-border);
+  color: var(--button-color);
+  padding: 0.3rem 0.5rem;
+  border-radius: 5px;
   margin-left: 5px;
   display: flex;
   align-items: center;
-  background: #f0f0f0;
   position: relative;
-  border: 1px solid #6f6f6f;
-  padding: 2px 0 2px 5px;
   font-family: var(--waves-display--font-family);
+  gap: 5px;
+  @media (min-width: 992px) {
+    padding: 0.3rem 1rem;
+  }
   &::before {
     content: "\f133";
     font-family: "FontAwesome";
     font-size: 0.9rem;
-    margin-right: 2px;
+    // margin-right: px;
+    @media (min-width: 768px) {
+      display: none;
+    }
+    @media (min-width: 1280px) {
+      display: block;
+    }
   }
   &::after {
     content: "\f0d7";
     font-family: 'FontAwesome';
     font-size: 0.8rem;
-    position: absolute;
-    top: 50%;
-    right: 5px;
-    transform: translate(0, -50%);
+    // position: absolute;
+    // top: 50%;
+    // right: 20px;
+    // transform: translate(0, -50%);
+  }
+  &:hover {
+    background: var(--button--color--hover);
   }
   input[type="text"] {
     font-size: 0.8rem;
-    min-width: 160px;
-    color: #111;
+    min-width: 138px;
+    color: var(--button-color);
     background: transparent;
     border: 0 none;
     display: block;
-    padding-right: 10px;
+    text-align: center;
+    padding: 0;
     &:focus-visible {
       outline: none;
     }
@@ -151,172 +167,6 @@ button.btn {
   }
 }
 
-.card {
-  .btn-group {
-    
-    & > button.btn {
-      & + button.btn {
-        border-left: 0 none;
-      }
-      &::before {
-        font-family: 'FontAwesome';
-        margin-right: 3px;
-        font-weight: normal;
-      }
-    }
-  }
-  &.card-primary {
-    border-color: var(--header);
-    box-shadow: 0 0 18px rgba(0, 0, 0, 0.1);
-    .card-header {
-      background: var(--header);
-      padding: 6px ;
-      @media (min-width: 768px) { 
-        padding: 6px 10px;
-      }
-      h6 {
-        font-size: min(12px, 0.75rem); 
-        margin: 0 0 0.5em;
-        line-height: 1.25em;
-        font-weight: 600;
-        color: #fff;
-        @media (min-width: 768px) { 
-          margin: 0.5em 0;
-        }
-        span {
-          opacity: 0 !important;
-        }
-      }
-      & > .btn-group {
-        @media (max-width: 767px) { 
-          flex-wrap: wrap;
-        }
-      }
-      time {
-        display: block;
-      }
-      button.btn {
-        // color: #fff;
-        // border-color: #fff;
-        
-      }
-    }
-    .card-body {
-      // padding: 10px 15px 5px;
-      h5.latest-observations {
-        // padding-left: 16px;
-        margin: 0.5em 0 0;
-        font-size: min(13px, 0.8125rem);
-        font-weight: 600;
-        .out-of-date {
-          color: red;
-        }
-      }
-      .canvas-legend {
-        font-size: min(12px, 0.75rem);
-        text-align: center;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-wrap: wrap;
-        label {
-          padding: 0 5px;
-          span {
-            // text-decoration: line-through;
-            opacity: 0.25;
-            transition: opacity 0.2s;
-          }
-          input[type="checkbox"] {
-            margin-right: 5px;
-            display: inline-block;
-            vertical-align: middle;
-            position: relative;
-            width: 16px;
-            height: 16px;
-            background: transparent;
-            &:checked {
-              & + span {
-                text-decoration: none;
-                opacity: 1;
-              }
-              &:before {
-                opacity: 1;
-              }
-            }
-            &:after,
-            &:before {
-              content: '';
-              background: var(--checkbox-background);
-              width: 16px;
-              height: 16px;
-              position: absolute;
-              left: 0;
-              top: 0;
-              z-index: 10;
-            }
-            &:before {
-              transition: opacity 0.2s;
-              opacity: 0.5;
-            }
-            &:after {
-              background: #fff;
-              z-index: 5;
-            }
-          }
-        }
-      }
-      .canvas-wrapper {
-        position: relative;
-        transition: opacity 0.5s;
-        &.is-updating {
-          canvas {
-            opacity: 0.5;
-          }
-        }
-        body:not(.page-template-wave-display-react) & {
-          &.no-results,
-          &.loading {
-            &:after {
-              content: 'Loading';
-              position: absolute;
-              top: 50%;
-              left: 50%;
-              transform: translate(-50%, -50%);
-              text-transform: uppercase;
-              letter-spacing: 0.1em;
-            }
-            canvas {
-              min-height: 35vh;
-              transition: opacity 0.3s;
-              @media (min-width: 768px) { 
-                opacity: 0.5;
-                width: 100%;
-                height: 0;
-                min-height: 0;
-                padding-bottom: 40%;
-              }
-            }
-            & + h5.latest-observations {
-              display: none;
-            }
-          }
-          &.no-results {
-            &:after {
-              content: 'No results found';
-              color: #c0c0c0;
-            }
-            canvas {
-              @media (min-width: 768px) { 
-                padding-bottom: 35px;
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-}
-
 .litepicker {
   font-size: min(12px, 0.75rem);
 }
@@ -338,9 +188,6 @@ button.btn {
     font-size: 1rem;
     display: block;
     margin-bottom: 0.2em;
-  }
-  .form-control {
-    border-radius: var(--bs-border-radius);
   }
 }
 
@@ -442,18 +289,20 @@ form {
     position: absolute;
     top: calc(100% + 8px);
     right: -12px;
-    border: 0 none;
-    padding: 7px 12px;
+    border: 1 solid var(--card--border--color);
+    padding: 0;
     list-style: none;
     background: #fff;
     margin: 0;
     font-size: 0.9rem;
-    filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.25));
-    border-radius: 5px;
+    z-index: 999;
+    filter: drop-shadow(0px 0px 4px rgba(0, 0, 0, 0.15));
+    border-radius: 8px;
+    overflow: hidden;
     & > li {
-      margin: 6px 0;
-      background: #f9f9f9;
-      padding: 10px;
+      // margin: 6px 0;
+      // padding: 10px;
+      background: var(--header--background);
       border-radius: 5px;
       // &:not(:last-child) {
       //   padding-bottom: 0.5em;
@@ -463,26 +312,105 @@ form {
       &:has(.items:empty) {
         display: none;
       }
+      &:last-child {
+        & > ul {
+          border-bottom: 0 none;
+        }
+      }
     }
     label {
       display: flex;
       align-items: center;
       font-weight: 400;
+      font-size: 0.8rem;
     }
     input {
-      margin: 0 8px 0 0 ;
+      margin: 0 5px 0 0 ;
     }
     h6 {
-      margin: 0 0 0.25em;
+      margin: 0;
+      padding: 10px 10px;
+      border-bottom: 1px solid var(--card--border--color);
+      font-size: 0.8rem;
     }
     ul {
       margin: 0;
       list-style: none;
-      padding-left: 6px;
-      padding-top: 4px;
+      padding: 10px 16px;
+      background: #fff;
+      border-bottom: 1px solid var(--card--border--color);
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
       ul {
         margin: 0 0 0.5em;
         padding-left: 5px;
+      }
+    }
+  }
+}
+
+.chart-gauges {
+  display: flex;
+  gap: 10px;
+  .gauge {
+    text-align: center;
+    h6 {
+      margin: 0 0 5px;
+    }
+    p {
+      font-size: 0.8rem;
+      margin: 5px 0 0;
+    }
+    .needle {
+      background: var(--warning);
+      width: 16px;
+      height: 70px;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -100%);
+      transform-origin: bottom center;
+      clip-path: polygon(50% 0, 100% 90%, 50% 100%, 0 90%);
+    }
+    .gauge-wind-direction {
+      width: 160px;
+      height: 160px;
+      border-radius: 80px;
+      background: #f3f6f9; // var(--header--background);
+      position: relative;
+      @for $i from 0 through 359 {
+        &[data-level="#{$i}"] .needle {
+          transform: translate(-50%, -100%) rotate(#{$i}deg);
+        }
+      }
+    }
+    .gauge-sea-temp {
+      width: 160px;
+      height: 160px;
+      border-radius: 80px;
+      background: url(../images/temp-gauge@2x.png) 0 0/100% auto no-repeat;
+      position: relative;
+      @for $i from 0 through 359 {
+        &[data-level="#{$i}"] .needle {
+          transform: translate(-50%, -100%) rotate(#{$i}deg);
+        }
+      }
+    }
+    .gauge-sea-state {
+      width: 190px;
+      height: 100px;
+      background: url(../images/sea-state-placeholder.jpg) 0 100%/100% auto no-repeat;
+      position: relative;
+      .needle {
+        top: 100%;
+        background: #000;
+        width: 10px;
+      }
+      @for $i from 0 through 359 {
+        &[data-level="#{$i}"] .needle {
+          transform: translate(-50%, -100%) rotate(#{$i}deg);
+        }
       }
     }
   }

@@ -5,3 +5,24 @@
 		font-size: 0.75rem;
 	}	
 }
+
+form {
+	input:not([type="file" i], [type="image" i], [type="checkbox" i], [type="radio" i]) {
+		border-radius: 6px;
+		background-color: var(--header--background);
+		border: 1px solid var(--card--border--color);
+		padding: 10px 12px;
+		display: block;
+		width: 100%;
+	}
+	select {
+		border-radius: 6px;
+    background-color: var(--header--background);
+    border: 1px solid var(--card--border--color);
+    padding: 10px 12px;
+    display: block;
+    width: 100%;
+	}
+	
+}
+

@@ -44,6 +44,9 @@
   overflow-y: auto;
   outline: 0;
 	background: var(--waves-display-modal-bg);
+  .btn-group {
+    margin: 0;
+  }
 }
 
 // Shell div to position the modal with bottom padding
@@ -98,14 +101,15 @@
   // counteract the pointer-events: none; in the .modal-dialog
   color: var(--waves-display-modal-color);
   pointer-events: auto;
-  background-color: var(--waves-display-modal-body-bg);
+  background-color: #fff;
   background-clip: padding-box;
-  border: var(--waves-display-modal-border-width) solid var(--waves-display-modal-border-color);
+  border: 1px solid var(--card--border--color);
 	border-radius: 5px;
   // @include border-radius(var(--waves-display-modal-border-radius));
   // @include box-shadow(var(--waves-display-modal-box-shadow));
   // Remove focus outline from opened modal
   outline: 0;
+  overflow: hidden;
 }
 
 // Modal background
@@ -122,17 +126,28 @@
 // Modal header
 // Top section of the modal w/ title and dismiss
 .modal-header {
-	background: #588da8;
-	color: #fff;
+  background-color: var(--header--background);
+  border-bottom: 1px solid var(--card--border--color);
+  color: var(--header--color);
+  padding: 12px 6px;
   display: flex;
-  flex-shrink: 0;
+  justify-content: flex-start;
   align-items: center;
-  justify-content: space-between; // Put modal header elements (title and dismiss) on opposite ends
-  padding: var(--waves-display-modal-header-padding);
-  border-bottom: var(--waves-display-modal-header-border-width) solid var(--waves-display-modal-header-border-color);
-	* {
-		margin: 0;
-	}
+  gap: 8px;
+  @media (min-width: 768px) {
+    padding: 12px 15px;
+  }
+	// background: #588da8;
+	// color: #fff;
+  // display: flex;
+  // flex-shrink: 0;
+  // align-items: center;
+  // justify-content: space-between; // Put modal header elements (title and dismiss) on opposite ends
+  // padding: var(--waves-display-modal-header-padding);
+  // border-bottom: var(--waves-display-modal-header-border-width) solid var(--waves-display-modal-header-border-color);
+	// * {
+	// 	margin: 0;
+	// }
   .btn-close {
     padding: calc(var(--waves-display-modal-header-padding-y) * .5) calc(var(--waves-display-modal-header-padding-x) * .5);
     margin: calc(-.5 * var(--waves-display-modal-header-padding-y)) calc(-.5 * var(--waves-display-modal-header-padding-x)) calc(-.5 * var(--waves-display-modal-header-padding-y)) auto;
@@ -141,7 +156,7 @@
 
 // Title text within header
 .modal-title {
-  margin-bottom: 0;
+  margin: 0;
   line-height: var(--waves-display-modal-title-line-height);
 }
 
@@ -163,9 +178,9 @@
   flex-wrap: wrap;
   align-items: center; // vertically center
   justify-content: flex-end; // Right align buttons with flex property because text-align doesn't work on flex items
-  padding: 10px 10px;
-  background-color: var(--waves-display-modal-footer-bg);
-  border-top: var(--waves-display-modal-footer-border-width) solid var(--waves-display-modal-footer-border-color);
+  padding: 6px 15px;
+
+  border-top: 1px solid var(--card--border--color);
   // @include border-bottom-radius(var(--waves-display-modal-inner-border-radius));
 
   // Place margin between footer elements

@@ -11,7 +11,7 @@ export const ChartDownloadModal = ( { close, download, downloadEnabled, download
       <div className={ classNames( 'modal-dialog' ) }>
         <div className={ classNames( 'modal-content' ) }>
           <div className={ classNames( 'modal-header' ) }>
-            <h5 className={ classNames( 'modal-title' ) } id="chartModalLabel">{ title }</h5>
+            <h6 className={ classNames( 'modal-title' ) } id="chartModalLabel">{ title }</h6>
             <button type="button" className={ classNames( ['btn-close', 'fa', 'fa-close'] ) } aria-label="Close" onClick={ close } ></button>
           </div>
           <div className={ classNames( 'modal-body' ) }>
@@ -19,17 +19,19 @@ export const ChartDownloadModal = ( { close, download, downloadEnabled, download
             { downloadEnabled ? downloadForm : undefined }
           </div>
           <div className={ classNames( 'modal-footer' ) }>
-            <button type="button" className={ classNames( 'btn' , 'btn-secondary', 'btn-cancel' ) } onClick={ close } >Close</button>
-            { 
-              downloadEnabled && !downloadRequiresDetails
-                ? <button 
-                    type="button" 
-                    className={ classNames( 'btn', 'btn-primary', 'btn-download' ) } 
-                    onClick={ download } >
-                    Download
-                  </button> 
-                : undefined 
-            }
+            <div className="btn-group">
+              <button type="button" className={ classNames( 'btn' , 'btn-secondary', 'btn-cancel' ) } onClick={ close } >Close</button>
+              { 
+                downloadEnabled && !downloadRequiresDetails
+                  ? <button 
+                      type="button" 
+                      className={ classNames( 'btn', 'btn-primary', 'btn-download' ) } 
+                      onClick={ download } >
+                      Download
+                    </button> 
+                  : undefined 
+              }
+            </div>
           </div>
         </div>
       </div>
@@ -198,7 +200,9 @@ export const ChartDownloadUserForm = ( { download, buoyId } ) => {
             value={ formik.values.howDidYouOther } />
         ) : null }
       </div>
-      <button type="submit" className="btn btn-primary">Download</button>
+      <div className="btn-group">
+        <button type="submit" className="btn btn-primary">Download</button>
+      </div>
     </form>
   )
 };

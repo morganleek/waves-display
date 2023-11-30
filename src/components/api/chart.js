@@ -377,6 +377,8 @@ function labelTooltip( tooltipItem ) {
 			const seaTemperature = dataset.data[dataIndex].y + "°C";
 			return 'Temperature: ' + seaTemperature;
 		case "Significant Wave Height (m)": // Sig Wave Height
+		case "Significant Wave Height Sea (m)":
+		case "Significant Wave Height Swell (m)":
 			const sigWaveHeight = dataset.data[dataIndex].y + "m";
 			return 'Significant Wave Height: ' + sigWaveHeight;
 		case "Bottom Temperature (°C)":
