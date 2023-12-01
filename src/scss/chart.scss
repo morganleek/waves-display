@@ -323,9 +323,10 @@ form {
       align-items: center;
       font-weight: 400;
       font-size: 0.8rem;
+      gap: 5px;
     }
     input {
-      margin: 0 5px 0 0 ;
+      margin: 0;
     }
     h6 {
       margin: 0;
@@ -342,6 +343,54 @@ form {
       display: flex;
       gap: 15px;
       flex-wrap: wrap;
+      & > li {
+        label {
+          &::after {
+            content: '';
+            width: 12px;
+            height: 12px;
+            border: 1px solid;
+          }
+          
+        }
+        &.filter-sst label::after{
+          background: rgba(194, 59, 34, 1);
+          border-color: rgba(194, 59, 34, 1);
+        }
+        &.filter-hsigSea label::after{
+          background: rgba(254, 240, 39, 0.4);
+          border-color: rgba(254, 240, 39, 1);
+        }
+        &.filter-hsigSwell label::after{
+          background: rgba(197, 132, 204, 0.4);
+          border-color: rgba(198, 60, 213, 1);
+        }
+        &.filter-hsig label::after{
+          background: rgba(165, 223, 223, 0.4);
+          border-color: rgba(75, 192, 192, 1);
+        }
+        &.filter-tp label::after{
+          background: rgba(237, 135, 80, 1);
+          border-color: rgba(235, 127, 74, 0.5);
+        }
+        &.filter-tm label::after{
+          background: rgba(77, 168, 248, 0.7);
+          border-color: rgba(77, 168, 248, 0.5);
+        }
+        &.filter-bottomTemp label::after{
+          background: rgb(255, 159, 64, 0.5);
+          border-color: rgb(255, 159, 64, 1);
+        }
+        &.filter-windspeed label::after{
+          background: rgba(77, 168, 248, 0.7);
+          border-color: rgba(77, 168, 248, 0.5);
+        }
+        &.filter-currentDir label::after{
+          background: rgba(165, 223, 223, 1);
+          border-color: rgba(75, 192, 192, 1);
+        }
+      }
+      
       ul {
         margin: 0 0 0.5em;
         padding-left: 5px;
@@ -351,10 +400,14 @@ form {
 }
 
 .chart-gauges {
-  display: flex;
+  display: grid;
   gap: 10px;
+  grid-template-columns: repeat(3, 1fr);
+  margin-top: 10px;
   .gauge {
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     h6 {
       margin: 0 0 5px;
     }
@@ -363,8 +416,8 @@ form {
       margin: 5px 0 0;
     }
     .needle {
-      background: var(--warning);
-      width: 16px;
+      background: #000; // var(--warning);
+      width: 8px;
       height: 70px;
       position: absolute;
       left: 50%;
@@ -373,43 +426,26 @@ form {
       transform-origin: bottom center;
       clip-path: polygon(50% 0, 100% 90%, 50% 100%, 0 90%);
     }
-    .gauge-wind-direction {
+    .gauge-dial {
       width: 160px;
       height: 160px;
       border-radius: 80px;
-      background: #f3f6f9; // var(--header--background);
       position: relative;
       @for $i from 0 through 359 {
         &[data-level="#{$i}"] .needle {
           transform: translate(-50%, -100%) rotate(#{$i}deg);
         }
       }
-    }
-    .gauge-sea-temp {
-      width: 160px;
-      height: 160px;
-      border-radius: 80px;
-      background: url(../images/temp-gauge@2x.png) 0 0/100% auto no-repeat;
-      position: relative;
-      @for $i from 0 through 359 {
-        &[data-level="#{$i}"] .needle {
-          transform: translate(-50%, -100%) rotate(#{$i}deg);
-        }
+      &.gauge-wind-direction {
+        background: url(../images/compass.svg) 0 0/100% auto no-repeat; // var(--header--background);
       }
-    }
-    .gauge-sea-state {
-      width: 190px;
-      height: 100px;
-      background: url(../images/sea-state-placeholder.jpg) 0 100%/100% auto no-repeat;
-      position: relative;
-      .needle {
-        top: 100%;
-        background: #000;
-        width: 10px;
+      &.gauge-sea-temp {
+        background: url(../images/temp-gauge@2x.png) 0 0/100% auto no-repeat;
       }
-      @for $i from 0 through 359 {
-        &[data-level="#{$i}"] .needle {
-          transform: translate(-50%, -100%) rotate(#{$i}deg);
+      &.gauge-sea-state {
+        background: url(../images/sea-state@2x.png) 50% 50%/100% auto no-repeat;
+        .needle {
+          background: rgba;
         }
       }
     }

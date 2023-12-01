@@ -154,6 +154,7 @@
 	.tools {
 		display: flex;
 		margin-left: auto;
+		gap: 5px;
 	}
 }
 
@@ -198,5 +199,19 @@
 		&:not(:first-child) {
 			margin-left: -1px;
 		}
+	}
+}
+
+.ant-picker {
+	.ant-picker-input {
+		max-width: 68px;
+		input {
+			font-size: 0.8rem !important;
+		}
+	}
+}
+.ant-picker-range {
+	.ant-picker-range-separator {
+		padding: 0 4px !important;
 	}
 }

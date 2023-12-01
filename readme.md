@@ -10,3 +10,9 @@ Waves Display plugin for Waves Websites. Built with WP Create Block tool.
 - `npm install`
 - `npm run start` - Start making changes
 - `npm run build` - Build changes
+
+### Change Log
+
+#### v2.0.4
+- Added gauges for wind direction, sea surface temperature and sea state
+- Added visibility toggles for guages and chart table

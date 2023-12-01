@@ -67,6 +67,16 @@
 								)
 							),
 							array(
+								'title' => 'Chart Visibility',
+								'fields' => array(
+									array(
+										'label' => 'Show Chart Info',
+										'name' => 'buoy_display_chart_info',
+										'type' => 'checkbox'
+									)
+								)
+							),
+							array(
 								'title' => 'Historic Data',
 								'fields' => array(
 									array(

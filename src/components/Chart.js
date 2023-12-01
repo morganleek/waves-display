@@ -1,7 +1,10 @@
 import React, { Component, forwardRef, useEffect, useState } from "@wordpress/element";
-import DatePicker from "react-datepicker";
+// import DatePicker from "react-datepicker";
 import { Line } from 'react-chartjs-2';
 import 'chartjs-adapter-luxon';
+import { DatePicker, Spin } from 'antd';
+import { LoadingOutlined } from '@ant-design/icons';
+import dayjs from 'dayjs';
 import { wadRawDataToChartData, wadGenerateChartData, wadGetAspectRatio } from './api/chart';
 import { getBuoys, getBuoy, getBuoyData, getBuoyByDate } from './api/buoys';
 import { Memplot } from './Memplot';
@@ -9,6 +12,7 @@ import { ChartDownloadModal } from "./ChartDownloadModal";
 import { ChartTable } from "./chart/ChartTable";
 
 const classNames = require('classnames');
+const { RangePicker } = DatePicker;
 
 export function Charts ( {restrict, buoyFocus, updateCenter, updateZoom} ) {
   const [buoys, setBuoys] = useState([]);
@@ -135,6 +139,7 @@ const Chart = ( props ) => {
           
           // Set data
           setData( data );
+          console.log( data.timeRange[0] );
           setDateRange([ 
             new Date( parseInt( data.timeRange[0] ) ), 
             new Date( parseInt( data.timeRange[1] ) ) 
@@ -181,7 +186,13 @@ const Chart = ( props ) => {
     setDownloadPath( '' );
   }
   
-  let chartGraph = <p>Loading &hellip;</p>;
+  let chartGraph = <Spin
+    indicator={
+      <LoadingOutlined
+        style={{ fontSize: 24, }} spin
+      />
+    }
+  />;
   let chartModal, chartTable, buttonGroup, chartBuoyDetails, downloadButton;
   const [ startDate, endDate ] = dateRange;
   const expandedLabel = ( isExpanded ) ? 'Collapse' : 'Expand';
@@ -223,16 +234,6 @@ const Chart = ( props ) => {
     ) ) );
   }
 
-  
-  // setGroupedIncludes( groupedIncludes.map( ( {label, items} ) => (
-  //   { 
-  //     label,
-  //     items: items.map( item => ( 
-  //       { ...item, enabled: available.includes( item.id ) } 
-  //     ) )
-  //   }
-  // ) ) );
-
   // Disable unused filters
   const available = [];
   for( const key in data.dataPoints ) {
@@ -250,7 +251,7 @@ const Chart = ( props ) => {
               include.items
                 .filter( ( { id } ) => available.includes( id ) )
                 .map( ( {id, label, visible}, j ) => (
-                  <li key={j}>
+                  <li key={j} className={ "filter-" + id }>
                     <label>
                       <input 
                         type="checkbox" 
@@ -291,7 +292,7 @@ const Chart = ( props ) => {
         // Clone options with updated options
         const optionsClone = { ...data.config.options };
         optionsClone.plugins = {} // Not legend title
-        optionsClone.aspectRatio = wadGetAspectRatio( 0.5 ); // Half aspect ratio
+        optionsClone.aspectRatio = wadGetAspectRatio( 0.6 ); // Half aspect ratio
         
         // Assign
         optionsClone.scales = currentScales;
@@ -318,9 +319,9 @@ const Chart = ( props ) => {
       chartGraph = <Line data={ data.config.data } options={ data.config.options } />;
     }
 
-    chartTable = <ChartTable data={ data } show={ wad.obs_table_fields } { ...props } />;
-    
-    console.log( data.dataPoints );
+    chartTable = ( wad.buoy_display_chart_info === "1" ) 
+      ? <ChartTable data={ data } show={ wad.obs_table_fields } { ...props } />
+      : undefined;
 
     const chartGauges = (
       wad.buoy_display_gauge_wind_direction === "1" ||
@@ -335,7 +336,7 @@ const Chart = ( props ) => {
           ? (
             <div className="gauge">
               <h6>Wind Direction</h6>
-              <div className="gauge-wind-direction" data-level={ ( data.dataPoints.winddirect.data.filter( t => t.y > 0 ).pop().y + 180 ) % 360 }>
+              <div className="gauge-dial gauge-wind-direction" data-level={ ( data.dataPoints.winddirect.data.filter( t => t.y > 0 ).pop().y + 180 ) % 360 }>
                 <div className="needle"></div>
               </div>
               <p>
@@ -352,7 +353,7 @@ const Chart = ( props ) => {
         ? (
           <div className="gauge">
             <h6>Sea Surface Temp</h6>
-            <div className="gauge-sea-temp" data-level={ Math.ceil( ( data.dataPoints.sst.data.filter( t => t.y > 0 ).pop().y / 50 ) * 120 ) }>
+            <div className="gauge-dial gauge-sea-temp" data-level={ Math.ceil( ( data.dataPoints.sst.data.filter( t => t.y > 0 ).pop().y / 50 ) * 120 ) }>
               <div className="needle"></div>
             </div>
             <p>
@@ -365,8 +366,8 @@ const Chart = ( props ) => {
         { wad.buoy_display_gauge_sea_state === "1" 
           ? (
             <div className="gauge">
-              <h6>Sea State</h6>
-              <div className="gauge-sea-state" data-level={ 8 / 10 * 180 - 90 }>
+              <h6>Sea State Danger</h6>
+              <div className="gauge-dial gauge-sea-state" data-level={ Math.ceil( ( ( ( 7.5 - 5 ) / 5 ) * 120 + 360 ) % 360 ) }>
                 <div className="needle"></div>
               </div>
             </div>
@@ -375,6 +376,8 @@ const Chart = ( props ) => {
         }
       </div>
     ) : undefined;
+
+    console.log( startDate );
     
     buttonGroup = <div className="tools">
       <div className={ classNames( ['btn-group'] ) } >
@@ -405,7 +408,22 @@ const Chart = ( props ) => {
           <i className={ classNames( ['fa'], ['fa-floppy-disk'] ) }></i>
         </button>
       </div>
-      <DatePicker
+      { startDate && endDate ? 
+        <RangePicker 
+          defaultValue={[dayjs(startDate), dayjs(endDate)]}
+          format='DD/MM/YYYY'
+          onChange={ ( date, dateString ) => { 
+            if( date ) {
+              setDateRange( [ date[0].$d, date[1].$d ] );
+              setSearchDateRange( [ date[0].$d, date[1].$d ] );
+            }
+            // console.log( date );
+            // console.log( dateString );
+          } }
+        />
+        : undefined
+      }
+      {/* <DatePicker
         selectsRange={ true }
         startDate={ startDate }
         endDate={ endDate }
@@ -417,7 +435,27 @@ const Chart = ( props ) => {
           }
         } }
         dateFormat="dd/MM/yyyy"
-      />
+      /> */}
+      {/* { startDate && endDate ? 
+        (
+          <div className="date-range">
+            
+            <input 
+              type="date" 
+              value={ startDate.toISOString().substr(0, 10) } 
+              min="2000-01-01" 
+              max={ endDate.toISOString().substr(0, 10) }
+              onChange={ e => { console.log( e.target.value ) } }
+            />
+            <input 
+              type="date" 
+              value={ endDate.toISOString().substr(0, 10) } 
+              min={ endDate.toISOString().substr(0, 10) }
+            />
+          </div>
+        ) 
+        : undefined
+      } */}
     </div>;
 
     if( downloadPath.length > 0 ) {
@@ -468,7 +506,15 @@ const Chart = ( props ) => {
       </div>
       <div className='card-body'> 
         <div className="canvas-wrapper">
-          <p className="loading">Loading&hellip;</p>
+          <p className="loading">
+            <Spin
+              indicator={
+                <LoadingOutlined
+                  style={{ fontSize: 24, }} spin
+                />
+              }
+            />
+          </p>
         </div>
       </div>
     </div>
