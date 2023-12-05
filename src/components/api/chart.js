@@ -259,7 +259,11 @@ export function wadGenerateChartData( waves, includes, multiplier = 1 ) {
 						}
 					},
 					legend: {
-						display: false
+						display: true,
+						position: 'bottom',
+						labels: {
+							boxWidth: 12
+						}
 					}
 				},
 				scales: axes,
@@ -389,6 +393,15 @@ function labelTooltip( tooltipItem ) {
 	}
 }
 
+// blue :: rgb(55 162 235)
+// pink :: rgb(255 99 132) // tmSea
+// mint :: rgb(76 192 192) // tmSwell
+// orange :: rgb(255 158 64) // hsig
+// purple :: rgb(154 102 255) rgb(154, 102, 255)
+// yellow :: rgb(255 205 86)
+// grey :: rgb(201 203 207)
+
+
 // Appearance for each datapoint type
 export function generateDataPoints( includes ) {
 	// Arrows
@@ -406,8 +419,8 @@ export function generateDataPoints( includes ) {
 			// showInChart: true, 
 			label: window.innerWidth >= 768 ? 'Significant Wave Height (m)' : 'Sig Wave (m)',
 			description: "Significant Wave Height (m)",
-			backgroundColor: 'rgba(165, 223, 223, 0.4)',
-			borderColor: 'rgba(75, 192, 192, 1)',
+			backgroundColor: 'rgba(77, 168, 248, 0.2)',
+			borderColor: 'rgba(77, 168, 248, 1)',
 			borderWidth: 1,
 			lineTension: 0,
 			pointRadius: 1,
@@ -437,8 +450,8 @@ export function generateDataPoints( includes ) {
 			// showInChart: false, 
 			description: "Mean Wave Period (s)",
 			label: window.innerWidth >= 768 ? 'Mean Wave Period & Direction (s & deg)' : 'Mean Wave/Dir (s & deg)', // Peak Period (s)
-			backgroundColor: 'rgba(77, 168, 248, 0.7)',
-			borderColor: 'rgba(77, 168, 248, 0.5)',
+			backgroundColor: 'rgba(255, 158, 64, 0.2)',
+			borderColor: 'rgba(255, 158, 64, 1)',
 			borderWidth: 0,
 			lineTension: 0,
 			pointRadius: 35,
@@ -473,12 +486,12 @@ export function generateDataPoints( includes ) {
 			// showInChart: true, 
 			description: "Sea Surface Temperature (degC)",
 			label: window.innerWidth >= 768 ? 'Sea Surface Temperature (°C)' : 'Sea Surf (°C)', 
-			backgroundColor: 'rgba(194, 59, 34, 1)',
+			backgroundColor: 'rgba(194, 59, 34, 0.05)',
 			borderColor: 'rgba(194, 59, 34, 1)',
 			borderWidth: 1,
 			lineTension: 0,
 			pointRadius: 1,
-			fill: false,
+			fill: true,
 			yAxisID: 'y-axis-3',
 			hidden: ( includes.hasOwnProperty( 'sst' ) ) ? !includes.sst : true
 		},
@@ -487,7 +500,7 @@ export function generateDataPoints( includes ) {
 			// showInChart: true, 
 			description: "Sea Bottom Temperature (degC)",
 			label: window.innerWidth ? 'Bottom Temperature (°C)' : 'Bot Temp (°C)',
-			backgroundColor: 'rgb(255, 159, 64, 0.5)',
+			backgroundColor: 'rgb(255, 159, 64, 0.2)',
 			borderColor: 'rgb(255, 159, 64, 1)',
 			borderWidth: 1,
 			lineTension: 0,
@@ -501,8 +514,8 @@ export function generateDataPoints( includes ) {
 			// showInChart: false, 
 			description: "Wind Speed (knots)",
 			label: window.innerWidth >= 768 ? 'Wind Speed (knots)' : 'Wind Spd (knts)',
-			backgroundColor: 'rgba(77, 168, 248, 0.7)',
-			borderColor: 'rgba(77, 168, 248, 0.5)',
+			backgroundColor: 'rgba(77, 168, 248, 0.2)',
+			borderColor: 'rgba(77, 168, 248, 1)',
 			borderWidth: 0,
 			lineTension: 0,
 			pointRadius: 35,
@@ -522,7 +535,7 @@ export function generateDataPoints( includes ) {
 			// showInChart: false, 
 			description: "Current Mag (m/s)",
 			label: "Current Mag (m/s)",
-			backgroundColor: 'rgba(165, 223, 223, 1)',
+			backgroundColor: 'rgba(165, 223, 223, 0.2)',
 			borderColor: 'rgba(75, 192, 192, 1)',
 			borderWidth: 0,
 			lineTension: 0,
@@ -536,7 +549,7 @@ export function generateDataPoints( includes ) {
 			// showInChart: false, 
 			description: "Current Direction (deg)",
 			label: window.innerWidth >= 768 ? "Current Direction (m/s)" : "Current Dir (m/s)",
-			backgroundColor: 'rgba(165, 223, 223, 1)',
+			backgroundColor: 'rgba(75, 192, 192, 0.2)',
 			borderColor: 'rgba(75, 192, 192, 1)',
 			borderWidth: 0,
 			lineTension: 0,
@@ -549,7 +562,7 @@ export function generateDataPoints( includes ) {
 			data: [],
 			label: window.innerWidth >= 768 ? 'Significant Wave Height Swell (m)' : 'Sig Wave Swell (m)',
 			description: "Significant Wave Height Swell (m)",
-			backgroundColor: 'rgba(197, 132, 204, 0.4)',
+			backgroundColor: 'rgba(198, 60, 213, 0.2)',
 			borderColor: 'rgba(198, 60, 213, 1)',
 			borderWidth: 1,
 			lineTension: 0,
@@ -562,8 +575,8 @@ export function generateDataPoints( includes ) {
 			data: [],
 			label: window.innerWidth >= 768 ? 'Significant Wave Height Sea (m)' : 'Sig Wave Sea (m)',
 			description: "Significant Wave Height Sea (m)",
-			backgroundColor: 'rgba(254, 240, 39, 0.4)',
-			borderColor: 'rgba(254, 240, 39, 1)',
+			backgroundColor: 'rgba(255, 205, 86, 0.2)',
+			borderColor: 'rgba(255, 205, 86, 1)',
 			borderWidth: 1,
 			lineTension: 0,
 			pointRadius: 1,
@@ -573,11 +586,29 @@ export function generateDataPoints( includes ) {
 		},
 		tmSwell: {
 			data: [],
-			description: "Tm_swell (s)"
+			label: window.innerWidth >= 768 ? 'Significant Wave Height Swell (m)' : 'Sig Wave Swell (m)',
+			description: "Mean Wave Height Swell (m)",
+			backgroundColor: 'rgba(76, 192, 192, 0.2)',
+			borderColor: 'rgba(76, 192, 192, 1)',
+			borderWidth: 1,
+			lineTension: 0,
+			pointRadius: 1,
+			fill: true,
+			yAxisID: 'y-axis-1',
+			hidden: ( includes.hasOwnProperty( 'tmSwell' ) ) ? !includes.tmSwell : true
 		},
 		tmSea: {
 			data: [],
-			description: "Tm_sea (s)"
+			label: window.innerWidth >= 768 ? 'Significant Wave Height Sea (m)' : 'Sig Wave Sea (m)',
+			description: "Mean Wave Height Sea (m)",
+			backgroundColor: 'rgba(255, 99, 132, 0.2)',
+			borderColor: 'rgba(255, 99, 132, 1)',
+			borderWidth: 1,
+			lineTension: 0,
+			pointRadius: 1,
+			fill: true,
+			yAxisID: 'y-axis-1',
+			hidden: ( includes.hasOwnProperty( 'tmSea' ) ) ? !includes.tmSea : true
 		},
 		dmSwell: {
 			data: [],

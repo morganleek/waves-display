@@ -58,7 +58,7 @@ function waves_display_enqueue_object() {
 			'buoy_display_gauge_wind_direction' => isset($options['buoy_display_gauge_wind_direction']) ? $options['buoy_display_gauge_wind_direction'] : false,
 			'buoy_display_gauge_sea_surface' => isset($options['buoy_display_gauge_sea_surface']) ? $options['buoy_display_gauge_sea_surface'] : false,
 			'buoy_display_gauge_sea_state' => isset($options['buoy_display_gauge_sea_state']) ? $options['buoy_display_gauge_sea_state'] : false,
-			'buoy_display_chart_info' => isset($option['buoy_display_chart_info']) ? $option['buoy_display_chart_info'] : false, 
+			'buoy_display_chart_info' => isset($options['buoy_display_chart_info']) ? $options['buoy_display_chart_info'] : false, 
 			'buoy_display_key' => isset( $options['buoy_display_key'] ) ? $options['buoy_display_key'] : "0",
 			'buoy_display_init_current' => isset( $options['buoy_display_init_current'] ) ? $options['buoy_display_init_current'] : "0",
 			'buoy_display_init_historic' => isset( $options['buoy_display_init_historic'] ) ? $options['buoy_display_init_historic'] : "0",

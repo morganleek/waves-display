@@ -95,24 +95,32 @@ const Chart = ( props ) => {
 
   const [groupedIncludes, setGroupedIncludes] = useState([
     { 
-      label: "Significant Wave Height (m)",
-      items: [
-        { id: "hsig", label: "Total", visible: true, enabled: true, order: 1 },
-        { id: "hsigSea", label: "Sea", visible: false, enabled: true, order: 2 },
-        { id: "hsigSwell", label: "Swell", visible: false, enabled: true, order: 3 }
-      ]
-    },
-    { 
       label: "Peak Wave Period & Direction (s & deg)",
       items: [
         { id: "tp", label: "Total ", visible: true, enabled: true, order: 0 }
       ]
     },
+    { 
+      label: "Mean Wave Period (s)",
+      items: [
+        { id: "tm", label: "Total ", visible: false, enabled: true, order: 1 },
+        { id: "tmSea", label: "Sea", visible: false, enabled: true, order: 2 },
+        { id: "tmSwell", label: "Swell", visible: false, enabled: true, order: 3 }
+      ]
+    },
+    { 
+      label: "Significant Wave Height (m)",
+      items: [
+        { id: "hsig", label: "Total", visible: true, enabled: true, order: 4 },
+        { id: "hsigSea", label: "Sea", visible: false, enabled: true, order: 5 },
+        { id: "hsigSwell", label: "Swell", visible: false, enabled: true, order: 6 }
+      ]
+    },
     {
       label: "Temperature (°C)",
       items: [
-        { id: "sst", label: "Sea Surface", visible: true, enabled: true, order: 4 },
-        { id: "bottomTemp", label: "Bottom", visible: true, enabled: true, order: 5 }
+        { id: "sst", label: "Sea Surface", visible: true, enabled: true, order: 7 },
+        { id: "bottomTemp", label: "Bottom", visible: true, enabled: true, order: 8 }
       ]
     }
   ]);
@@ -134,7 +142,7 @@ const Chart = ( props ) => {
           const data = wadGenerateChartData( 
             wadRawDataToChartData( json.data ), 
             formatGroupedIncludes(), 
-            0.8 
+            0.9 
           );
           
           // Set data
@@ -292,7 +300,7 @@ const Chart = ( props ) => {
         // Clone options with updated options
         const optionsClone = { ...data.config.options };
         optionsClone.plugins = {} // Not legend title
-        optionsClone.aspectRatio = wadGetAspectRatio( 0.6 ); // Half aspect ratio
+        optionsClone.aspectRatio = wadGetAspectRatio( 0.5 ); // Half aspect ratio
         
         // Assign
         optionsClone.scales = currentScales;
@@ -315,8 +323,12 @@ const Chart = ( props ) => {
       </div>;
     }
     else {
+      // Reduce to only visible items
+      const datasetsFiltered = data.config.data.datasets.filter( ( { hidden } ) => !hidden );
+      
+      // console.log( data.config.data );
       // All in one
-      chartGraph = <Line data={ data.config.data } options={ data.config.options } />;
+      chartGraph = <Line data={ { labels: data.config.data.labels, datasets: datasetsFiltered } } options={ data.config.options } />;
     }
 
     chartTable = ( wad.buoy_display_chart_info === "1" ) 
@@ -376,8 +388,6 @@ const Chart = ( props ) => {
         }
       </div>
     ) : undefined;
-
-    console.log( startDate );
     
     buttonGroup = <div className="tools">
       <div className={ classNames( ['btn-group'] ) } >
@@ -484,7 +494,7 @@ const Chart = ( props ) => {
               ? ( 
                 <div className="chart-filter">
                   <div className="btn-group">
-                    <button className="btn" onClick={ () => setShowFitlers( !showFilters ) }>Filter <i className={ classNames( ["fa-solid", { "fa-chevron-down": !showFilters, "fa-chevron-up": showFilters } ] ) }></i></button>
+                    <button className="btn" onClick={ () => setShowFitlers( !showFilters ) }>Data selection <i className={ classNames( ["fa-solid", { "fa-chevron-down": !showFilters, "fa-chevron-up": showFilters } ] ) }></i></button>
                   </div>
                   { showFilters ? ( <ul className="chart-filter-list">{ groupedIncludesListItems }</ul> ) : undefined }
                 </div>

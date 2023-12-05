@@ -353,42 +353,56 @@ form {
           }
           
         }
-        &.filter-sst label::after{
-          background: rgba(194, 59, 34, 1);
-          border-color: rgba(194, 59, 34, 1);
+        &.filter-hsig label::after { 
+          background-color: rgba(77, 168, 248, 0.2);
+          border-color: rgba(77, 168, 248, 1);
         }
-        &.filter-hsigSea label::after{
-          background: rgba(254, 240, 39, 0.4);
-          border-color: rgba(254, 240, 39, 1);
-        }
-        &.filter-hsigSwell label::after{
-          background: rgba(197, 132, 204, 0.4);
-          border-color: rgba(198, 60, 213, 1);
-        }
-        &.filter-hsig label::after{
-          background: rgba(165, 223, 223, 0.4);
-          border-color: rgba(75, 192, 192, 1);
-        }
-        &.filter-tp label::after{
-          background: rgba(237, 135, 80, 1);
+        &.filter-tp label::after { 
+          background-color: rgba(237, 135, 80, 1);
           border-color: rgba(235, 127, 74, 0.5);
         }
-        &.filter-tm label::after{
-          background: rgba(77, 168, 248, 0.7);
-          border-color: rgba(77, 168, 248, 0.5);
+        &.filter-tm label::after { 
+          background-color: rgba(255, 158, 64, 0.2);
+          border-color: rgba(255, 158, 64, 1);
         }
-        &.filter-bottomTemp label::after{
-          background: rgb(255, 159, 64, 0.5);
+        &.filter-sst label::after { 
+          background-color: rgba(194, 59, 34, 0.05);
+          border-color: rgba(194, 59, 34, 1);
+        }
+        &.filter-bottomTemp label::after { 
+          background-color: rgb(255, 159, 64, 0.2);
           border-color: rgb(255, 159, 64, 1);
         }
-        &.filter-windspeed label::after{
-          background: rgba(77, 168, 248, 0.7);
-          border-color: rgba(77, 168, 248, 0.5);
+        &.filter-windspeed label::after { 
+          background-color: rgba(77, 168, 248, 0.2);
+          border-color: rgba(77, 168, 248, 1);
         }
-        &.filter-currentDir label::after{
-          background: rgba(165, 223, 223, 1);
+        &.filter-currentMag label::after { 
+          background-color: rgba(165, 223, 223, 0.2);
           border-color: rgba(75, 192, 192, 1);
         }
+        &.filter-currentDir label::after { 
+          background-color: rgba(75, 192, 192, 0.2);
+          border-color: rgba(75, 192, 192, 1);
+        }
+        &.filter-hsigSwell label::after {
+          background-color: rgba(198, 60, 213, 0.2);
+          border-color: rgba(198, 60, 213, 1);
+        }
+        &.filter-hsigSea label::after {
+          background-color: rgba(254, 240, 39, 0.2);
+          border-color: rgba(254, 240, 39, 1);
+        }
+        &.filter-tmSwell label::after {
+          background-color: rgba(76, 192, 192, 0.2);
+          border-color: rgba(76, 192, 192, 1);
+        }
+        &.filter-tmSea label::after {
+          background-color: rgba(255, 99, 132, 0.2);
+          border-color: rgba(255, 99, 132, 1);
+        }
+        
+        
       }
       
       ul {
