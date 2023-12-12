@@ -428,6 +428,7 @@ form {
     p {
       font-size: 0.8rem;
       margin: 5px 0 0;
+      font-weight: 600;
     }
     .needle {
       background: #000; // var(--warning);
@@ -439,6 +440,9 @@ form {
       transform: translate(-50%, -100%);
       transform-origin: bottom center;
       clip-path: polygon(50% 0, 100% 90%, 50% 100%, 0 90%);
+      [data-theme="theme-dark"] & {
+        background: #fa0000;
+      }
     }
     .gauge-dial {
       width: 160px;
@@ -455,6 +459,9 @@ form {
       }
       &.gauge-sea-temp {
         background: url(../images/temp-gauge@2x.png) 0 0/100% auto no-repeat;
+        [data-theme="theme-dark"] & {
+          background: url(../images/dark-temp-gauge@2x.png) 0 0/100% auto no-repeat;
+        }
       }
       &.gauge-sea-state {
         background: url(../images/sea-state@2x.png) 50% 50%/100% auto no-repeat;

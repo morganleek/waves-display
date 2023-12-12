@@ -24,6 +24,10 @@
 				{ "id": 2, "label": "Tantabiddi" },
 				{ "id": 3, "label": "Exmouth Gulf" }
 			]
+		},
+		"darkMode": {
+			"type": "boolean",
+			"default": false
 		}
 	}
 }

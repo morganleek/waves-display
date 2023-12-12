@@ -1,0 +1,8 @@
+[
+	{ 
+		"label": "Swell",
+		"items": [
+			{ "id": "tmSwell", "label": "Swell", "visible": true, "enabled": true, "order": 3 }
+		]
+	}
+]

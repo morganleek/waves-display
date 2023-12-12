@@ -14,6 +14,16 @@
 
 						$options = get_option('wad_options');
 						$options_tables = array(
+							// array(
+							// 	'title' => 'Style',
+							// 	'fields' => array(
+							// 		array( 
+							// 			'label' => 'Enable dark mode',
+							// 			'name' => 'buoy_display_enable_dark_mode',
+							// 			'type' => 'checkbox'
+							// 		)
+							// 	)
+							// ),
 							array(
 								'title' => 'Google Maps',
 								'fields' => array(
@@ -72,6 +82,11 @@
 									array(
 										'label' => 'Show Chart Info',
 										'name' => 'buoy_display_chart_info',
+										'type' => 'checkbox'
+									),
+									array(
+										'label' => 'Show Swell Only (For Fishing Sites)',
+										'name' => 'buoy_display_chart_swell_only',
 										'type' => 'checkbox'
 									)
 								)

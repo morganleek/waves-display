@@ -1,0 +1,29 @@
+[{ 
+	"label": "Peak Wave Period & Direction (s & deg)",
+	"items": [
+		{ "id": "tp", "label": "Total ", "visible": true, "enabled": true, "order": 0 }
+	]
+},
+{ 
+	"label": "Mean Wave Period (s)",
+	"items": [
+		{ "id": "tm", "label": "Total ", "visible": false, "enabled": true, "order": 1 },
+		{ "id": "tmSea", "label": "Sea", "visible": false, "enabled": true, "order": 2 },
+		{ "id": "tmSwell", "label": "Swell", "visible": false, "enabled": true, "order": 3 }
+	]
+},
+{ 
+	"label": "Significant Wave Height (m)",
+	"items": [
+		{ "id": "hsig", "label": "Total", "visible": true, "enabled": true, "order": 4 },
+		{ "id": "hsigSea", "label": "Sea", "visible": false, "enabled": true, "order": 5 },
+		{ "id": "hsigSwell", "label": "Swell", "visible": false, "enabled": true, "order": 6 }
+	]
+},
+{
+	"label": "Temperature (°C)",
+	"items": [
+		{ "id": "sst", "label": "Sea Surface", "visible": true, "enabled": true, "order": 7 },
+		{ "id": "bottomTemp", "label": "Bottom", "visible": true, "enabled": true, "order": 8 }
+	]
+}]

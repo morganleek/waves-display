@@ -48,6 +48,17 @@
 			}
 		}
 	}
+	&[data-theme="theme-dark"] {
+		background: #000;
+		--header--background: #111827; // #588da8;
+		--header--color: #fff;
+		--button: #374151; // #5cb85c;
+		--button-border: #4b5563; // #4cae4c;
+		--button-color: #fff;
+		--body--background: #111827; // rgb(11, 107, 203);
+		--body--color: #fff;
+		--card--border--color: #474747;
+	}
 }
 
 .pull-left {

@@ -11,6 +11,9 @@ import { Memplot } from './Memplot';
 import { ChartDownloadModal } from "./ChartDownloadModal";
 import { ChartTable } from "./chart/ChartTable";
 
+import chartActive from './api/chart-active.json';
+import chartActiveSwellOnly from './api/chart-active-swell-only.json';
+
 const classNames = require('classnames');
 const { RangePicker } = DatePicker;
 
@@ -93,37 +96,7 @@ const Chart = ( props ) => {
     hsigSea: true
   });
 
-  const [groupedIncludes, setGroupedIncludes] = useState([
-    { 
-      label: "Peak Wave Period & Direction (s & deg)",
-      items: [
-        { id: "tp", label: "Total ", visible: true, enabled: true, order: 0 }
-      ]
-    },
-    { 
-      label: "Mean Wave Period (s)",
-      items: [
-        { id: "tm", label: "Total ", visible: false, enabled: true, order: 1 },
-        { id: "tmSea", label: "Sea", visible: false, enabled: true, order: 2 },
-        { id: "tmSwell", label: "Swell", visible: false, enabled: true, order: 3 }
-      ]
-    },
-    { 
-      label: "Significant Wave Height (m)",
-      items: [
-        { id: "hsig", label: "Total", visible: true, enabled: true, order: 4 },
-        { id: "hsigSea", label: "Sea", visible: false, enabled: true, order: 5 },
-        { id: "hsigSwell", label: "Swell", visible: false, enabled: true, order: 6 }
-      ]
-    },
-    {
-      label: "Temperature (°C)",
-      items: [
-        { id: "sst", label: "Sea Surface", visible: true, enabled: true, order: 7 },
-        { id: "bottomTemp", label: "Bottom", visible: true, enabled: true, order: 8 }
-      ]
-    }
-  ]);
+  const [groupedIncludes, setGroupedIncludes] = useState(wad.buoy_display_chart_swell_only ? chartActiveSwellOnly : chartActive);
 
   const [showFilters, setShowFitlers] = useState(false);
 
@@ -147,7 +120,7 @@ const Chart = ( props ) => {
           
           // Set data
           setData( data );
-          console.log( data.timeRange[0] );
+          // console.log( data.timeRange[0] );
           setDateRange([ 
             new Date( parseInt( data.timeRange[0] ) ), 
             new Date( parseInt( data.timeRange[1] ) ) 
@@ -201,7 +174,7 @@ const Chart = ( props ) => {
       />
     }
   />;
-  let chartModal, chartTable, buttonGroup, chartBuoyDetails, downloadButton;
+  let chartModal, chartTable, chartBuoyDetails, downloadButton;
   const [ startDate, endDate ] = dateRange;
   const expandedLabel = ( isExpanded ) ? 'Collapse' : 'Expand';
   
@@ -389,84 +362,56 @@ const Chart = ( props ) => {
       </div>
     ) : undefined;
     
-    buttonGroup = <div className="tools">
-      <div className={ classNames( ['btn-group'] ) } >
-        <button 
-          className={ classNames( ['btn', 'btn-outline-secondary' ] ) } 
-          onClick={ handleExpandClick }
-          title="Expand chart"
-        >
-          <span className="label">{ expandedLabel }</span>
-          <i className={ classNames( ['fa'], ['fa-expand'] ) }></i>
-        </button>
-        <button 
-          className={ classNames( ['btn', 'btn-outline-secondary' ] ) } 
-          onClick={ handleCentreClick }
-          title="Centre on map"
-        >
-          <span className="label">Centre</span>
-          <i className={ classNames( ['fa'], ['fa-crosshairs'] ) }></i>
-        </button>
-        <button 
-          className={ 
-            classNames( ['btn', 'btn-outline-secondary' ] ) 
-          } 
-          onClick={ () => handleExportClick() }
-          title="Export data"
-        >
-          <span className="label">Export Data</span>
-          <i className={ classNames( ['fa'], ['fa-floppy-disk'] ) }></i>
-        </button>
+    const buttonGroup = !wad.buoy_display_chart_swell_only 
+      ? <div className="tools">
+        <div className={ classNames( ['btn-group'] ) } >
+          <button 
+            className={ classNames( ['btn', 'btn-outline-secondary' ] ) } 
+            onClick={ handleExpandClick }
+            title="Expand chart"
+          >
+            <span className="label">{ expandedLabel }</span>
+            <i className={ classNames( ['fa'], ['fa-expand'] ) }></i>
+          </button>
+          <button 
+            className={ classNames( ['btn', 'btn-outline-secondary' ] ) } 
+            onClick={ handleCentreClick }
+            title="Centre on map"
+          >
+            <span className="label">Centre</span>
+            <i className={ classNames( ['fa'], ['fa-crosshairs'] ) }></i>
+          </button>
+          <button 
+            className={ 
+              classNames( ['btn', 'btn-outline-secondary' ] ) 
+            } 
+            onClick={ () => handleExportClick() }
+            title="Export data"
+          >
+            <span className="label">Export Data</span>
+            <i className={ classNames( ['fa'], ['fa-floppy-disk'] ) }></i>
+          </button>
+        </div>
+        { startDate && endDate ? 
+          <RangePicker 
+            defaultValue={[dayjs(startDate), dayjs(endDate)]}
+            format='DD/MM/YYYY'
+            onChange={ ( date, dateString ) => { 
+              if( date ) {
+                setDateRange( [ date[0].$d, date[1].$d ] );
+                setSearchDateRange( [ date[0].$d, date[1].$d ] );
+              }
+            } }
+          />
+          : undefined
+        }
       </div>
-      { startDate && endDate ? 
-        <RangePicker 
-          defaultValue={[dayjs(startDate), dayjs(endDate)]}
-          format='DD/MM/YYYY'
-          onChange={ ( date, dateString ) => { 
-            if( date ) {
-              setDateRange( [ date[0].$d, date[1].$d ] );
-              setSearchDateRange( [ date[0].$d, date[1].$d ] );
-            }
-            // console.log( date );
-            // console.log( dateString );
-          } }
-        />
-        : undefined
-      }
-      {/* <DatePicker
-        selectsRange={ true }
-        startDate={ startDate }
-        endDate={ endDate }
-        onChange={ update => {
-          setDateRange( update );
-          // Ensure both values are set and then refresh chart
-          if( update.length === 2 && update[0] !== null && update[1] !== null ) {
-            setSearchDateRange([update[0], update[1]]);
-          }
-        } }
-        dateFormat="dd/MM/yyyy"
-      /> */}
-      {/* { startDate && endDate ? 
-        (
-          <div className="date-range">
-            
-            <input 
-              type="date" 
-              value={ startDate.toISOString().substr(0, 10) } 
-              min="2000-01-01" 
-              max={ endDate.toISOString().substr(0, 10) }
-              onChange={ e => { console.log( e.target.value ) } }
-            />
-            <input 
-              type="date" 
-              value={ endDate.toISOString().substr(0, 10) } 
-              min={ endDate.toISOString().substr(0, 10) }
-            />
-          </div>
-        ) 
-        : undefined
-      } */}
-    </div>;
+      : undefined
+
+    // buttonGroup = { ( !wad.buoy_display_chart_swell_only ) ?
+      
+    //   : undefined 
+    // };
 
     if( downloadPath.length > 0 ) {
       chartModal = <ChartDownloadModal 
@@ -490,7 +435,7 @@ const Chart = ( props ) => {
         <div className='card-body'> 
           <div className="canvas-wrapper">
             { chartGauges }
-            { groupedIncludesListItems && !isExpanded
+            { groupedIncludesListItems && !isExpanded && !wad.buoy_display_chart_swell_only
               ? ( 
                 <div className="chart-filter">
                   <div className="btn-group">

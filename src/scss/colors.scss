@@ -1,7 +1,9 @@
 :root {
 	--card--border--color: rgb(229, 234, 242); // rgb(151, 195, 240);
 	--header--background: rgba(243, 246, 249, 0.2); // rgb(11, 107, 203);
+	--body--background: #ffffff; // rgb(11, 107, 203);
 	--header--color: rgb(28, 32, 37);
+	--body--color: #000;
 	--button: #ffffff; // #5cb85c;
 	--button-border: rgb(205, 215, 225); // #4cae4c;
 	--button-color: rgb(28, 32, 37);
@@ -10,9 +12,5 @@
 }
 
 .is-dark-mode {
-	--header: #111827; // #588da8;
-	--header--color: #fff;
-	--button: #374151; // #5cb85c;
-	--button-border: #4b5563; // #4cae4c;
-	--button-color: #fff;
+	
 }

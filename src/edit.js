@@ -2,7 +2,8 @@ import { __ } from '@wordpress/i18n';
 import { useBlockProps, BlockControls, InspectorControls } from '@wordpress/block-editor';
 import { 
 	PanelBody,
-	FormTokenField
+	FormTokenField,
+	ToggleControl
 } from '@wordpress/components';
 import { Component, useEffect, useState } from '@wordpress/element';
 
@@ -10,7 +11,7 @@ import './editor.scss';
 
 export default function Edit( { attributes, setAttributes, isSelected } ) {
 	// Selected buoys
-	const { buoys } = attributes;
+	const { buoys, darkMode } = attributes;
 	// All buoys
 	const [allBuoys, setAllBuoys] = useState([]);
 
@@ -36,6 +37,13 @@ export default function Edit( { attributes, setAttributes, isSelected } ) {
 	return (
 		<div { ...useBlockProps() }>
 			<InspectorControls>
+				<PanelBody title={ __( 'Appearance' ) }>
+					<ToggleControl
+            checked={ darkMode }
+            onChange={ newValue => setAttributes( { darkMode: newValue } ) }
+						label="Enable dark mode"
+					/>
+				</PanelBody>
 				<PanelBody title={ __( 'Restrict Buoys' ) }>
 					{ allBuoys.length > 0 ? (
 						<FormTokenField

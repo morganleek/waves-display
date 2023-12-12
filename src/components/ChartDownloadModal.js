@@ -3,8 +3,8 @@ import { useFormik } from 'formik';
 const classNames = require('classnames');
 
 export const ChartDownloadModal = ( { close, download, downloadEnabled, downloadRequiresDetails, title, license, buoyId } ) => {
-  console.log( downloadEnabled ? 'true' : 'false' );
-  console.log( typeof( downloadEnabled ) );
+  // console.log( downloadEnabled ? 'true' : 'false' );
+  // console.log( typeof( downloadEnabled ) );
   const downloadForm = ( downloadRequiresDetails ) ? <ChartDownloadUserForm download={ download } buoyId={ buoyId }></ChartDownloadUserForm> : '';
   return (
     <div className={ classNames( 'modal', 'fade', 'show' ) } id="chartModal" tabindex="-1" aria-labelledby="chartModalLabel" >

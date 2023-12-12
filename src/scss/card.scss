@@ -41,6 +41,8 @@
 		}
 	}	
 	.card-body {
+		background-color: var(--body--background);
+		color: var(--body--color);
 		padding: 6px 16px 16px;
 		h5.latest-observations {
 			margin: 0 0 0.5em;
