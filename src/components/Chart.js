@@ -334,7 +334,7 @@ const Chart = ( props ) => {
           ? (
             <div className="gauge">
               <h6>Sea State Danger</h6>
-              <div className="gauge-dial gauge-sea-state" data-level={ Math.ceil( ( ( ( 7.5 - 5 ) / 5 ) * 120 + 360 ) % 360 ) }>
+              <div className="gauge-dial gauge-sea-state" data-level={ Math.ceil( ( ( ( 0.5 - 5 ) / 5 ) * 120 + 360 ) % 360 ) }>
                 <div className="needle"></div>
               </div>
             </div>
