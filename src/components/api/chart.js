@@ -1,7 +1,16 @@
 // import $ from 'jquery';
 import Chart from 'chart.js/auto';
 import chartStyles from './chart-style.json';
+import chartStylesSimple from './chart-style-simple.json';
 import { DateTime } from 'luxon'; 
+import ChartActiveAppearance from './chart-active-appearance.json';
+import ChartActiveSimpleAppearance from './chart-active-simple-appearance.json';
+
+// Arrows
+let arrowImageOrange = new Image( 28, 28 );
+arrowImageOrange.src = wad.plugin + "images/arrow-grad-orange@2x.png";
+let arrowImageBlue = new Image( 28, 28 );
+arrowImageBlue.src = wad.plugin + "images/arrow-blue-g@2x.png";
 
 // Tool for parsing Ints
 function parseIntOr( intVal, altVal ) {
@@ -42,25 +51,43 @@ function wadGetMod( max, length ) {
 	return ( mod >= 1 ) ? mod : 1;
 }
 
+const formatGroupedIncludes = ( groupedIncludes ) => {
+	let orderedIncludes = [];
+	let fIncludes = {};
+	// Sort by 'order' attribute
+	groupedIncludes.forEach( g => {
+		g.items.forEach( ( item ) => { 
+			orderedIncludes[item.order] = item;
+		} );
+	} );
+	// Translate to form { ...id: isVisible }
+	orderedIncludes.forEach( ( {id, visible} ) => {
+		fIncludes[id] = visible;
+	} );
+	
+	return fIncludes;
+}
+
 // Process and sort data and push into chart
-export function wadGenerateChartData( waves, includes, multiplier = 1 ) {
+export function wadGenerateChartData( waves, groupedIncludes, multiplier = 1,  ) {
 	const MAX_ARROW_LIMIT = 60;
 
-	if( !includes ) {
-		// Ordering 
-		includes = {
-			tp: true,
-			sst: true, 
-			bottomTemp: true,
-			hsig: true,
-			hsigSwell: true,
-			hsigSea: true
-		};
-	}
+	// if( !includes ) {
+	// 	// Ordering 
+	// 	includes = {
+	// 		tp: true,
+	// 		sst: true, 
+	// 		bottomTemp: true,
+	// 		hsig: true,
+	// 		hsigSwell: true,
+	// 		hsigSea: true
+	// 	};
+	// }
+	const includes = formatGroupedIncludes( groupedIncludes );
 
 	if( typeof( waves ) != "undefined" && waves.length > 0 ) {
 		let chartLabels = [];
-		let dataPoints = generateDataPoints( includes );
+		let dataPoints = generateDataPoints( groupedIncludes );
 
 		// Check again MAX_ARROW_LIMIT
 		const mod = wadGetMod( MAX_ARROW_LIMIT, waves.length );
@@ -178,7 +205,9 @@ export function wadGenerateChartData( waves, includes, multiplier = 1 ) {
 		// Axes'
 		const axes = {};
 		// Import styles
-		const { x, waveHeightAxes, peakPeriodAxes, tempAxes, windSpeedAxes } = chartStyles.axesStyles;
+		const { x, waveHeightAxes, peakPeriodAxes, tempAxes, windSpeedAxes } = wad.buoy_display_chart_swell_only
+			? chartStylesSimple.axesStyles
+			: chartStyles.axesStyles;
 
 		// X Axis
 		x.title.text = scaleLabel;
@@ -197,6 +226,7 @@ export function wadGenerateChartData( waves, includes, multiplier = 1 ) {
 			// Wave Height Axes
 			waveHeightAxes.ticks.max = ( Math.ceil( maxWaveHeight ) > 2 ) ? Math.ceil( maxWaveHeight ) : 2; 
 			waveHeightAxes.title.display = isMobile;
+
 			axes["y-axis-1"] = waveHeightAxes;
 		}
 		
@@ -209,7 +239,7 @@ export function wadGenerateChartData( waves, includes, multiplier = 1 ) {
 			axes["y-axis-2"] = peakPeriodAxes;
 		}
 
-		if( hasItem.hasOwnProperty( 'sst' ) || hasItem.hasOwnProperty( 'bottomTemp' ) ) {
+		if( ( hasItem.hasOwnProperty( 'sst' ) || hasItem.hasOwnProperty( 'bottomTemp' ) ) && ( includes.sst || includes.bottomTemp ) ) {
 			// Temp Axes
 			tempAxes.ticks.min = minTemp - 1;
 			tempAxes.ticks.max = maxTemp + 1;
@@ -403,232 +433,253 @@ function labelTooltip( tooltipItem ) {
 
 
 // Appearance for each datapoint type
-export function generateDataPoints( includes ) {
-	// Arrows
-	let arrowImageOrange = new Image( 28, 28 );
-	arrowImageOrange.src = wad.plugin + "images/arrow-grad-orange@2x.png";
-	let arrowImageBlue = new Image( 28, 28 );
-	arrowImageBlue.src = wad.plugin + "images/arrow-blue-g@2x.png";
-	let arrowImagePink = new Image( 28, 28 );
-	arrowImagePink.src = wad.plugin + "images/arrow-pink-g@2x.png";
-	
-	// Datapoint setup
-	let dataPoints = {
-		hsig: { 
-			data: [], 
-			// showInChart: true, 
-			label: window.innerWidth >= 768 ? 'Significant Wave Height (m)' : 'Sig Wave (m)',
-			description: "Significant Wave Height (m)",
-			backgroundColor: 'rgba(77, 168, 248, 0.2)',
-			borderColor: 'rgba(77, 168, 248, 1)',
-			borderWidth: 1,
-			lineTension: 0,
-			pointRadius: 1,
-			fill: true,
-			yAxisID: 'y-axis-1',
-			hidden: ( includes.hasOwnProperty( 'hsig' ) ) ? !includes.hsig : true
-		}, 
-		tp: { 
-			data: [], 
-			// showInChart: true, 
-			label: window.innerWidth >= 768 ? 'Peak Wave Period & Direction (s & deg)' : 'Peak Wave/Dir (s & deg)',
-			description: "Peak Wave Period (s)",
-			backgroundColor: 'rgba(237, 135, 80, 1)',
-			borderColor: 'rgba(235, 127, 74, 0.5)',
-			borderWidth: 0,
-			lineTension: 0,
-			pointRadius: 35,
-			pointStyle: arrowImageOrange,
-			rotation: [],
-			fill: false,
-			yAxisID: 'y-axis-2',
-			showLine: false,
-			hidden: ( includes.hasOwnProperty( 'tp' ) ) ? !includes.tp : true
-		}, 
-		tm: { 
-			data: [], 
-			// showInChart: false, 
-			description: "Mean Wave Period (s)",
-			label: window.innerWidth >= 768 ? 'Mean Wave Period & Direction (s & deg)' : 'Mean Wave/Dir (s & deg)', // Peak Period (s)
-			backgroundColor: 'rgba(255, 158, 64, 0.2)',
-			borderColor: 'rgba(255, 158, 64, 1)',
-			borderWidth: 0,
-			lineTension: 0,
-			pointRadius: 35,
-			pointStyle: arrowImageBlue,
-			rotation: [],
-			fill: false,
-			yAxisID: 'y-axis-2',
-			hidden: ( includes.hasOwnProperty( 'tm' ) ) ? !includes.tm : true
-		}, 
-		tpdeg: { 
-			data: [], 
-			// showInChart: true, 
-			description: "Peak Wave Direction (deg)",
-		}, 
-		tmdeg: { 
-			data: [], 
-			// showInChart: false, 
-			description: "Mean Wave Direction (deg)",
-		},
-		dpspr: { 
-			data: [], 
-			// showInChart: true, 
-			description: "Peak Wave Spreading (deg)",
-		}, 
-		dmspr: { 
-			data: [], 
-			// showInChart: false, 
-			description: "Mean Wave Spreading (deg)",
-		},
-		sst: { 
-			data: [], 
-			// showInChart: true, 
-			description: "Sea Surface Temperature (degC)",
-			label: window.innerWidth >= 768 ? 'Sea Surface Temperature (°C)' : 'Sea Surf (°C)', 
-			backgroundColor: 'rgba(194, 59, 34, 0.05)',
-			borderColor: 'rgba(194, 59, 34, 1)',
-			borderWidth: 1,
-			lineTension: 0,
-			pointRadius: 1,
-			fill: true,
-			yAxisID: 'y-axis-3',
-			hidden: ( includes.hasOwnProperty( 'sst' ) ) ? !includes.sst : true
-		},
-		bottomTemp: { 
-			data: [], 
-			// showInChart: true, 
-			description: "Sea Bottom Temperature (degC)",
-			label: window.innerWidth ? 'Bottom Temperature (°C)' : 'Bot Temp (°C)',
-			backgroundColor: 'rgb(255, 159, 64, 0.2)',
-			borderColor: 'rgb(255, 159, 64, 1)',
-			borderWidth: 1,
-			lineTension: 0,
-			pointRadius: 1,
-			fill: false,
-			yAxisID: 'y-axis-3',
-			hidden: ( includes.hasOwnProperty( 'bottomTemp' ) ) ? !includes.bottomTemp : true
-		},
-		windspeed: { 
-			data: [], 
-			// showInChart: false, 
-			description: "Wind Speed (knots)",
-			label: window.innerWidth >= 768 ? 'Wind Speed (knots)' : 'Wind Spd (knts)',
-			backgroundColor: 'rgba(77, 168, 248, 0.2)',
-			borderColor: 'rgba(77, 168, 248, 1)',
-			borderWidth: 0,
-			lineTension: 0,
-			pointRadius: 35,
-			pointStyle: arrowImageBlue,
-			rotation: [], // winddirec
-			fill: false,
-			yAxisID: 'y-axis-1',
-			hidden: ( includes.hasOwnProperty( 'windspeed' ) ) ? !includes.windspeed : true
-		},
-		winddirect: { 
-			data: [], 
-			// showInChart: false, 
-			description: "Wind Direction (deg)",
-		},
-		currentMag: { 
-			data: [], 
-			// showInChart: false, 
-			description: "Current Mag (m/s)",
-			label: "Current Mag (m/s)",
-			backgroundColor: 'rgba(165, 223, 223, 0.2)',
-			borderColor: 'rgba(75, 192, 192, 1)',
-			borderWidth: 0,
-			lineTension: 0,
-			pointRadius: 2,
-			fill: true,
-			yAxisID: 'y-axis-1',
-			// hidden: ( includes.hasOwnProperty( 'currentMag' ) ) ? !includes.currentMag : true
-		},
-		currentDir: { 
-			data: [], 
-			// showInChart: false, 
-			description: "Current Direction (deg)",
-			label: window.innerWidth >= 768 ? "Current Direction (m/s)" : "Current Dir (m/s)",
-			backgroundColor: 'rgba(75, 192, 192, 0.2)',
-			borderColor: 'rgba(75, 192, 192, 1)',
-			borderWidth: 0,
-			lineTension: 0,
-			pointRadius: 2,
-			fill: true,
-			yAxisID: 'y-axis-1',
-			// hidden: ( includes.hasOwnProperty( 'currentDir' ) ) ? !includes.currentDir : true
-		},
-		hsigSwell: {
-			data: [],
-			label: window.innerWidth >= 768 ? 'Significant Wave Height Swell (m)' : 'Sig Wave Swell (m)',
-			description: "Significant Wave Height Swell (m)",
-			backgroundColor: 'rgba(198, 60, 213, 0.2)',
-			borderColor: 'rgba(198, 60, 213, 1)',
-			borderWidth: 1,
-			lineTension: 0,
-			pointRadius: 1,
-			fill: true,
-			yAxisID: 'y-axis-1',
-			hidden: ( includes.hasOwnProperty( 'hsigSwell' ) ) ? !includes.hsigSwell : true
-		},
-		hsigSea: {
-			data: [],
-			label: window.innerWidth >= 768 ? 'Significant Wave Height Sea (m)' : 'Sig Wave Sea (m)',
-			description: "Significant Wave Height Sea (m)",
-			backgroundColor: 'rgba(255, 205, 86, 0.2)',
-			borderColor: 'rgba(255, 205, 86, 1)',
-			borderWidth: 1,
-			lineTension: 0,
-			pointRadius: 1,
-			fill: true,
-			yAxisID: 'y-axis-1',
-			hidden: ( includes.hasOwnProperty( 'hsigSea' ) ) ? !includes.hsigSea : true
-		},
-		tmSwell: {
-			data: [],
-			label: window.innerWidth >= 768 ? 'Significant Wave Height Swell (m)' : 'Sig Wave Swell (m)',
-			description: "Mean Wave Height Swell (m)",
-			backgroundColor: 'rgba(76, 192, 192, 0.2)',
-			borderColor: 'rgba(76, 192, 192, 1)',
-			borderWidth: 1,
-			lineTension: 0,
-			pointRadius: 1,
-			fill: true,
-			yAxisID: 'y-axis-1',
-			hidden: ( includes.hasOwnProperty( 'tmSwell' ) ) ? !includes.tmSwell : true
-		},
-		tmSea: {
-			data: [],
-			label: window.innerWidth >= 768 ? 'Significant Wave Height Sea (m)' : 'Sig Wave Sea (m)',
-			description: "Mean Wave Height Sea (m)",
-			backgroundColor: 'rgba(255, 99, 132, 0.2)',
-			borderColor: 'rgba(255, 99, 132, 1)',
-			borderWidth: 1,
-			lineTension: 0,
-			pointRadius: 1,
-			fill: true,
-			yAxisID: 'y-axis-1',
-			hidden: ( includes.hasOwnProperty( 'tmSea' ) ) ? !includes.tmSea : true
-		},
-		dmSwell: {
-			data: [],
-			description: "Dm_swell (deg)"
-		},
-		dmSea: {
-			data: [],
-			description: "Dm_sea (deg)"
-		},
-		dmSprSwell: {
-			data: [],
-			description: "DmSpr_swell (deg)"
-		},
-		dmSprSea: {
-			data: [],
-			description: "DmSpr_sea (deg)"
-		}
-	};
+export function generateDataPoints( groupedIncludes ) {
+	// let arrowImagePink = new Image( 28, 28 );
+	// arrowImagePink.src = wad.plugin + "images/arrow-pink-g@2x.png";
 
-	return dataPoints;
+	const includes = formatGroupedIncludes( groupedIncludes );
+
+	// Clone appearance
+	// const newChartData = { ...ChartActiveAppearance };
+	let newChartData = wad.buoy_display_chart_swell_only
+		? JSON.parse(JSON.stringify(ChartActiveSimpleAppearance))
+		: JSON.parse(JSON.stringify(ChartActiveAppearance)); // Object.assign({}, ChartActiveAppearance);
+	
+	// Set arrow styles
+	newChartData.tp.pointStyle = arrowImageOrange;
+	newChartData.tm.pointStyle = arrowImageBlue;
+	// Set visibility
+	newChartData.hsig.hidden = ( includes.hasOwnProperty( 'hsig' ) ) ? !includes.hsig : true;
+	newChartData.tp.hidden = ( includes.hasOwnProperty( 'tp' ) ) ? !includes.tp : true;
+	newChartData.tm.hidden = ( includes.hasOwnProperty( 'tm' ) ) ? !includes.tm : true;
+	newChartData.sst.hidden = ( includes.hasOwnProperty( 'sst' ) ) ? !includes.sst : true
+	newChartData.bottomTemp.hidden = ( includes.hasOwnProperty( 'bottomTemp' ) ) ? !includes.bottomTemp : true
+	newChartData.windspeed.hidden = ( includes.hasOwnProperty( 'windspeed' ) ) ? !includes.windspeed : true
+	newChartData.hsigSwell.hidden = ( includes.hasOwnProperty( 'hsigSwell' ) ) ? !includes.hsigSwell : true
+	newChartData.hsigSea.hidden = ( includes.hasOwnProperty( 'hsigSea' ) ) ? !includes.hsigSea : true
+	newChartData.tmSwell.hidden = ( includes.hasOwnProperty( 'tmSwell' ) ) ? !includes.tmSwell : true
+	newChartData.tmSea.hidden = ( includes.hasOwnProperty( 'tmSea' ) ) ? !includes.tmSea : true
+
+	// Datapoint setup
+	// let dataPoints = {
+	// 	hsig: { 
+	// 		data: [], 
+	// 		// showInChart: true, 
+	// 		label: window.innerWidth >= 768 ? 'Significant Wave Height (m)' : 'Sig Wave (m)',
+	// 		description: "Significant Wave Height (m)",
+	// 		backgroundColor: 'rgba(77, 168, 248, 0.2)',
+	// 		borderColor: 'rgba(77, 168, 248, 1)',
+	// 		borderWidth: 1,
+	// 		lineTension: 0,
+	// 		pointRadius: 1,
+	// 		fill: true,
+	// 		yAxisID: 'y-axis-1',
+	// 		hidden: ( includes.hasOwnProperty( 'hsig' ) ) ? !includes.hsig : true
+	// 	}, 
+	// 	tp: { 
+	// 		data: [], 
+	// 		// showInChart: true, 
+	// 		label: window.innerWidth >= 768 
+	// 			? groupedIncludes?.tp?.items?.legendLabel ? groupedIncludes.tp.items.legendLabel : 'mmPeak Wave Period & Direction (s & deg)' 
+	// 			: groupedIncludes?.tp?.items?.legendLabelShort ? groupedIncludes.tp.items.legendLabelShort : 'nnPeak Wave/Dir (s & deg)',
+	// 		description: groupedIncludes?.tp?.items?.description ? groupedIncludes.tp.items.description : "Peak Wave Period (s)",
+	// 		backgroundColor: 'rgba(237, 135, 80, 1)',
+	// 		borderColor: 'rgba(235, 127, 74, 0.5)',
+	// 		borderWidth: 0,
+	// 		lineTension: 0,
+	// 		pointRadius: 35,
+	// 		pointStyle: arrowImageOrange,
+	// 		rotation: [],
+	// 		fill: false,
+	// 		yAxisID: 'y-axis-2',
+	// 		showLine: false,
+	// 		hidden: ( includes.hasOwnProperty( 'tp' ) ) ? !includes.tp : true
+	// 	}, 
+	// 	tm: { 
+	// 		data: [], 
+	// 		// showInChart: false, 
+	// 		description: "Mean Wave Period (s)",
+	// 		label: window.innerWidth >= 768 ? 'Mean Wave Period & Direction (s & deg)' : 'Mean Wave/Dir (s & deg)', // Peak Period (s)
+	// 		backgroundColor: 'rgba(255, 158, 64, 0.2)',
+	// 		borderColor: 'rgba(255, 158, 64, 1)',
+	// 		borderWidth: 0,
+	// 		lineTension: 0,
+	// 		pointRadius: 35,
+	// 		pointStyle: arrowImageBlue,
+	// 		rotation: [],
+	// 		fill: false,
+	// 		yAxisID: 'y-axis-2',
+	// 		hidden: ( includes.hasOwnProperty( 'tm' ) ) ? !includes.tm : true
+	// 	}, 
+	// 	tpdeg: { 
+	// 		data: [], 
+	// 		// showInChart: true, 
+	// 		description: "Peak Wave Direction (deg)",
+	// 	}, 
+	// 	tmdeg: { 
+	// 		data: [], 
+	// 		// showInChart: false, 
+	// 		description: "Mean Wave Direction (deg)",
+	// 	},
+	// 	dpspr: { 
+	// 		data: [], 
+	// 		// showInChart: true, 
+	// 		description: "Peak Wave Spreading (deg)",
+	// 	}, 
+	// 	dmspr: { 
+	// 		data: [], 
+	// 		// showInChart: false, 
+	// 		description: "Mean Wave Spreading (deg)",
+	// 	},
+	// 	sst: { 
+	// 		data: [], 
+	// 		// showInChart: true, 
+	// 		description: "Sea Surface Temperature (degC)",
+	// 		label: window.innerWidth >= 768 ? 'Sea Surface Temperature (°C)' : 'Sea Surf (°C)', 
+	// 		backgroundColor: 'rgba(194, 59, 34, 0.05)',
+	// 		borderColor: 'rgba(194, 59, 34, 1)',
+	// 		borderWidth: 1,
+	// 		lineTension: 0,
+	// 		pointRadius: 1,
+	// 		fill: true,
+	// 		yAxisID: 'y-axis-3',
+	// 		hidden: ( includes.hasOwnProperty( 'sst' ) ) ? !includes.sst : true
+	// 	},
+	// 	bottomTemp: { 
+	// 		data: [], 
+	// 		// showInChart: true, 
+	// 		description: "Sea Bottom Temperature (degC)",
+	// 		label: window.innerWidth ? 'Bottom Temperature (°C)' : 'Bot Temp (°C)',
+	// 		backgroundColor: 'rgb(255, 159, 64, 0.2)',
+	// 		borderColor: 'rgb(255, 159, 64, 1)',
+	// 		borderWidth: 1,
+	// 		lineTension: 0,
+	// 		pointRadius: 1,
+	// 		fill: false,
+	// 		yAxisID: 'y-axis-3',
+	// 		hidden: ( includes.hasOwnProperty( 'bottomTemp' ) ) ? !includes.bottomTemp : true
+	// 	},
+	// 	windspeed: { 
+	// 		data: [], 
+	// 		// showInChart: false, 
+	// 		description: "Wind Speed (knots)",
+	// 		label: window.innerWidth >= 768 ? 'Wind Speed (knots)' : 'Wind Spd (knts)',
+	// 		backgroundColor: 'rgba(77, 168, 248, 0.2)',
+	// 		borderColor: 'rgba(77, 168, 248, 1)',
+	// 		borderWidth: 0,
+	// 		lineTension: 0,
+	// 		pointRadius: 35,
+	// 		pointStyle: arrowImageBlue,
+	// 		rotation: [], // winddirec
+	// 		fill: false,
+	// 		yAxisID: 'y-axis-1',
+	// 		hidden: ( includes.hasOwnProperty( 'windspeed' ) ) ? !includes.windspeed : true
+	// 	},
+	// 	winddirect: { 
+	// 		data: [], 
+	// 		// showInChart: false, 
+	// 		description: "Wind Direction (deg)",
+	// 	},
+	// 	currentMag: { 
+	// 		data: [], 
+	// 		// showInChart: false, 
+	// 		description: "Current Mag (m/s)",
+	// 		label: "Current Mag (m/s)",
+	// 		backgroundColor: 'rgba(165, 223, 223, 0.2)',
+	// 		borderColor: 'rgba(75, 192, 192, 1)',
+	// 		borderWidth: 0,
+	// 		lineTension: 0,
+	// 		pointRadius: 2,
+	// 		fill: true,
+	// 		yAxisID: 'y-axis-1',
+	// 		// hidden: ( includes.hasOwnProperty( 'currentMag' ) ) ? !includes.currentMag : true
+	// 	},
+	// 	currentDir: { 
+	// 		data: [], 
+	// 		// showInChart: false, 
+	// 		description: "Current Direction (deg)",
+	// 		label: window.innerWidth >= 768 ? "Current Direction (m/s)" : "Current Dir (m/s)",
+	// 		backgroundColor: 'rgba(75, 192, 192, 0.2)',
+	// 		borderColor: 'rgba(75, 192, 192, 1)',
+	// 		borderWidth: 0,
+	// 		lineTension: 0,
+	// 		pointRadius: 2,
+	// 		fill: true,
+	// 		yAxisID: 'y-axis-1',
+	// 		// hidden: ( includes.hasOwnProperty( 'currentDir' ) ) ? !includes.currentDir : true
+	// 	},
+	// 	hsigSwell: {
+	// 		data: [],
+	// 		label: window.innerWidth >= 768 ? 'Significant Wave Height Swell (m)' : 'Sig Wave Swell (m)',
+	// 		description: "Significant Wave Height Swell (m)",
+	// 		backgroundColor: 'rgba(198, 60, 213, 0.2)',
+	// 		borderColor: 'rgba(198, 60, 213, 1)',
+	// 		borderWidth: 1,
+	// 		lineTension: 0,
+	// 		pointRadius: 1,
+	// 		fill: true,
+	// 		yAxisID: 'y-axis-1',
+	// 		hidden: ( includes.hasOwnProperty( 'hsigSwell' ) ) ? !includes.hsigSwell : true
+	// 	},
+	// 	hsigSea: {
+	// 		data: [],
+	// 		label: window.innerWidth >= 768 ? 'Significant Wave Height Sea (m)' : 'Sig Wave Sea (m)',
+	// 		description: "Significant Wave Height Sea (m)",
+	// 		backgroundColor: 'rgba(255, 205, 86, 0.2)',
+	// 		borderColor: 'rgba(255, 205, 86, 1)',
+	// 		borderWidth: 1,
+	// 		lineTension: 0,
+	// 		pointRadius: 1,
+	// 		fill: true,
+	// 		yAxisID: 'y-axis-1',
+	// 		hidden: ( includes.hasOwnProperty( 'hsigSea' ) ) ? !includes.hsigSea : true
+	// 	},
+	// 	tmSwell: {
+	// 		data: [],
+	// 		label: window.innerWidth >= 768 ? 'Significant Wave Height Swell (m)' : 'Sig Wave Swell (m)',
+	// 		description: "Mean Wave Height Swell (m)",
+	// 		backgroundColor: 'rgba(76, 192, 192, 0.2)',
+	// 		borderColor: 'rgba(76, 192, 192, 1)',
+	// 		borderWidth: 1,
+	// 		lineTension: 0,
+	// 		pointRadius: 1,
+	// 		fill: true,
+	// 		yAxisID: 'y-axis-1',
+	// 		hidden: ( includes.hasOwnProperty( 'tmSwell' ) ) ? !includes.tmSwell : true
+	// 	},
+	// 	tmSea: {
+	// 		data: [],
+	// 		label: window.innerWidth >= 768 ? 'Significant Wave Height Sea (m)' : 'Sig Wave Sea (m)',
+	// 		description: "Mean Wave Height Sea (m)",
+	// 		backgroundColor: 'rgba(255, 99, 132, 0.2)',
+	// 		borderColor: 'rgba(255, 99, 132, 1)',
+	// 		borderWidth: 1,
+	// 		lineTension: 0,
+	// 		pointRadius: 1,
+	// 		fill: true,
+	// 		yAxisID: 'y-axis-1',
+	// 		hidden: ( includes.hasOwnProperty( 'tmSea' ) ) ? !includes.tmSea : true
+	// 	},
+	// 	dmSwell: {
+	// 		data: [],
+	// 		description: "Dm_swell (deg)"
+	// 	},
+	// 	dmSea: {
+	// 		data: [],
+	// 		description: "Dm_sea (deg)"
+	// 	},
+	// 	dmSprSwell: {
+	// 		data: [],
+	// 		description: "DmSpr_swell (deg)"
+	// 	},
+	// 	dmSprSea: {
+	// 		data: [],
+	// 		description: "DmSpr_sea (deg)"
+	// 	}
+	// };
+	
+	// return dataPoints;
+	return newChartData;
 }
 
 export const wadGetAspectRatio = ( multiplier = 1 ) => {

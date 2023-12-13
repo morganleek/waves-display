@@ -48,7 +48,8 @@ export class Map extends Component {
 				startDate: '', 
 				endDate: '',
 				content: ''
-			}
+			},
+			mode: props.mode
     }
 
 		this.handleModalClose = this.handleModalClose.bind( this );
@@ -385,7 +386,8 @@ export class Map extends Component {
 			buoyDownloadText, 
 			downloadEnabled,
 			currentZoom,
-			infoWindow
+			infoWindow,
+			mode
 		} = this.state;
 
 		// console.log( markers );
@@ -535,6 +537,7 @@ export class Map extends Component {
 		}
 
 		let mapRender = undefined; // <div className="loading"><p>Loading&hellip;</p></div>;
+		
 		// Load when markers, zoom and center are defined
 		if( center !== undefined && currentZoom !== undefined && markers.length > 0 ) {
 			mapRender = <LoadScript
@@ -544,7 +547,7 @@ export class Map extends Component {
 					mapContainerStyle={ containerStyle }
 					center={ center }
 					zoom={ currentZoom }
-					options={{ styles: mapStyles }}
+					options={{ styles: mode === "theme-dark" ? mapStyles.dark : mapStyles.light }}
 					onLoad={ this.onLoad }
 					onBoundsChanged={ this.onBoundsChanged }
 					onZoomChanged={ this.onZoomChanged }

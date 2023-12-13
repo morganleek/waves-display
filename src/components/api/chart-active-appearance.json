@@ -1,0 +1,196 @@
+{
+	"hsig": { 
+		"data": [], 
+		"label": "Significant Wave Height (m)",
+		"description": "Significant Wave Height (m)",
+		"backgroundColor": "rgba(77, 168, 248, 0.2)",
+		"borderColor": "rgba(77, 168, 248, 1)",
+		"borderWidth": 1,
+		"lineTension": 0,
+		"pointRadius": 1,
+		"fill": true,
+		"yAxisID": "y-axis-1",
+		"hidden": true
+	}, 
+	"tp": { 
+		"data": [], 
+		"label": "Peak Wave Period & Direction (s & deg)",
+		"description": "Peak Wave Period (s)",
+		"backgroundColor": "rgba(237, 135, 80, 1)",
+		"borderColor": "rgba(235, 127, 74, 0.5)",
+		"borderWidth": 0,
+		"lineTension": 0,
+		"pointRadius": 35,
+		"rotation": [],
+		"fill": false,
+		"yAxisID": "y-axis-2",
+		"showLine": false,
+		"hidden": true
+	}, 
+	"tm": { 
+		"data": [], 
+		"label": "Mean Wave Period & Direction (s & deg)",
+		"description": "Mean Wave Period (s)",
+		"backgroundColor": "rgba(255, 158, 64, 0.2)",
+		"borderColor": "rgba(255, 158, 64, 1)",
+		"borderWidth": 0,
+		"lineTension": 0,
+		"pointRadius": 35,
+		"rotation": [],
+		"fill": false,
+		"yAxisID": "y-axis-2",
+		"hidden": true
+	}, 
+	"tpdeg": { 
+		"data": [], 
+		"description": "Peak Wave Direction (deg)"
+	}, 
+	"tmdeg": { 
+		"data": [], 
+		"description": "Mean Wave Direction (deg)"
+	},
+	"dpspr": { 
+		"data": [], 
+		"description": "Peak Wave Spreading (deg)"
+	}, 
+	"dmspr": { 
+		"data": [], 
+		"description": "Mean Wave Spreading (deg)"
+	},
+	"sst": { 
+		"data": [], 
+		"description": "Sea Surface Temperature (degC)",
+		"label": "Sea Surface Temperature (°C)",
+		"backgroundColor": "rgba(194, 59, 34, 0.05)",
+		"borderColor": "rgba(194, 59, 34, 1)",
+		"borderWidth": 1,
+		"lineTension": 0,
+		"pointRadius": 1,
+		"fill": true,
+		"yAxisID": "y-axis-3",
+		"hidden": true
+	},
+	"bottomTemp": { 
+		"data": [], 
+		"description": "Sea Bottom Temperature (degC)",
+		"label": "Bottom Temperature (°C)",
+		"backgroundColor": "rgb(255, 159, 64, 0.2)",
+		"borderColor": "rgb(255, 159, 64, 1)",
+		"borderWidth": 1,
+		"lineTension": 0,
+		"pointRadius": 1,
+		"fill": false,
+		"yAxisID": "y-axis-3",
+		"hidden": true
+	},
+	"windspeed": { 
+		"data": [], 
+		"description": "Wind Speed (knots)",
+		"label": "Wind Speed (knots)",
+		"backgroundColor": "rgba(77, 168, 248, 0.2)",
+		"borderColor": "rgba(77, 168, 248, 1)",
+		"borderWidth": 0,
+		"lineTension": 0,
+		"pointRadius": 35,
+		"rotation": [],
+		"fill": false,
+		"yAxisID": "y-axis-1",
+		"hidden": true
+	},
+	"winddirect": { 
+		"data": [], 
+		"description": "Wind Direction (deg)"
+	},
+	"currentMag": { 
+		"data": [], 
+		"description": "Current Mag (m/s)",
+		"label": "Current Mag (m/s)",
+		"backgroundColor": "rgba(165, 223, 223, 0.2)",
+		"borderColor": "rgba(75, 192, 192, 1)",
+		"borderWidth": 0,
+		"lineTension": 0,
+		"pointRadius": 2,
+		"fill": true,
+		"yAxisID": "y-axis-1"
+	},
+	"currentDir": { 
+		"data": [], 
+		"description": "Current Direction (deg)",
+		"label": "Current Direction (m/s)",
+		"backgroundColor": "rgba(75, 192, 192, 0.2)",
+		"borderColor": "rgba(75, 192, 192, 1)",
+		"borderWidth": 0,
+		"lineTension": 0,
+		"pointRadius": 2,
+		"fill": true,
+		"yAxisID": "y-axis-1"
+	},
+	"hsigSwell": {
+		"data": [],
+		"label": "Significant Wave Height Swell (m)",
+		"description": "Significant Wave Height Swell (m)",
+		"backgroundColor": "rgba(198, 60, 213, 0.2)",
+		"borderColor": "rgba(198, 60, 213, 1)",
+		"borderWidth": 1,
+		"lineTension": 0,
+		"pointRadius": 1,
+		"fill": true,
+		"yAxisID": "y-axis-1",
+		"hidden": true
+	},
+	"hsigSea": {
+		"data": [],
+		"label": "Significant Wave Height Sea (m)",
+		"description": "Significant Wave Height Sea (m)",
+		"backgroundColor": "rgba(255, 205, 86, 0.2)",
+		"borderColor": "rgba(255, 205, 86, 1)",
+		"borderWidth": 1,
+		"lineTension": 0,
+		"pointRadius": 1,
+		"fill": true,
+		"yAxisID": "y-axis-1",
+		"hidden": true
+	},
+	"tmSwell": {
+		"data": [],
+		"label": "Significant Wave Height Swell (m)",
+		"description": "Mean Wave Height Swell (m)",
+		"backgroundColor": "rgba(76, 192, 192, 0.2)",
+		"borderColor": "rgba(76, 192, 192, 1)",
+		"borderWidth": 1,
+		"lineTension": 0,
+		"pointRadius": 1,
+		"fill": true,
+		"yAxisID": "y-axis-1",
+		"hidden": true
+	},
+	"tmSea": {
+		"data": [],
+		"label": "Significant Wave Height Sea (m)",
+		"description": "Mean Wave Height Sea (m)",
+		"backgroundColor": "rgba(255, 99, 132, 0.2)",
+		"borderColor": "rgba(255, 99, 132, 1)",
+		"borderWidth": 1,
+		"lineTension": 0,
+		"pointRadius": 1,
+		"fill": true,
+		"yAxisID": "y-axis-1",
+		"hidden": true
+	},
+	"dmSwell": {
+		"data": [],
+		"description": "Dm_swell (deg)"
+	},
+	"dmSea": {
+		"data": [],
+		"description": "Dm_sea (deg)"
+	},
+	"dmSprSwell": {
+		"data": [],
+		"description": "DmSpr_swell (deg)"
+	},
+	"dmSprSea": {
+		"data": [],
+		"description": "DmSpr_sea (deg)"
+	}
+}

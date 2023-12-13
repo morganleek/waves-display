@@ -7,17 +7,17 @@
 			},
 			"title": {
 				"display": true,
-				"color": "#000"
+				"color": "#fff"
 			},
 			"ticks": {
 				"maxTicksLimit": 7,
 				"autoSkip": false,
 				"maxRotation": 0,
-				"color": "#000"
+				"color": "#fff"
 			},
 			"grid": { 
-				"tickColor": "#000",
-				"color": "#e1e1e1"
+				"tickColor": "#fff",
+				"color": "#4b5563"
 			}
 		},
 		"timeAxes" : {
@@ -26,7 +26,7 @@
 				"min": 0,
 				"maxTicksLimit": 7,
 				"padding": 0,
-				"color": "#000"
+				"color": "#fff"
 			},
 			"type": "time",
 			"time": {
@@ -39,11 +39,11 @@
 			},
 			"title": {
 				"display": false,
-				"color": "#000"
+				"color": "#fff"
 			},
 			"grid": { 
-				"tickColor": "#000",
-				"color": "#e1e1e1"
+				"tickColor": "#fff",
+				"color": "#4b5563"
 			}
 		},
 		"waveHeightAxes": {
@@ -56,16 +56,16 @@
 				"min": 0,
 				"max": 20,
 				"maxTicksLimit": 6,
-				"color": "#000"
+				"color": "#fff"
 			},
 			"title": {
 				"display": false,
 				"text": "Wave height (m)",
-				"color": "#000"
+				"color": "#fff"
 			},
 			"grid": { 
-				"tickColor": "#000",
-				"color": "#e1e1e1"
+				"tickColor": "#fff",
+				"color": "#4b5563"
 			}
 		},
 		"peakPeriodAxes": {
@@ -81,16 +81,16 @@
 				"min": 0,
 				"max": 20,
 				"maxTicksLimit": 6,
-				"color": "#000"
+				"color": "#fff"
 			},
 			"title": {
 				"display": false,
-				"text": "Peak period (s)",
-				"color": "#000"
+				"text": "Period (s)",
+				"color": "#fff"
 			},
 			"grid": { 
-				"tickColor": "#000",
-				"color": "#e1e1e1",
+				"tickColor": "#fff",
+				"color": "#4b5563",
 				"drawOnChartArea": false
 			}
 		},
@@ -103,17 +103,17 @@
 				"beginAtZero": true,
 				"min": 0,
 				"maxTicksLimit": 6,
-				"color": "#000"
+				"color": "#fff"
 			},
 			"title": {
 				"display": true,
 				"text": "Wind speed (m/s & deg)",
-				"color": "#000"
+				"color": "#fff"
 			},
 			"grid": {
 				"drawOnChartArea": false,
-				"tickColor": "#000",
-				"color": "#e1e1e1"
+				"tickColor": "#fff",
+				"color": "#4b5563"
 			}
 		},
 		"tempAxes": {
@@ -129,17 +129,17 @@
 				"min": 15,
 				"max": 25,
 				"maxTicksLimit": 6,
-				"color": "#000"
+				"color": "#fff"
 			},
 			"title": {
 				"display": false,
 				"text": "Temp (Deg C)",
-				"color": "#000"
+				"color": "#fff"
 			},
 			"grid": {
 				"drawOnChartArea": false,
-				"tickColor": "#000",
-				"color": "#e1e1e1"
+				"tickColor": "#fff",
+				"color": "#4b5563"
 			}
 		}
 	}

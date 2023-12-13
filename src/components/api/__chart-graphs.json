@@ -1,0 +1,35 @@
+[
+	{ 
+		"headings": [
+			{ "id": 0, "label": "Peak Wave Period & Direction (s & deg)", "order": 0 },
+			{ "id": 1, "label": "Mean Wave Period (s)", "order": 1 },
+			{ "id": 2, "label": "Significant Wave Height (m)", "order": 2 },	
+			{ "id": 3, "label": "Temperature (°C)", "order": 3 }
+		],
+		"charts": {
+			"tp": {
+				"parent": 0,
+				"label": "Total ", 
+				"legendLabel": "xxPeak Wave Period & Direction (s & deg)",
+				"legendLabelShort": "xzPeak Wave/Dir (s & deg)",
+				"description": "Peak Wave Period (s)",
+				"backgroundColor": "rgba(237, 135, 80, 1)",
+				"borderColor": "rgba(235, 127, 74, 0.5)",
+				"borderWidth": 0,
+				"lineTension": 0,
+				"pointRadius": 35,
+				"visible": true, 
+				"enabled": true, 
+				"order": 0 
+			},
+			"tm" : { "parent": 1, "label": "Total ", "visible": false, "enabled": true, "order": 1 },
+			"tmSea" : { "parent": 1, "label": "Sea", "visible": false, "enabled": true, "order": 2 },
+			"tmSwell" : { "parent": 1, "label": "Swell", "visible": false, "enabled": true, "order": 3 },
+			"hsig": { "parent": 2, "label": "Total", "visible": true, "enabled": true, "order": 4 },
+			"hsigSea": { "parent": 2, "label": "Sea", "visible": false, "enabled": true, "order": 5 },
+			"hsigSwell": { "parent": 2, "label": "Swell", "visible": false, "enabled": true, "order": 6 },
+			"sst": { "parent": 3, "label": "Sea Surface", "visible": true, "enabled": true, "order": 7 },
+			"bottomTemp": { "parent": 3, "label": "Bottom", "visible": true, "enabled": true, "order": 8 }
+		}
+	}
+]

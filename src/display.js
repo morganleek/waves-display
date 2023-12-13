@@ -44,7 +44,9 @@ function App(props) {
         center={center}
         zoom={zoom}
         updateFocus={updateFocus}
-        restrict={props.restrict} />
+        restrict={props.restrict}
+        mode={props.mode}
+      />
       <Charts
         updateCenter={updateMapCenter}
         updateZoom={updateMapZoom}

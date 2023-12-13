@@ -12,7 +12,7 @@ import { ChartDownloadModal } from "./ChartDownloadModal";
 import { ChartTable } from "./chart/ChartTable";
 
 import chartActive from './api/chart-active.json';
-import chartActiveSwellOnly from './api/chart-active-swell-only.json';
+import chartActiveSimpleOnly from './api/chart-active-simple-only.json';
 
 const classNames = require('classnames');
 const { RangePicker } = DatePicker;
@@ -96,7 +96,7 @@ const Chart = ( props ) => {
     hsigSea: true
   });
 
-  const [groupedIncludes, setGroupedIncludes] = useState(wad.buoy_display_chart_swell_only ? chartActiveSwellOnly : chartActive);
+  const [groupedIncludes, setGroupedIncludes] = useState(wad.buoy_display_chart_swell_only ? chartActiveSimpleOnly : chartActive);
 
   const [showFilters, setShowFitlers] = useState(false);
 
@@ -114,8 +114,8 @@ const Chart = ( props ) => {
         if( json.success === 1 ) {
           const data = wadGenerateChartData( 
             wadRawDataToChartData( json.data ), 
-            formatGroupedIncludes(), 
-            0.9 
+            groupedIncludes,
+            0.9
           );
           
           // Set data
@@ -183,24 +183,6 @@ const Chart = ( props ) => {
     download_enabled: downloadEnabled, 
     download_requires_details: downloadRequiresDetails 
   } = buoy;
-
-  const formatGroupedIncludes = () => {
-    let orderedIncludes = [];
-    let fIncludes = {};
-    // Sort by 'order' attribute
-    groupedIncludes.forEach( g => {
-      g.items.forEach( ( item ) => { 
-        orderedIncludes[item.order] = item;
-      } );
-    } );
-    // Translate to form { ...id: isVisible }
-    orderedIncludes.forEach( ( {id, visible} ) => {
-      fIncludes[id] = visible;
-    } );
-    
-    return fIncludes;
-    
-  }
 
   const updateGroupIncludes = toggledId => {
     setGroupedIncludes( groupedIncludes.map( ( {label, items} ) => (
