@@ -281,6 +281,51 @@ form {
   }
 }
 
+.chart-legend {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  gap: 2px 18px;
+  align-items: center;
+  flex-direction: column;
+  margin: 6px 0 16px;
+  h6 {
+    margin: 0;
+    font-size: 11px;
+    font-weight: 400;
+  }
+  & > li {
+    display: none;
+    &:has(input:checked) {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    ul {
+      padding: 0;
+      list-style: none;
+      display: flex;
+      gap: 10px;
+    }
+    li {
+      label {
+        font-size: 11px;
+        display: flex;
+        flex-direction: row-reverse;
+        align-items: center;
+        gap: 3px;
+        font-weight: 400;
+      }
+      &:has(input:not(:checked)) {
+        display: none;
+      }
+      input {
+        display: none;
+      }
+    }
+  }
+}
+
 .chart-filter {
   position: relative;
   display: flex;
@@ -343,67 +388,6 @@ form {
       display: flex;
       gap: 15px;
       flex-wrap: wrap;
-      & > li {
-        label {
-          &::after {
-            content: '';
-            width: 12px;
-            height: 12px;
-            border: 1px solid;
-          }
-          
-        }
-        &.filter-hsig label::after { 
-          background-color: rgba(77, 168, 248, 0.2);
-          border-color: rgba(77, 168, 248, 1);
-        }
-        &.filter-tp label::after { 
-          background-color: rgba(237, 135, 80, 1);
-          border-color: rgba(235, 127, 74, 0.5);
-        }
-        &.filter-tm label::after { 
-          background-color: rgba(255, 158, 64, 0.2);
-          border-color: rgba(255, 158, 64, 1);
-        }
-        &.filter-sst label::after { 
-          background-color: rgba(194, 59, 34, 0.05);
-          border-color: rgba(194, 59, 34, 1);
-        }
-        &.filter-bottomTemp label::after { 
-          background-color: rgb(255, 159, 64, 0.2);
-          border-color: rgb(255, 159, 64, 1);
-        }
-        &.filter-windspeed label::after { 
-          background-color: rgba(77, 168, 248, 0.2);
-          border-color: rgba(77, 168, 248, 1);
-        }
-        &.filter-currentMag label::after { 
-          background-color: rgba(165, 223, 223, 0.2);
-          border-color: rgba(75, 192, 192, 1);
-        }
-        &.filter-currentDir label::after { 
-          background-color: rgba(75, 192, 192, 0.2);
-          border-color: rgba(75, 192, 192, 1);
-        }
-        &.filter-hsigSwell label::after {
-          background-color: rgba(198, 60, 213, 0.2);
-          border-color: rgba(198, 60, 213, 1);
-        }
-        &.filter-hsigSea label::after {
-          background-color: rgba(254, 240, 39, 0.2);
-          border-color: rgba(254, 240, 39, 1);
-        }
-        &.filter-tmSwell label::after {
-          background-color: rgba(76, 192, 192, 0.2);
-          border-color: rgba(76, 192, 192, 1);
-        }
-        &.filter-tmSea label::after {
-          background-color: rgba(255, 99, 132, 0.2);
-          border-color: rgba(255, 99, 132, 1);
-        }
-        
-        
-      }
       
       ul {
         margin: 0 0 0.5em;
@@ -411,6 +395,69 @@ form {
       }
     }
   }
+}
+
+li[class^="filter-"] {
+  label {
+    &::after {
+      content: '';
+      width: 12px;
+      height: 12px;
+      border: 1px solid;
+      display: block;
+    }
+    
+  }
+  &.filter-hsig label::after { 
+    background-color: rgba(77, 168, 248, 0.2);
+    border-color: rgba(77, 168, 248, 1);
+  }
+  &.filter-tp label::after { 
+    background-color: rgba(237, 135, 80, 1);
+    border-color: rgba(235, 127, 74, 0.5);
+  }
+  &.filter-tm label::after { 
+    background-color: rgba(255, 158, 64, 0.2);
+    border-color: rgba(255, 158, 64, 1);
+  }
+  &.filter-sst label::after { 
+    background-color: rgba(194, 59, 34, 0.05);
+    border-color: rgba(194, 59, 34, 1);
+  }
+  &.filter-bottomTemp label::after { 
+    background-color: rgb(255, 159, 64, 0.2);
+    border-color: rgb(255, 159, 64, 1);
+  }
+  &.filter-windspeed label::after { 
+    background-color: rgba(77, 168, 248, 0.2);
+    border-color: rgba(77, 168, 248, 1);
+  }
+  &.filter-currentMag label::after { 
+    background-color: rgba(165, 223, 223, 0.2);
+    border-color: rgba(75, 192, 192, 1);
+  }
+  &.filter-currentDir label::after { 
+    background-color: rgba(75, 192, 192, 0.2);
+    border-color: rgba(75, 192, 192, 1);
+  }
+  &.filter-hsigSwell label::after {
+    background-color: rgba(198, 60, 213, 0.2);
+    border-color: rgba(198, 60, 213, 1);
+  }
+  &.filter-hsigSea label::after {
+    background-color: rgba(254, 240, 39, 0.2);
+    border-color: rgba(254, 240, 39, 1);
+  }
+  &.filter-tmSwell label::after {
+    background-color: rgba(76, 192, 192, 0.2);
+    border-color: rgba(76, 192, 192, 1);
+  }
+  &.filter-tmSea label::after {
+    background-color: rgba(255, 99, 132, 0.2);
+    border-color: rgba(255, 99, 132, 1);
+  }
+  
+  
 }
 
 .chart-gauges {

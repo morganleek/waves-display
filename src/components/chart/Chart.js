@@ -115,7 +115,7 @@ const Chart = ( props ) => {
           const data = wadGenerateChartData( 
             wadRawDataToChartData( json.data ), 
             groupedIncludes,
-            0.9
+            0.75
           );
           
           // Set data
@@ -429,6 +429,10 @@ const Chart = ( props ) => {
               : undefined 
             }
 						{ chartGraph }
+            { groupedIncludesListItems && !wad.buoy_display_chart_swell_only
+              ? <ul className="chart-legend">{ groupedIncludesListItems }</ul>
+              : undefined 
+            }
             { chartBuoyDetails }
             { chartTable }
           </div>

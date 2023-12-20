@@ -283,7 +283,7 @@ export function wadGenerateChartData( waves, groupedIncludes, multiplier = 1,  )
 						}
 					},
 					legend: {
-						display: true,
+						display: false,
 						position: 'bottom',
 						labels: {
 							boxWidth: 12
