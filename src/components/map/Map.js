@@ -2,9 +2,9 @@ import React, { Component, useState } from "react";
 import { GoogleMap, LoadScript, MarkerClusterer, Marker, Polyline, InfoWindow } from '@react-google-maps/api';
 // import { GoogleMap, useLoadScript, MarkerClusterer, Marker, Polyline } from '@react-google-maps/api';
 
-import { getBuoys, getDriftingBuoys } from './api/buoys';
-import { wadRawDataToChartData } from './api/chart';
-import { ChartDownloadModal } from "./ChartDownloadModal";
+import { getBuoys, getDriftingBuoys } from '../api/buoys';
+import { wadRawDataToChartData } from '../chart/chart-lib';
+import { ChartDownloadModal } from "../chart/ChartDownloadModal";
 
 import mapStyles from './map-style.json';
 
@@ -218,6 +218,7 @@ export class Map extends Component {
 	}
 
 	onMapMarkerClick = ( marker ) => {
+		console.log( marker );
 		const { ref } = this.state;
 		if( ref ) {
 			const newCenter = { 
@@ -235,7 +236,6 @@ export class Map extends Component {
 	}
 
 	onMapDecommissionedMarkerClick = ( marker ) => {
-
 		const { ref } = this.state;
 		if( ref ) {
 			const buoyId = marker.buoyId;
@@ -322,9 +322,9 @@ export class Map extends Component {
 		this.setState( { icon: icon, decommissionedIcon: decommissionedIcon, labelIcon: labelIcon, ref: ref } );
 	}
 
-	onBoundsChanged = ( ) => {
-		this.setBounds( );
-	}
+	// onBoundsChanged = ( ) => {
+	// 	this.setBounds( );
+	// }
 
 	onZoomChanged = ( ) => {
 		const { ref } = this.state;
@@ -445,10 +445,11 @@ export class Map extends Component {
 							// Hide historic buoys OR hide live buoys
 							return;
 						}
-						
+						// console.log( marker );
 						return (
 							<MapMarker 
-								buoyId={ marker.buoyId } 
+								{...marker}
+								// buoyId={ marker.buoyId } 
 								icon={ ( marker.isEnabled == 1 ) ? icon : decommissionedIcon } 
 								position={ { lat: marker.lat, lng: marker.lng } } 
 								label={ { text: marker.label, fontSize: '13px' } } 
@@ -486,12 +487,6 @@ export class Map extends Component {
 			const sDate = new Date( infoWindow.startDate * 1000 );
 			const eDate = new Date( infoWindow.endDate * 1000 );
 			
-			// const sDay = sDate.getDate().toString().padStart( 2, "0" );
-			// const sMonth = sDate.getMonth().toString().padStart( 2, "0" );
-			// const sYear = sDate.getFullYear().toString();
-			// let startLabel = sDay + '/' + sMonth + '/' + sYear;
-
-
 			info = <InfoWindow
 				position={ { lat: infoWindow.lat, lng: infoWindow.lng } }
 				options={ { closeBoxURL: '', enableEventPropagation: true } }
@@ -539,7 +534,7 @@ export class Map extends Component {
 		let mapRender = undefined; // <div className="loading"><p>Loading&hellip;</p></div>;
 		
 		// Load when markers, zoom and center are defined
-		if( center !== undefined && currentZoom !== undefined && markers.length > 0 ) {
+		if( center && currentZoom && markers.length > 0 ) {
 			mapRender = <LoadScript
 				googleMapsApiKey={ ( typeof( wad ) != "undefined" ) ? wad.googleApiKey : '' }
 			>
@@ -549,7 +544,7 @@ export class Map extends Component {
 					zoom={ currentZoom }
 					options={{ styles: mode === "theme-dark" ? mapStyles.dark : mapStyles.light }}
 					onLoad={ this.onLoad }
-					onBoundsChanged={ this.onBoundsChanged }
+					// onBoundsChanged={ this.onBoundsChanged }
 					onZoomChanged={ this.onZoomChanged }
 				>
 					<>{ info }{ cluster }{ polylines }{ polylineLabels }</>
@@ -567,31 +562,12 @@ export class Map extends Component {
   }
 }
 
-const MapMarker = ( props ) => {
-	const onMarkerClick = ( e ) => {
-		props.markerFocus( { 
-			buoyId: props.buoyId,
-			position: props.position,
-			buoyDownloadText: props.buoyDownloadText,
-			startDate: props.startDate,
-			endDate: props.endDate, 
-			downloadEnabled: props.downloadEnabled,
-			description: props.description
-		} );
-	} 
-	return (
-		<Marker onClick={ onMarkerClick } { ...props }>
-			{ props.children }
-		</Marker>
-	);
-}
+const MapMarker = ( props ) => (
+	<Marker onClick={ () => { props.markerFocus( props ) } } { ...props }>
+		{ props.children }
+	</Marker>
+);
 
-const MapPolyline = ( props ) => {
-	const onPolylineClick = ( e ) => {
-		props.polylineFocus( { buoyId: props.buoyId, pathTimes: props.pathTimes } );
-	}
-
-	return (
-		<Polyline onClick={ onPolylineClick } { ...props } />
-	)
-}
+const MapPolyline = ( props ) => (
+	<Polyline onClick={ () => { props.polylineFocus( props ) } } { ...props } />
+);

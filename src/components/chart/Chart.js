@@ -5,14 +5,14 @@ import 'chartjs-adapter-luxon';
 import { DatePicker, Spin } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
-import { wadRawDataToChartData, wadGenerateChartData, wadGetAspectRatio } from './api/chart';
-import { getBuoys, getBuoy, getBuoyData, getBuoyByDate } from './api/buoys';
-import { Memplot } from './Memplot';
+import { wadRawDataToChartData, wadGenerateChartData, wadGetAspectRatio } from './chart-lib';
+import { getBuoys, getBuoy, getBuoyData, getBuoyByDate } from '../api/buoys';
+import { Memplot } from '../memplot/Memplot';
 import { ChartDownloadModal } from "./ChartDownloadModal";
-import { ChartTable } from "./chart/ChartTable";
+import { ChartTable } from "./ChartTable";
 
-import chartActive from './api/chart-active.json';
-import chartActiveSimpleOnly from './api/chart-active-simple-only.json';
+import chartActive from './chart-active.json';
+import chartActiveSimpleOnly from './chart-active-simple-only.json';
 
 const classNames = require('classnames');
 const { RangePicker } = DatePicker;

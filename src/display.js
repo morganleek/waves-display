@@ -1,7 +1,7 @@
 import { useEffect, useState, Component, Fragment } from "@wordpress/element";
 
-import { Charts } from './components/Chart';
-import { Map } from './components/Map';
+import { Charts } from './components/chart/Chart';
+import { Map } from './components/map/Map';
 
 // import "../scss/bundle.scss"; 
 
