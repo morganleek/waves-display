@@ -223,7 +223,7 @@ const Chart = ( props ) => {
                           updateGroupIncludes( id );
                         } }
                       />
-                      { label }
+                      <span>{ label }</span>
                     </label>
                   </li>
                 ) )
