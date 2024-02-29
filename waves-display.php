@@ -3,7 +3,7 @@
  * Plugin Name:  Waves Display 
  * Plugin URI:   https://github.com/morganleek/waves-fetch
  * Description:  Buoy data display tool to be used with the Waves Fetch plugin
- * Version:      2.0.5
+ * Version:      2.0.6
  * Author:       https://morganleek.me/ 
  * Author URI:   https://morganleek.me/ 
  * License:      GPL2 
