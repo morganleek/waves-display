@@ -5,7 +5,7 @@ export default function save( { attributes } ) {
 	const { buoys, darkMode } = attributes;
 
 	const theme = darkMode ? "theme-dark" : "theme-light";
-
+	
 	return (
 		<div data-theme={ theme } { ...useBlockProps.save() } data-buoys={ buoys.join(",") }></div>
 	);
