@@ -201,9 +201,12 @@ button.btn {
 
 .buoy-details {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr;
   padding: 20px 10px;
-  column-gap: 15px;
+  gap: 15px;
+  @media (min-width: 768px) {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
   .chart-memplot,
   .chart-image,
   .chart-description {
@@ -216,6 +219,22 @@ button.btn {
     }
     p {
       margin: 0.5em 0;
+    }
+  }
+  .chart-image {
+
+    @media (min-width: 768px) {
+      grid-area: 1 / 1 / 2 / 2;
+    }
+  }
+  .chart-memplot {
+    @media (min-width: 768px) {
+      grid-area: 1 / 2 / 2 / 3;
+    }
+  }
+  .chart-description {
+    @media (min-width: 768px) {
+      grid-area: 1 / 3 / 2 / 4;
     }
   }
   .chart-memplot {

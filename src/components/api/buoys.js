@@ -3,6 +3,7 @@ export function getBuoys( restrict = [] ) {
     const init = {
       method: 'POST'
     }
+
     // Restrict to certain buoys
     const restrictQuery = ( restrict.length > 0 ) ? "&restrict=" + restrict.join(",") : "";
 

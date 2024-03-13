@@ -26,16 +26,7 @@
   "attributes": {
     "buoys": {
       "type": "array",
-      "default": [
-        {
-          "id": 2,
-          "label": "Tantabiddi"
-        },
-        {
-          "id": 3,
-          "label": "Exmouth Gulf"
-        }
-      ]
+      "default": []
     },
     "darkMode": {
       "type": "boolean",

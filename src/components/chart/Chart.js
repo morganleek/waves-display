@@ -23,7 +23,7 @@ export function Charts ( {restrict, buoyFocus, updateCenter, updateZoom} ) {
   useEffect( () => {
     // console.log( 'Chart::componentDidMount' );
     // const { restrict } = props;
-  
+    // console.log( restrict );
     getBuoys( restrict ).then( json => {
       setBuoys( json );
     } );
@@ -78,7 +78,7 @@ const Chart = ( props ) => {
     buoyDownloadText,
     updateCenter,
     updateZoom
-   } = props;
+  } = props;
 
   const [data, setData] = useState([]);
   const [isExpanded, setIsExpanded] = useState(false);
@@ -272,7 +272,7 @@ const Chart = ( props ) => {
 
       // Expanded buoy details 
       chartBuoyDetails = <div className={ classNames( ['buoy-details'] ) }>
-        <ChartPhoto buoy={ props } />
+        { buoy.image && ( <ChartPhoto image={ buoy.image } /> ) }
         <div className="chart-description"><p>{ buoyDescription }</p></div>
         <Memplot buoyId={ buoyId } startDate={ startDate } endDate={ endDate } />
       </div>;
@@ -462,14 +462,6 @@ const Chart = ( props ) => {
   );
 }
 
-const ChartPhoto = ( props ) => {
-  return (
-    <div className="chart-image">
-      { 
-        ( props?.buoy?.image && buoy.image.length > 0 )
-        ? <img src={ buoy.image } />
-        : <div className="chart-photo-placeholder" />
-      }
-    </div>
-  );
-}
+const ChartPhoto = ( { image } ) => (
+  image ? <div className="chart-image"><img src={ image } /></div> : undefined
+);
