@@ -21,9 +21,6 @@ export function Charts ( {restrict, buoyFocus, updateCenter, updateZoom} ) {
   const [buoys, setBuoys] = useState([]);
   
   useEffect( () => {
-    // console.log( 'Chart::componentDidMount' );
-    // const { restrict } = props;
-    // console.log( restrict );
     getBuoys( restrict ).then( json => {
       setBuoys( json );
     } );

@@ -37,8 +37,6 @@ function App(props) {
     setFocus(buoyId);
   };
 
-  console.log( props );
-
   return (
     <>
       <Map

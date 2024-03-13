@@ -125,7 +125,7 @@ export class Map extends Component {
     } );
 
 		// Get drifting
-		getDriftingBuoys().then( json => {
+		getDriftingBuoys( restrict ).then( json => {
 			if( json.length > 0 ) {
 				// let driftingMap = json.map( ( row, index ) => {
 				json.forEach( ( element, index ) => {
