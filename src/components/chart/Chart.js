@@ -32,13 +32,15 @@ export function Charts ( {restrict, buoyFocus, updateCenter, updateZoom} ) {
     }
   }, [buoyFocus] );
 
+  console.log( buoys );
+
   return (
     <div className="charts">
       <div>
         { 
           ( buoys.length > 0 ) 
             ? ( buoys
-              .filter( row => row.is_enabled )
+              .filter( row => parseInt( row.is_enabled ) === 1 )
               .map( ( row, index ) => (
                 <Chart
                   buoy={ row }
@@ -71,6 +73,7 @@ const Chart = ( props ) => {
     buoy,
     buoyLat, 
     buoyLng,
+    buoyLabel,
     buoyDescription,
     buoyDownloadText,
     updateCenter,
@@ -176,7 +179,7 @@ const Chart = ( props ) => {
   const expandedLabel = ( isExpanded ) ? 'Collapse' : 'Expand';
   
   const { 
-    web_display_name: buoyLabel, 
+    // web_display_name: buoyLabel, 
     download_enabled: downloadEnabled, 
     download_requires_details: downloadRequiresDetails 
   } = buoy;

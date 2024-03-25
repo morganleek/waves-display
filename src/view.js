@@ -7,6 +7,7 @@ domReady( () => {
 	// Narrow results to only certain buoys
 	const restrict = container.dataset.buoys ? container.dataset.buoys.split(",") : [];
 	const mode = container.dataset.theme;
+
 	
 	render( <App restrict={ restrict } mode={mode} />, container );
 } );
