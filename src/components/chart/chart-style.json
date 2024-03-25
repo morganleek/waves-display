@@ -85,7 +85,7 @@
 			},
 			"title": {
 				"display": false,
-				"text": "Peak period (s)",
+				"text": "Period (s)",
 				"color": "#000"
 			},
 			"grid": { 
