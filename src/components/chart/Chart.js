@@ -32,8 +32,6 @@ export function Charts ( {restrict, buoyFocus, updateCenter, updateZoom} ) {
     }
   }, [buoyFocus] );
 
-  console.log( buoys );
-
   return (
     <div className="charts">
       <div>
@@ -244,10 +242,11 @@ const Chart = ( props ) => {
         // Create dateset from grouped dataset
         const datasetClone = { ...dataset };
         datasetClone.hidden = false;
-        
+
         // Create scales with only necessary ones
         const currentY = datasetClone.yAxisID; // Current y-axis
         const currentScales = {}; // New axis'
+        
         currentScales['x'] = { ...data.config.options.scales['x'] };
         currentScales[currentY] = { ...data.config.options.scales[currentY] };
         currentScales[currentY].position = "left"; // Make position left
@@ -257,8 +256,10 @@ const Chart = ( props ) => {
         optionsClone.plugins = {} // Not legend title
         optionsClone.aspectRatio = wadGetAspectRatio( 0.5 ); // Half aspect ratio
         
+
         // Assign
         optionsClone.scales = currentScales;
+        
         
         chartGraphTemp.unshift( 
           <Line 
