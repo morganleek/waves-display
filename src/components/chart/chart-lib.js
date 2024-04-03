@@ -345,11 +345,17 @@ function labelTooltip( tooltipItem ) {
 
 	switch ( dataset.label ) {
 		case "Peak Wave Period & Direction (s & deg)": // Peak Period & Direction
+		case "Mean Wave Period & Direction (s & deg)":
 			const wavePeriod = dataset.data[dataIndex].y + "s";
 			const waveDirection = (dataset.rotation[dataIndex] + 180) % 360;
 			// Convert wave direction from type used by chart
 			// const waveDirection = dataset.rotation[dataIndex] + "°"; // // Math.abs( dataset.rotation[dataIndex] ) + "°"; // - 180
-			return ['Peak Wave Period: ' + wavePeriod, "Direction: " + waveDirection + "°"];
+			return ['Period: ' + wavePeriod, "Direction: " + waveDirection + "°"];
+		case "Mean Wave Height Swell & Direction (m & deg)":
+		case "Mean Wave Height Sea & Direction (m & deg)":
+			const meanHeight = dataset.data[dataIndex].y + "m";
+			const meanDirection = (dataset.rotation[dataIndex] + 180) % 360;
+			return ['Height: ' + meanHeight, "Direction: " + meanDirection + "°"];
 		case "Sea Surface Temperature (°C)": // Temp
 			const seaTemperature = dataset.data[dataIndex].y + "°C";
 			return 'Temperature: ' + seaTemperature;
@@ -357,10 +363,10 @@ function labelTooltip( tooltipItem ) {
 		case "Significant Wave Height Sea (m)":
 		case "Significant Wave Height Swell (m)":
 			const sigWaveHeight = dataset.data[dataIndex].y + "m";
-			return 'Significant Wave Height: ' + sigWaveHeight;
+			return 'Height: ' + sigWaveHeight;
 		case "Bottom Temperature (°C)":
 			const botTemperature = dataset.data[dataIndex].y + "°C";
-			return "Bottom Temperature: " + botTemperature;
+			return "Temperature: " + botTemperature;
 		default: 
 			return '';
 	}

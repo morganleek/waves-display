@@ -255,13 +255,24 @@ const Chart = ( props ) => {
         currentScales[currentY].position = "left"; // Make position left
 
         // Clone options with updated options
-        const optionsClone = { ...data.config.options };
-        optionsClone.plugins = {} // Not legend title
-        optionsClone.aspectRatio = wadGetAspectRatio( 0.5 ); // Half aspect ratio
+        console.log( data.config.options );
+        const optionsClone = { 
+          ...data.config.options,
+          plugins: { 
+            ...data.config.options.plugins,
+            legend: {}
+          },
+          aspectRatio: wadGetAspectRatio( 0.5 ),
+          scales: currentScales
+        };
+        console.log( optionsClone );
+        // console.log( optionsClone.plugins );
+        // optionsClone.plugins = {} // Not legend title
+        // optionsClone.aspectRatio = wadGetAspectRatio( 0.5 ); // Half aspect ratio
         
 
         // Assign
-        optionsClone.scales = currentScales;
+        // optionsClone.scales = currentScales;
         
         chartGraphTemp.unshift( 
           <Line 
