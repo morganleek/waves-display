@@ -117,8 +117,7 @@
 									array(
 										'label' => 'Download requires user information',
 										'name' => 'buoy_display_user_info_required',
-										'type' => 'checkbox',
-										'disabled' => 'disabled'
+										'type' => 'checkbox'
 									),
 									array( 
 										'label' => 'User info email recipient ',
