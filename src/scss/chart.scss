@@ -478,15 +478,20 @@ li[class^="filter-"] {
     border-color: rgba(252, 185, 0, 1);
   }
   &.filter-tmSwell label span::before {
-    background-color: rgba(76, 192, 192, 0.2);
-    border-color: rgba(76, 192, 192, 1);
+    // background-color: #4cc0c033;
+    // border-color: #4cc0c0;
+    border-radius: 0;
+    border: 0 none;
+    background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMiAxMiI+CiAgPHBhdGggZD0iTTExLjUuNUwxLjYyLDMuNDFsMi4wMSwyLTMuMTMsMy4xMywxLjQ4LDEuNDgsMS40OCwxLjQ4LDMuMTMtMy4xMywyLDIuMDFMMTEuNS41WiIgc3R5bGU9ImZpbGw6ICNkZWYzZjI7IHN0cm9rZTogIzRjYzBjMDsgc3Ryb2tlLW1pdGVybGltaXQ6IDEwOyBzdHJva2Utd2lkdGg6IC41cHg7Ii8+Cjwvc3ZnPg==");
+    
   }
   &.filter-tmSea label span::before {
-    background-color: rgba(255, 99, 132, 0.2);
-    border-color: rgba(255, 99, 132, 1);
+    // background-color: rgba(255, 99, 132, 0.2);
+    // border-color: rgba(255, 99, 132, 1);
+    border-radius: 0;
+    border: 0 none;
+    background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMiAxMiI+CiAgPHBhdGggZD0iTTExLjUuNUwxLjYyLDMuNDFsMi4wMSwyLTMuMTMsMy4xMywxLjQ4LDEuNDgsMS40OCwxLjQ4LDMuMTMtMy4xMywyLDIuMDFMMTEuNS41WiIgc3R5bGU9ImZpbGw6ICNmZmUxZTc7IHN0cm9rZTogI2ZmNjY4Njsgc3Ryb2tlLW1pdGVybGltaXQ6IDEwOyBzdHJva2Utd2lkdGg6IC41cHg7Ii8+Cjwvc3ZnPg==");
   }
-  
-  
 }
 
 .chart-gauges {

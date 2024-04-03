@@ -7,12 +7,20 @@ import ChartActiveAppearance from './chart-active-appearance.json';
 import ChartActiveSimpleAppearance from './chart-active-simple-appearance.json';
 
 // Arrows
-let arrowImageOrange = new Image( 28, 28 );
-arrowImageOrange.src = wad.plugin + "images/arrow-grad-orange@2x.png";
-let arrowImageBlue = new Image( 28, 28 );
-arrowImageBlue.src = wad.plugin + "images/arrow-blue-g@2x.png";
+// let arrowImageOrange = new Image( 28, 28 );
+// arrowImageOrange.src = wad.plugin + "images/arrow-grad-orange@2x.png";
+// let arrowImageBlue = new Image( 28, 28 );
+// arrowImageBlue.src = wad.plugin + "images/arrow-blue-g@2x.png";
 // let arrowImagePink = new Image( 28, 28 );
 // arrowImagePink.src = wad.plugin + "images/arrow-pink-g@2x.png";
+
+const generateImageArrow = ( fill = "#ffffff", border = "#000000" ) => {
+	const vector = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28"><polygon points="10.15 27.5 10.15 18.29 4.59 18.31 14 1.04 23.41 18.31 17.85 18.29 17.85 27.5 10.15 27.5" style="fill: ' + fill + ';stroke-width: 1px;stroke: ' + border + ';"/></svg>'
+	// const vector = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 46 52" style="enable-background:new 0 0 46 52" xml:space="preserve"><path fill="' + fill + '" d="M33.2 1.6c.3 0 .5.2.5.5v25.5h7.4c1.1 0 2 .6 2.4 1.6.4 1 .2 2.1-.6 2.8L25.6 49.3c-.7.7-1.6 1.1-2.6 1.1s-1.9-.4-2.6-1.1L3.1 32c-.8-.8-1-1.8-.6-2.8s1.3-1.6 2.4-1.6h7.8V2.1c0-.3.2-.5.5-.5h20z"/><path d="M23 48.9c-.6 0-1.2-.2-1.6-.7L4.1 31c-.5-.5-.3-.9-.2-1.2.1-.2.4-.7 1-.7h9.3v-26h18v26h8.9c.6 0 .9.4 1 .7.1.2.2.8-.2 1.2L24.6 48.2c-.4.5-1 .7-1.6.7m0 3c1.3 0 2.7-.5 3.7-1.5L44 33.1c2.6-2.6.8-7-2.9-7h-5.9v-24c0-1.1-.9-2-2-2h-20c-1.1 0-2 .9-2 2v24H4.9c-3.7 0-5.5 4.4-2.9 7l17.3 17.3c1 1 2.4 1.5 3.7 1.5z"/></svg>';
+	const image = new Image( 28, 28 );
+	image.src = "data:image/svg+xml," + encodeURIComponent( vector );
+	return image;
+}
 
 // Tool for parsing Ints
 function parseIntOr( intVal, altVal ) {
@@ -154,15 +162,29 @@ export function wadGenerateChartData( waves, groupedIncludes, multiplier = 1,  )
 			}
 			if( typeof( wave["Tm_swell (s)"] ) !== "undefined" && parseInt( wave["Tm_swell (s)"] ) !== -9999 ) {
 				dataPoints.tmSwell.data.push( { x: time, y: parseFloatOr( wave["Tm_swell (s)"], 0.0 ) } );
+				// Swell Rotation
+				if( typeof( wave["Dm_swell (deg)"] ) !== "undefined" && parseInt( wave["Dm_swell (deg)"] ) !== -9999 ) {
+					dataPoints.tmSwell.rotation.push( reverseRotation( wave["Dm_swell (deg)"] ) );
+					dataPoints.dmSwell.data.push( { x: time, y: parseFloatOr( wave["Dm_swell (deg)"], 0.0 ) } );
+				}
+				else {
+					dataPoints.tmSwell.rotation.push( 0 );
+				}
 			}
 			if( typeof( wave["Tm_sea (s)"] ) !== "undefined" && parseInt( wave["Tm_sea (s)"] ) !== -9999 ) {
 				dataPoints.tmSea.data.push( { x: time, y: parseFloatOr( wave["Tm_sea (s)"], 0.0 ) } );
+				// Seas Rotation
+				if( typeof( wave["Dm_sea (deg)"] ) !== "undefined" && parseInt( wave["Dm_sea (deg)"] ) !== -9999 ) {
+					dataPoints.tmSea.rotation.push( reverseRotation( wave["Dm_sea (deg)"] ) );
+					dataPoints.dmSea.data.push( { x: time, y: parseFloatOr( wave["Dm_sea (deg)"], 0.0 ) } );
+				}
+				else {
+					dataPoints.dmSea.data.push( 0 );
+				}
 			}
-			if( typeof( wave["Dm_swell (deg)"] ) !== "undefined" && parseInt( wave["Dm_swell (deg)"] ) !== -9999 ) {
-				dataPoints.dmSwell.data.push( { x: time, y: parseFloatOr( wave["Dm_swell (deg)"], 0.0 ) } );
-			}
+			
 			if( typeof( wave["Dm_sea (deg)"] ) !== "undefined" && parseInt( wave["Dm_sea (deg)"] ) !== -9999 ) {
-				dataPoints.dmSea.data.push( { x: time, y: parseFloatOr( wave["Dm_sea (deg)"], 0.0 ) } );
+				
 			}
 			if( typeof( wave["DmSpr_swell (deg)"] ) !== "undefined" && parseInt( wave["DmSpr_swell (deg)"] ) !== -9999 ) {
 				dataPoints.dmSprSwell.data.push( { x: time, y: parseFloatOr( wave["DmSpr_swell (deg)"], 0.0 ) } );
@@ -356,8 +378,10 @@ const generateDataPoints = groupedIncludes => {
 		: JSON.parse(JSON.stringify(ChartActiveAppearance)); 
 	
 	// Set arrow styles
-	newChartData.tp.pointStyle = arrowImageOrange;
-	newChartData.tm.pointStyle = arrowImageBlue;
+	newChartData.tp.pointStyle = generateImageArrow( '#e26a26', '#8c3f18' );
+	newChartData.tm.pointStyle = generateImageArrow( '#60bafa', '#3c7699' );
+	newChartData.tmSwell.pointStyle = generateImageArrow( '#def3f2', '#4cc0c0' );
+	newChartData.tmSea.pointStyle = generateImageArrow( '#ffe1e7', '#ff6686' );
 
 	types.forEach( type => {
 		newChartData[type].hidden = ( includes.hasOwnProperty( type ) ) ? !includes[type] : true;
