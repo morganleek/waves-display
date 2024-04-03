@@ -172,10 +172,11 @@ export function wadGenerateChartData( waves, groupedIncludes, multiplier = 1,  )
 			}
 		} );
 		
-		const startTime = Math.min(...waves.map( ( wave ) => wave['Time (UNIX/UTC)'] ) ) * 1000;
-		const endTime = Math.max(...waves.map( ( wave ) => wave['Time (UNIX/UTC)'] ) ) * 1000;
-		const startTimeRounded = ( Math.ceil( startTime / 3600000 ) + 1 ) * 3600000;
-		const endTimeRounded = ( Math.ceil( endTime / 3600000 ) + 1 ) * 3600000;
+		// Times only as int value
+		const timesOnly = waves.map( ( wave ) => parseInt(wave['Time (UNIX/UTC)']) );
+		
+		const startTime = Math.min(...timesOnly) * 1000;
+		const endTime = Math.max(...timesOnly) * 1000;
 		
 		// Max values of each the following datapoints 
 		const maxWaveHeight = Math.ceil( Math.max( ...dataPoints.hsig.data.map( ( wave ) => wave.y ) ) );
@@ -186,8 +187,8 @@ export function wadGenerateChartData( waves, groupedIncludes, multiplier = 1,  )
 		const minTemp = Math.floor( Math.min( ...dataPoints.sst.data.map( ( wave ) => wave.y ), ...dataPoints.bottomTemp.data.map( ( wave ) => wave.y ) ) );
 
 		const mBaseFormat = 'dd LLL y h:mma';
-		const mStart = DateTime.fromMillis( startTimeRounded );
-		const mEnd = DateTime.fromMillis( endTimeRounded );
+		const mStart = DateTime.fromMillis( startTime );
+		const mEnd = DateTime.fromMillis( endTime );
 		const scaleLabel = mStart.toFormat( mBaseFormat ) + " — " + mEnd.toFormat( mBaseFormat );
 		const timeRange = [ mStart.toFormat( 'x' ), mEnd.toFormat( 'x' ) ];
 
@@ -207,23 +208,31 @@ export function wadGenerateChartData( waves, groupedIncludes, multiplier = 1,  )
 			}
 		}
 		
-		// Axes'
-		const axes = {};
 		// Import styles
 		const { x, waveHeightAxes, peakPeriodAxes, tempAxes, windSpeedAxes } = wad.buoy_display_chart_swell_only
 			? chartStylesSimple.axesStyles
 			: chartStyles.axesStyles;
 
 		// X Axis
-		x.title.text = scaleLabel;
-		x.ticks.callback = ( tickValue, index, ticks ) => {
-			return [
-				DateTime.fromMillis( ticks[index].value ).toFormat( "d LLL" ),
-				DateTime.fromMillis( ticks[index].value ).toFormat( "HH:MM" )
-			];
+		const axes = {
+			x: {
+				...x,
+				title: {
+					...x.title,
+					text: scaleLabel
+				},
+				ticks: {
+					...x.ticks,
+					callback: ( tickValue, index, ticks ) => {
+						return [
+							DateTime.fromMillis( ticks[index].value ).toFormat( "d LLL" ),
+							DateTime.fromMillis( ticks[index].value ).toFormat( "HH:MM" )
+						];
+					}
+				}
+			}
 		};
-		axes.x = x;
-
+		
 		const isMobile = ( window.innerWidth < 768 ) ? false : true; // Screen size
 		
 		// Y Axes
@@ -257,14 +266,6 @@ export function wadGenerateChartData( waves, groupedIncludes, multiplier = 1,  )
 			// Peak Period Axes
 			axes["y-axis-4"] = windSpeedAxes;
 		}
-
-		// const sizing = ( window.innerWidth >= 992 ) ? 'desktop' : ( window.innerWidth >= 768 ) ? 'tablet' : ( window.innerWidth >= 450 ) ? 'mobileLandscape' : 'mobilePortrait';
-		// const ratios = {
-		// 	desktop: 2 / multiplier,
-		// 	tablet: 2 / multiplier,
-		// 	mobileLandscape: 1.75,
-		// 	mobilePortrait: 1.5,
-		// };
 		
 		// Draw Chart
 		var config = {

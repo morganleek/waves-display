@@ -103,6 +103,7 @@ const Chart = ( props ) => {
     const params = { id: buoy.id };
     // Custom start and end dates
     if( searchDateRange !== null  ) {
+
       params.start = searchDateRange[0].getTime() / 1000;
       params.end = searchDateRange[1].getTime() / 1000;
     }
@@ -110,19 +111,20 @@ const Chart = ( props ) => {
     getBuoyData( params )
       .then( json => {
         if( json.success === 1 ) {
-          const data = wadGenerateChartData( 
+          const dataTemp = wadGenerateChartData( 
             wadRawDataToChartData( json.data ), 
             groupedIncludes,
             0.75
           );
           
-          // Set data
-          setData( data );
-          // console.log( data.timeRange[0] );
+          // Start - End Date Time
           setDateRange([ 
-            new Date( parseInt( data.timeRange[0] ) ), 
-            new Date( parseInt( data.timeRange[1] ) ) 
+            new Date( parseInt( dataTemp.timeRange[0] ) ), 
+            new Date( parseInt( dataTemp.timeRange[1] ) ) 
           ]);
+
+          // Set data
+          setData( { ...dataTemp } );
         }
         else {
           console.log( json.success );
@@ -172,15 +174,6 @@ const Chart = ( props ) => {
       />
     }
   />;
-  let chartModal, chartTable, chartBuoyDetails, downloadButton;
-  const [ startDate, endDate ] = dateRange;
-  const expandedLabel = ( isExpanded ) ? 'Collapse' : 'Expand';
-  
-  const { 
-    // web_display_name: buoyLabel, 
-    download_enabled: downloadEnabled, 
-    download_requires_details: downloadRequiresDetails 
-  } = buoy;
 
   const updateGroupIncludes = toggledId => {
     setGroupedIncludes( groupedIncludes.map( ( {label, items} ) => (
@@ -194,46 +187,55 @@ const Chart = ( props ) => {
       }
     ) ) );
   }
-
-  // Disable unused filters
-  const available = [];
-  for( const key in data.dataPoints ) {
-    if( data.dataPoints[key].data.length > 0 ) {
-      available.push(key);
-    }
-  }
-  const groupedIncludesListItems = ( groupedIncludes ) ? (
-    groupedIncludes.map( ( include, i ) => (
-      <li key={i}>
-        <h6 className="label">{ include.label }</h6>
-        <ul className="items">
-          { include.items 
-            ? (
-              include.items
-                .filter( ( { id } ) => available.includes( id ) )
-                .map( ( {id, label, visible}, j ) => (
-                  <li key={j} className={ "filter-" + id }>
-                    <label>
-                      <input 
-                        type="checkbox" 
-                        checked={ visible } 
-                        onChange={ () => {
-                          updateGroupIncludes( id );
-                        } }
-                      />
-                      <span>{ label }</span>
-                    </label>
-                  </li>
-                ) )
-            )
-            : undefined
-          }
-        </ul>
-      </li>
-    ) )
-  ) : undefined;
-
+  
   if( Object.keys( data ).length > 0 ) {
+    let chartModal, chartTable, chartBuoyDetails, downloadButton;
+    const [ startDate, endDate ] = dateRange;
+    const expandedLabel = ( isExpanded ) ? 'Collapse' : 'Expand';
+    const { 
+      // web_display_name: buoyLabel, 
+      download_enabled: downloadEnabled, 
+      download_requires_details: downloadRequiresDetails 
+    } = buoy;
+
+    // Disable unused filters
+    const available = [];
+    for( const key in data.dataPoints ) {
+      if( data.dataPoints[key].data.length > 0 ) {
+        available.push(key);
+      }
+    }
+    const groupedIncludesListItems = ( groupedIncludes ) ? (
+      groupedIncludes.map( ( include, i ) => (
+        <li key={i}>
+          <h6 className="label">{ include.label }</h6>
+          <ul className="items">
+            { include.items 
+              ? (
+                include.items
+                  .filter( ( { id } ) => available.includes( id ) )
+                  .map( ( {id, label, visible}, j ) => (
+                    <li key={j} className={ "filter-" + id }>
+                      <label>
+                        <input 
+                          type="checkbox" 
+                          checked={ visible } 
+                          onChange={ () => {
+                            updateGroupIncludes( id );
+                          } }
+                        />
+                        <span>{ label }</span>
+                      </label>
+                    </li>
+                  ) )
+              )
+              : undefined
+            }
+          </ul>
+        </li>
+      ) )
+    ) : undefined;
+    
     if( isExpanded ) {
       // Split apart
       let chartGraphTemp = [];
@@ -260,7 +262,6 @@ const Chart = ( props ) => {
         // Assign
         optionsClone.scales = currentScales;
         
-        
         chartGraphTemp.unshift( 
           <Line 
             data={ { labels: data.config.data.labels, datasets: [ datasetClone ] } }  
@@ -282,7 +283,6 @@ const Chart = ( props ) => {
       // Reduce to only visible items
       const datasetsFiltered = data.config.data.datasets.filter( ( { hidden } ) => !hidden );
       
-      // console.log( data.config.data );
       // All in one
       chartGraph = <Line data={ { labels: data.config.data.labels, datasets: datasetsFiltered } } options={ data.config.options } />;
     }
@@ -430,7 +430,7 @@ const Chart = ( props ) => {
               : undefined 
             }
 						{ chartGraph }
-            { groupedIncludesListItems && !wad.buoy_display_chart_swell_only
+            { groupedIncludesListItems && !isExpanded && !wad.buoy_display_chart_swell_only
               ? <ul className="chart-legend">{ groupedIncludesListItems }</ul>
               : undefined 
             }
