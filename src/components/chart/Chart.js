@@ -239,8 +239,9 @@ const Chart = ( props ) => {
     if( isExpanded ) {
       // Split apart
       let chartGraphTemp = [];
-      
-      data.config.data.datasets.forEach( ( dataset, j ) => {
+
+      const reverse = [...data.config.data.datasets].reverse();
+      reverse.forEach( ( dataset, j ) => {
         // Create dateset from grouped dataset
         const datasetClone = { ...dataset };
         datasetClone.hidden = false;
