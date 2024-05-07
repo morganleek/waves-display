@@ -13,6 +13,13 @@ const containerStyle = {
   height: '100%'
 };
 
+const validateLatLng = ( { lat, lng } ) => {
+	if( lat > 90 || lat < -90 || lng > 180 || lng < -180 ) {
+		return false;
+	}
+	return true;
+}
+
 export class Map extends Component {
 	constructor( props ) {
     super( props );
@@ -136,12 +143,14 @@ export class Map extends Component {
 					let pathTimes = [];
 					
 					for( let j = 0; j < processed.length; j++ ) {
-						if( !isNaN( parseFloat( processed[j]["Latitude (deg)"] ) ) && !isNaN( parseFloat( processed[j]["Longitude (deg) "] ) ) ) {
-							path.push( { lat: parseFloat( processed[j]["Latitude (deg)"] ), lng: parseFloat( processed[j]["Longitude (deg) "] ) } );
+						const lat = parseFloat( processed[j]["Latitude (deg)"] );
+						const lng = parseFloat( processed[j]["Longitude (deg) "] );
+						if( !isNaN( lat ) && !isNaN( lng ) && validateLatLng( { lat, lng } ) ) {
+							path.push( { lat: lat, lng: lng } );
 							pathTimes.push( {
 								time: parseInt( processed[j]['Time (UNIX/UTC)'] ),
-								lat: parseFloat( processed[j]["Latitude (deg)"] ), 
-								lng: parseFloat( processed[j]["Longitude (deg) "] )
+								lat: lat, 
+								lng: lng
 							} );
 						}
 					}
@@ -203,7 +212,8 @@ export class Map extends Component {
 									isEnabled: parseInt( element.is_enabled )
 								};
 								newMarkers.push( driftingMarker );
-							}	
+							
+							}
 						}
 						this.setState( ( state ) => ( { polylineMarkers: [...state.polylineMarkers, ...newMarkers] } ) ); 
 					}
