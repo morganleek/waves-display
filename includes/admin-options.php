@@ -115,9 +115,10 @@
 								'title' => 'Export',
 								'fields' => array(
 									array(
-										'label' => 'Download requires user information',
+										'label' => 'Download requires user information (Manage in either buoys.csv or Buoys backend)',
 										'name' => 'buoy_display_user_info_required',
-										'type' => 'checkbox'
+										'type' => 'checkbox',
+										'disabled' => true
 									),
 									array( 
 										'label' => 'User info email recipient ',
