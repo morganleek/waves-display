@@ -1,4 +1,4 @@
-import React, { Component, useState } from "react";
+import React, { Component, useState, useEffect } from "react";
 import { GoogleMap, LoadScript, MarkerClusterer, Marker, Polyline, InfoWindow } from '@react-google-maps/api';
 // import { GoogleMap, useLoadScript, MarkerClusterer, Marker, Polyline } from '@react-google-maps/api';
 
@@ -13,6 +13,13 @@ const containerStyle = {
   height: '100%'
 };
 
+const pin = {
+	url: wad.plugin + "images/marker@2x.png",
+	labelOrigin: new window.google.maps.Point(0, 24),
+	scaledSize: new window.google.maps.Size(14,14),
+	anchor: new window.google.maps.Point(7,7)
+};
+
 const validateLatLng = ( { lat, lng } ) => {
 	if( lat > 90 || lat < -90 || lng > 180 || lng < -180 ) {
 		return false;
@@ -20,7 +27,42 @@ const validateLatLng = ( { lat, lng } ) => {
 	return true;
 }
 
-export class Map extends Component {
+export const Map = () => {
+	const [center, setCenter] = useState({ lat: -32.04020115615059, lng: 115.70963929875994 });
+	const [currentZoom, setCurrentZoom] = useState(12);
+	const [markers, setMarkers] = useState([]);
+
+	// Pins
+	const [icon, setIcon] = useState( { ...pin } );
+	const [decommissionedIcon, setDecommissionedIcon] = useState( { ...pin, url: wad.plugin + "images/marker-decom@2x.png" });
+	const [labelIcon, setLabelIcon] = useState( { ...pin, url: wad.plugin + "images/label-marker@2x.png" });
+
+	
+	return (
+		<div className="maps">
+			{ center && currentZoom && markers.length > 0 && (
+				mapRender = <LoadScript
+					googleMapsApiKey={ ( typeof( wad ) != "undefined" ) ? wad.googleApiKey : '' }
+				>
+					<GoogleMap
+						mapContainerStyle={ containerStyle }
+						center={ center }
+						zoom={ currentZoom }
+						options={{ styles: mode === "theme-dark" ? mapStyles.dark : mapStyles.light }}
+						onLoad={ this.onLoad }
+						// onBoundsChanged={ this.onBoundsChanged }
+						onZoomChanged={ this.onZoomChanged }
+					>
+						<>{ info }{ cluster }{ polylines }{ polylineLabels }</>
+					</GoogleMap>
+					{ historicKey }
+				</LoadScript>
+			) }
+		</div>
+	);
+}
+
+export class _Map extends Component {
 	constructor( props ) {
     super( props );
     
@@ -77,149 +119,149 @@ export class Map extends Component {
 
 		// Map Data Fetch
 		// Get buoys
-    getBuoys( restrict ).then( json => {
-			// Bounds
-			let bounds = {
-				minLat: 90,
-				maxLat: -90,
-				minLng: 180,
-				maxLng: -180
-			};
+    // getBuoys( restrict ).then( json => {
+		// 	// Bounds
+		// 	let bounds = {
+		// 		minLat: 90,
+		// 		maxLat: -90,
+		// 		minLng: 180,
+		// 		maxLng: -180
+		// 	};
 
-			if( json.length > 0 ) {
+		// 	if( json.length > 0 ) {
 
-				json.forEach( ( element, index ) => {
-					const lat = parseFloat( element.lat );
-					const lng = parseFloat( element.lng );
+		// 		json.forEach( ( element, index ) => {
+		// 			const lat = parseFloat( element.lat );
+		// 			const lng = parseFloat( element.lng );
 
-					// Bounds Min/Max
-					bounds.minLat = ( bounds.minLat < lat ) ? bounds.minLat : lat;
-					bounds.maxLat = ( bounds.maxLat > lat ) ? bounds.maxLat : lat;
-					bounds.minLng = ( bounds.minLng < lng ) ? bounds.minLng : lng;
-					bounds.maxLng = ( bounds.maxLng > lng ) ? bounds.maxLng : lng;
+		// 			// Bounds Min/Max
+		// 			bounds.minLat = ( bounds.minLat < lat ) ? bounds.minLat : lat;
+		// 			bounds.maxLat = ( bounds.maxLat > lat ) ? bounds.maxLat : lat;
+		// 			bounds.minLng = ( bounds.minLng < lng ) ? bounds.minLng : lng;
+		// 			bounds.maxLng = ( bounds.maxLng > lng ) ? bounds.maxLng : lng;
 
-					if( parseInt( element.drifting ) === 0 ) {
+		// 			if( parseInt( element.drifting ) === 0 ) {
 						
-						let marker = {
-							buoyId: element.id,
-							label: element.web_display_name,
-							lat: lat,
-							lng: lng,
-							isEnabled: parseInt( element.is_enabled ),
-							buoyDownloadText: element.download_text,
-							downloadPath: '',
-							downloadEnabled: parseInt( element.download_enabled ),
-							description: element.description,
-							startDate: element.start_date,
-							endDate: element.end_date
-						};
+		// 				let marker = {
+		// 					buoyId: element.id,
+		// 					label: element.web_display_name,
+		// 					lat: lat,
+		// 					lng: lng,
+		// 					isEnabled: parseInt( element.is_enabled ),
+		// 					buoyDownloadText: element.download_text,
+		// 					downloadPath: '',
+		// 					downloadEnabled: parseInt( element.download_enabled ),
+		// 					description: element.description,
+		// 					startDate: element.start_date,
+		// 					endDate: element.end_date
+		// 				};
 
-						this.setState( ( state ) => ( { markers: [...state.markers, marker] } ) );
-					}
-				} );
-			}
+		// 				this.setState( ( state ) => ( { markers: [...state.markers, marker] } ) );
+		// 			}
+		// 		} );
+		// 	}
 
-			// Check if really zoomed in or only one time and set range to about 0.1 degree +/-
-			if( Math.abs( bounds.minLat - bounds.maxLat ) < 0.1 ) {
-				bounds.minLat -= 0.05;
-				bounds.maxLat += 0.05;
-			}
+		// 	// Check if really zoomed in or only one time and set range to about 0.1 degree +/-
+		// 	if( Math.abs( bounds.minLat - bounds.maxLat ) < 0.1 ) {
+		// 		bounds.minLat -= 0.05;
+		// 		bounds.maxLat += 0.05;
+		// 	}
 			
-			this.setState( () => ( { minLat : bounds.minLat, maxLat : bounds.maxLat, minLng : bounds.minLng, maxLng : bounds.maxLng } ) );
+		// 	this.setState( () => ( { minLat : bounds.minLat, maxLat : bounds.maxLat, minLng : bounds.minLng, maxLng : bounds.maxLng } ) );
 
-			this.setState( () => ( { boundsSet: true } ) );
-			this.setBounds();
-    } );
+		// 	this.setState( () => ( { boundsSet: true } ) );
+		// 	this.setBounds();
+    // } );
 
-		// Get drifting
-		getDriftingBuoys( restrict ).then( json => {
-			if( json.length > 0 ) {
-				// let driftingMap = json.map( ( row, index ) => {
-				json.forEach( ( element, index ) => {
+		// // Get drifting
+		// getDriftingBuoys( restrict ).then( json => {
+		// 	if( json.length > 0 ) {
+		// 		// let driftingMap = json.map( ( row, index ) => {
+		// 		json.forEach( ( element, index ) => {
 
-					const processed = wadRawDataToChartData( element.data );
+		// 			const processed = wadRawDataToChartData( element.data );
 					
-					let path = [];
-					let pathTimes = [];
+		// 			let path = [];
+		// 			let pathTimes = [];
 					
-					for( let j = 0; j < processed.length; j++ ) {
-						const lat = parseFloat( processed[j]["Latitude (deg)"] );
-						const lng = parseFloat( processed[j]["Longitude (deg) "] );
-						if( !isNaN( lat ) && !isNaN( lng ) && validateLatLng( { lat, lng } ) ) {
-							path.push( { lat: lat, lng: lng } );
-							pathTimes.push( {
-								time: parseInt( processed[j]['Time (UNIX/UTC)'] ),
-								lat: lat, 
-								lng: lng
-							} );
-						}
-					}
+		// 			for( let j = 0; j < processed.length; j++ ) {
+		// 				const lat = parseFloat( processed[j]["Latitude (deg)"] );
+		// 				const lng = parseFloat( processed[j]["Longitude (deg) "] );
+		// 				if( !isNaN( lat ) && !isNaN( lng ) && validateLatLng( { lat, lng } ) ) {
+		// 					path.push( { lat: lat, lng: lng } );
+		// 					pathTimes.push( {
+		// 						time: parseInt( processed[j]['Time (UNIX/UTC)'] ),
+		// 						lat: lat, 
+		// 						lng: lng
+		// 					} );
+		// 				}
+		// 			}
 
-					if( path.length > 0 ) {
+		// 			if( path.length > 0 ) {
 
-						const polyLineTime = {
-							buoyId: element.id,
-							isEnabled: parseInt( element.is_enabled ),
-							pathTimes: pathTimes,
-							path: path
-						};
-						this.setState( ( state ) => ( { polylineTimes: [...state.polylineTimes, polyLineTime] } ) );
+		// 				const polyLineTime = {
+		// 					buoyId: element.id,
+		// 					isEnabled: parseInt( element.is_enabled ),
+		// 					pathTimes: pathTimes,
+		// 					path: path
+		// 				};
+		// 				this.setState( ( state ) => ( { polylineTimes: [...state.polylineTimes, polyLineTime] } ) );
 
 						
-						// Add Marker
-						let marker = {
-							buoyId: element.id,
-							label: element.web_display_name,
-							lat: path[0].lat, // First path lat/lng
-							lng: path[0].lng, // First path lat/lng
-							isEnabled: parseInt( element.is_enabled ),
-							buoyDownloadText: element.download_text,
-							downloadPath: '',
-							downloadEnabled: parseInt( element.download_enabled ),
-							content: element.description,
-							startDate: element.start_date,
-							endDate: element.end_date
-						};
+		// 				// Add Marker
+		// 				let marker = {
+		// 					buoyId: element.id,
+		// 					label: element.web_display_name,
+		// 					lat: path[0].lat, // First path lat/lng
+		// 					lng: path[0].lng, // First path lat/lng
+		// 					isEnabled: parseInt( element.is_enabled ),
+		// 					buoyDownloadText: element.download_text,
+		// 					downloadPath: '',
+		// 					downloadEnabled: parseInt( element.download_enabled ),
+		// 					content: element.description,
+		// 					startDate: element.start_date,
+		// 					endDate: element.end_date
+		// 				};
 						
-						this.setState( ( state ) => ( { markers: [...state.markers, marker] } ) );
+		// 				this.setState( ( state ) => ( { markers: [...state.markers, marker] } ) );
 
-						// Polyline markers 
-						const newMarkers = [];
-						// Start date/time
-						const startDate = new Date( pathTimes[0].time * 1000 )
-						let currentDay = startDate.getDate();
-						for( let n = 0; n < pathTimes.length; n++ ) { 
-							const pathDate = new Date( pathTimes[n].time * 1000 );
-							if( currentDay != pathDate.getDate() ) {
-								// Friendly date format
-								currentDay = pathDate.getDate();
-								const day = pathDate.getDate().toString().padStart( 2, "0" );
-								// JS months start a 0 
-								const month = ( pathDate.getMonth() + 1 ).toString().padStart( 2, "0" );
-								let label = day + '/' + month;
+		// 				// Polyline markers 
+		// 				const newMarkers = [];
+		// 				// Start date/time
+		// 				const startDate = new Date( pathTimes[0].time * 1000 )
+		// 				let currentDay = startDate.getDate();
+		// 				for( let n = 0; n < pathTimes.length; n++ ) { 
+		// 					const pathDate = new Date( pathTimes[n].time * 1000 );
+		// 					if( currentDay != pathDate.getDate() ) {
+		// 						// Friendly date format
+		// 						currentDay = pathDate.getDate();
+		// 						const day = pathDate.getDate().toString().padStart( 2, "0" );
+		// 						// JS months start a 0 
+		// 						const month = ( pathDate.getMonth() + 1 ).toString().padStart( 2, "0" );
+		// 						let label = day + '/' + month;
 
-								// Add year for first entry
-								if( newMarkers.length == 0 ) {
-									label += "/" + pathDate.getFullYear();
-								}
+		// 						// Add year for first entry
+		// 						if( newMarkers.length == 0 ) {
+		// 							label += "/" + pathDate.getFullYear();
+		// 						}
 								
-								// Add to markers
-								let driftingMarker = {
-									lat: pathTimes[n].lat,
-									lng: pathTimes[n].lng,
-									label: label,
-									key: n + 1000,
-									isEnabled: parseInt( element.is_enabled )
-								};
-								newMarkers.push( driftingMarker );
+		// 						// Add to markers
+		// 						let driftingMarker = {
+		// 							lat: pathTimes[n].lat,
+		// 							lng: pathTimes[n].lng,
+		// 							label: label,
+		// 							key: n + 1000,
+		// 							isEnabled: parseInt( element.is_enabled )
+		// 						};
+		// 						newMarkers.push( driftingMarker );
 							
-							}
-						}
-						this.setState( ( state ) => ( { polylineMarkers: [...state.polylineMarkers, ...newMarkers] } ) ); 
-					}
-				} );
-			}
-		} );
+		// 					}
+		// 				}
+		// 				this.setState( ( state ) => ( { polylineMarkers: [...state.polylineMarkers, ...newMarkers] } ) ); 
+		// 			}
+		// 		} );
+		// 	}
+		// } );
   }
 		
 	onMapPolylineClick = ( polyline ) => {
@@ -381,6 +423,7 @@ export class Map extends Component {
 	}
 
   render() {
+		console.log( 'render' );
 		const { center } = this.props;
 		const { 
 			markers, 
