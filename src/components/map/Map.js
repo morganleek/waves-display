@@ -48,7 +48,6 @@ export const WavesMap = ( { mode, restrict, buoys } ) => {
   }, [marker]);
 
 	const onZoomChange = ( e ) => {
-		console.log(e.detail);
 		if( e.detail.zoom != currentZoom ) {
 			setCurrentZoom( e.detail.zoom );
 			setCurrentBounds( e.detail.bounds );
@@ -63,6 +62,7 @@ export const WavesMap = ( { mode, restrict, buoys } ) => {
 						className="maps" 
 						defaultBounds={currentBounds}
 						onZoomChanged={(e) => onZoomChange(e)}
+						styles={ mapStyles }
 					>
 						{ buoys && buoys.map( marker => <BuoyMarker 
 							markerRef={markerRef} 
@@ -136,7 +136,6 @@ const BuoyMarker = ( { details, markerRef, setCenter, setInfoWindow, currentBoun
 				},
 				label: waveData["Timestamp (UTC)"].split(" ")[0]
 			}) );
-			console.log( polylineDates );
 		}
 	}
 

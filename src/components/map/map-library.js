@@ -51,7 +51,7 @@ export const markerTimeIcon = ( color ) => {
 	const icon = markerIcon( color );
 	return {
 		...icon,
-		anchor: { x: 2.5, y: 2.5 },
+		anchor: { x: 5, y: 5 },
 		path: "M5,2.5c0,1.38-1.12,2.5-2.5,2.5S0,3.88,0,2.5,1.12,0,2.5,0s2.5,1.12,2.5,2.5Z"
 	};
 }
