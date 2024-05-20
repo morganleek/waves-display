@@ -43,7 +43,7 @@ export const markerIcon = ( color ) => {
 		scale: 1,
 		// strokeColor: strokeColor,
 		anchor: { x: 8, y: 8 },
-		fillOpacity: 1
+		fillOpacity: 0.8
 	};
 };
 

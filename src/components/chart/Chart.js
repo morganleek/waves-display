@@ -127,7 +127,7 @@ const Chart = ( props ) => {
           setData( { ...dataTemp } );
         }
         else {
-          console.log( json.success );
+          // console.log( json.success );
         }
       } );
   }, [groupedIncludes, searchDateRange] );

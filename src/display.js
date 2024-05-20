@@ -9,13 +9,14 @@ import { getBuoys, getBuoy, getBuoyData, getBuoyByDate } from "./components/api/
 function App(props) {
   // States
   const [showAll, setShowAll] = useState((wad.googleShowAllBuoys) ? wad.googleShowAllBuoys : false);
-  const [center, setCenter] = useState(
-    {
-      lat: (typeof (wad) != "undefined" && 'googleLat' in wad && wad.googleLat !== '') ? parseFloat(wad.googleLat) : 0.0,
-      lng: (typeof (wad) != "undefined" && 'googleLng' in wad && wad.googleLng !== '') ? parseFloat(wad.googleLng) : 0.0
-    }
-  );
-  const [zoom, setZoom] = useState((window.innerWidth < 1200) ? 4 : 5);
+  // const [center, setCenter] = useState(
+  //   {
+  //     lat: (typeof (wad) != "undefined" && 'googleLat' in wad && wad.googleLat !== '') ? parseFloat(wad.googleLat) : 0.0,
+  //     lng: (typeof (wad) != "undefined" && 'googleLng' in wad && wad.googleLng !== '') ? parseFloat(wad.googleLng) : 0.0
+  //   }
+  // );
+  const [center, setCenter] = useState(null);
+  const [zoom, setZoom] = useState(null); // (window.innerWidth < 1200) ? 4 : 5
   const [focus, setFocus] = useState(null);
   const [buoys, setBuoys] = useState([]);
 
@@ -60,7 +61,9 @@ function App(props) {
         <WavesMap
           showAll={showAll}
           center={center}
+          setCenter={setCenter}
           zoom={zoom}
+          setZoom={setZoom}
           updateFocus={updateFocus}
           restrict={props.restrict}
           mode={props.mode}
