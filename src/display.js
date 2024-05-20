@@ -1,7 +1,8 @@
 import { useEffect, useState, Component, Fragment } from "@wordpress/element";
 
 import { Charts } from './components/chart/Chart';
-import { Map } from './components/map/Map';
+import { WavesMap } from './components/map/Map';
+import { getBuoys, getBuoy, getBuoyData, getBuoyByDate } from "./components/api/buoys";
 
 // import "../scss/bundle.scss"; 
 
@@ -16,11 +17,27 @@ function App(props) {
   );
   const [zoom, setZoom] = useState((window.innerWidth < 1200) ? 4 : 5);
   const [focus, setFocus] = useState(null);
+  const [buoys, setBuoys] = useState([]);
 
-  useEffect((props) => {
-    // Props loaded via javascript globals 
-    // No need to setup anything but reload 
-    // when zoom and center change.
+  useEffect( () => {
+    getBuoys( props.restrict ).then( json => {
+      // Cast some number values
+      const newBuoys = json.map( marker => ( { 
+				...marker, 
+				lat: parseFloat( marker.lat ), 
+				lng: parseFloat( marker.lng ),
+				drifting: parseInt( marker.drifting ),
+				is_enabled: parseInt( marker.is_enabled )
+			} ) );
+
+      setBuoys( newBuoys );
+    } );
+
+    // if( buoyFocus ) {
+    //   if( document.querySelector('[data-buoy-id="' + buoyFocus + '"]') ) {
+    //     document.querySelector('[data-buoy-id="' + buoyFocus + '"]').scrollIntoView( { block: "start" } );
+    //   }
+    // }
   }, [zoom, center]);
 
   const updateMapCenter = (newCenter) => {
@@ -39,19 +56,26 @@ function App(props) {
 
   return (
     <>
-      <Map
-        showAll={showAll}
-        center={center}
-        zoom={zoom}
-        updateFocus={updateFocus}
-        restrict={props.restrict}
-        mode={props.mode}
-      />
-      <Charts
-        updateCenter={updateMapCenter}
-        updateZoom={updateMapZoom}
-        buoyFocus={focus}
-        restrict={props.restrict} />
+      { buoys.length > 0 && (
+        <WavesMap
+          showAll={showAll}
+          center={center}
+          zoom={zoom}
+          updateFocus={updateFocus}
+          restrict={props.restrict}
+          mode={props.mode}
+          buoys={buoys}
+        />
+      ) }
+      { buoys.length > 0 && (
+        <Charts
+          updateCenter={updateMapCenter}
+          updateZoom={updateMapZoom}
+          buoyFocus={focus}
+          restrict={props.restrict}
+          buoys={buoys}
+        />
+      ) }
     </>
   );
 }

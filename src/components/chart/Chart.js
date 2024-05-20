@@ -17,13 +17,13 @@ import chartActiveSimpleOnly from './chart-active-simple-only.json';
 const classNames = require('classnames');
 const { RangePicker } = DatePicker;
 
-export function Charts ( {restrict, buoyFocus, updateCenter, updateZoom} ) {
-  const [buoys, setBuoys] = useState([]);
+export function Charts ( {restrict, buoyFocus, updateCenter, updateZoom, buoys} ) {
+  // const [buoys, setBuoys] = useState([]);
   
   useEffect( () => {
-    getBuoys( restrict ).then( json => {
-      setBuoys( json );
-    } );
+    // getBuoys( restrict ).then( json => {
+    //   setBuoys( json );
+    // } );
 
     if( buoyFocus ) {
       if( document.querySelector('[data-buoy-id="' + buoyFocus + '"]') ) {
