@@ -91,29 +91,28 @@ export const WavesMap = ( { buoys, center, setCenter } ) => {
 							pixelOffset={ [0, -10] }
 							visible={ infoWindow.visible }
 							onCloseClick={ () => setInfoWindow( undefined ) }
+							maxWidth={ 350 }
 						>
 							<div className="info-window">
 								<div className="info-copy">
 									<p className="title has-text-align-center"><strong>{ infoWindow.title }</strong></p>
 									<p className="has-text-align-center">{ infoWindow.description }</p>
-									{ document.querySelectorAll( '.card[data-buoy-id="' + infoWindow.id + '"]' ).length > 0 && (
-										<div className="wp-block-buttons is-content-justification-center is-layout-flex wp-container-core-buttons-layout-2 wp-block-buttons-is-layout-flex">
-											<div className="wp-block-button has-custom-font-size is-style-outline has-small-font-size">
-												<a 
-													href="#" 
-													className="wp-block-button__link has-blue-color has-text-color has-link-color wp-element-button"
-													onClick={ e => { 
-														e.preventDefault();
-														const card = document.querySelector( '.card[data-buoy-id="' + infoWindow.id + '"]' );
-														if( card ) {
-															card.scrollIntoView( { behavior: "smooth" } );
-														}
-													} }	
-												>
-													<strong>Show Charts</strong>
-												</a>
-											</div>
-										</div>
+									{ document.querySelector( '.card[data-buoy-id="' + infoWindow.id + '"]' ) && (
+										<p className="has-text-align-center">
+											<a 
+												href="#" 
+												className="wp-block-button__link has-blue-color has-text-color has-link-color wp-element-button"
+												onClick={ e => { 
+													e.preventDefault();
+													const card = document.querySelector( '.card[data-buoy-id="' + infoWindow.id + '"]' );
+													if( card ) {
+														card.scrollIntoView( { behavior: "smooth" } );
+													}
+												} }	
+											>
+												<strong>Show Charts</strong>
+											</a>
+										</p>
 									) }
 								</div>
 							</div>
