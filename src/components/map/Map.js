@@ -69,7 +69,7 @@ export const WavesMap = ( { buoys, center, setCenter } ) => {
 				<APIProvider apiKey={wad.googleApiKey}>
 					<Map 
 						className="maps" 
-						// styles={ mapStyles.light }
+						styles={ mapStyles }
 						defaultBounds={currentBounds}
 						onZoomChanged={(e) => onZoomChange(e)}
 						
@@ -97,7 +97,7 @@ export const WavesMap = ( { buoys, center, setCenter } ) => {
 								<div className="info-copy">
 									<p className="title has-text-align-center"><strong>{ infoWindow.title }</strong></p>
 									<p className="has-text-align-center">{ infoWindow.description }</p>
-									{ document.querySelector( '.card[data-buoy-id="' + infoWindow.id + '"]' ) && (
+									{/* { document.querySelector( '.card[data-buoy-id="' + infoWindow.id + '"]' ) && (
 										<p className="has-text-align-center">
 											<a 
 												href="#" 
@@ -113,7 +113,7 @@ export const WavesMap = ( { buoys, center, setCenter } ) => {
 												<strong>Show Charts</strong>
 											</a>
 										</p>
-									) }
+									) } */}
 								</div>
 							</div>
 							

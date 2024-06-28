@@ -75,15 +75,24 @@ export const BuoyMarker = ( {
 			icon={markerIcon(is_enabled === 1 ? "#e26a26" : "#a0a7ac" )}	
 			onClick={ 
 				( e ) => { 
-					setInfoWindow( {
+					setCenter( position );
+					
+					if( is_enabled === 1 ) {
+						const card = document.querySelector( '.card[data-buoy-id="' + id + '"]' );
+						if( card ) {
+							card.scrollIntoView( { behavior: "smooth" } );
+						}
+					}
+					else {
+						setInfoWindow( {
 						id: id,
 						title: web_display_name,
 						position: position,
 						description: description,
 						visible: true
 					} );
-					setCenter( position );
-				} 
+					}
+				}
 			}
 		/>
 		{ polylinePoints.length > 0 && (
