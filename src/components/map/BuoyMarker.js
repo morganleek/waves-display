@@ -22,6 +22,9 @@ export const BuoyMarker = ( {
 		web_display_name,
 		description
 	} = details;
+
+	// Only show labels on zoom
+	const label = currentZoom > 5 ? web_display_name : "";
 	
 	// Check if this should be visible
 	if( details.is_enabled === 1 && !showLive ) {
@@ -72,7 +75,9 @@ export const BuoyMarker = ( {
 			ref={markerRef} 
 			position={position} 
 			title={web_display_name}
-			icon={markerIcon(is_enabled === 1 ? "#e26a26" : "#a0a7ac" )}	
+			icon={markerIcon(is_enabled === 1 ? "#e26a26" : "#a0a7ac" )}
+			label={label}
+			
 			onClick={ 
 				( e ) => { 
 					setCenter( position );
@@ -97,7 +102,7 @@ export const BuoyMarker = ( {
 		/>
 		{ polylinePoints.length > 0 && (
 			<Polyline 
-				strokeColor={"#ff0000"}
+				strokeColor={"#c4deea"}
 				path={ polylinePoints }
 				strokeWeight={"2"}
 			/>
