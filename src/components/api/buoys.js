@@ -51,21 +51,23 @@ export function getDriftingBuoys( restrict = [] ) {
 
 export function getBuoyData( { id, start, end } ) {
   if( typeof( wad ) !== "undefined" ) {
-    const url = [ wad.ajax + "?action=waf_rest_list_buoy_datapoints" ];
-    
-    // Append arguments
-    // const args = [];
+    // Rest URL
+    let url = window.location.origin + '/wp-json/waves/v1/buoys';
+    // Specific buoy
     if( id ) {
-      url.push("id=" + id);
+      url += `/${id}`;
     }
+    
+    // Query params 
+    const params = [];
     if( start ) {
-      url.push("start=" + start);
+      params.push("start=" + start);
     }
     if( end ) {
-      url.push("end=" + end);
+      params.push("end=" + end);
     }
   
-    return fetch( url.join('&'), { method: 'GET' } ) 
+    return fetch( url + "?" + params.join('&'), { method: 'GET' } ) 
       .then( response => {
         if( !response.ok ) throw Error( response.statusText );
         return response.json();

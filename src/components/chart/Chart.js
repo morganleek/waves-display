@@ -110,25 +110,30 @@ const Chart = ( props ) => {
 
     getBuoyData( params )
       .then( json => {
-        if( json.success === 1 ) {
-          const dataTemp = wadGenerateChartData( 
-            wadRawDataToChartData( json.data ), 
-            groupedIncludes,
-            0.75
-          );
-          
-          // Start - End Date Time
+        
+        // if( json.success === 1 ) {
+        const dataTemp = wadGenerateChartData( 
+          // wadRawDataToChartData( json.data ), 
+          json.data,
+          groupedIncludes,
+          0.75
+        );
+        
+        // Start - End Date Time
+        if( dataTemp.timeRange ) {
           setDateRange([ 
             new Date( parseInt( dataTemp.timeRange[0] ) ), 
             new Date( parseInt( dataTemp.timeRange[1] ) ) 
           ]);
-
+          
           // Set data
           setData( { ...dataTemp } );
         }
-        else {
-          // console.log( json.success );
-        }
+
+        // }
+        // else {
+        //   // console.log( json.success );
+        // }
       } );
   }, [groupedIncludes, searchDateRange] );
 
