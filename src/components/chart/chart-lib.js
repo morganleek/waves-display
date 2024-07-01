@@ -275,7 +275,9 @@ export function wadGenerateChartData( waves, groupedIncludes, multiplier = 1,  )
 			axes["y-axis-2"] = peakPeriodAxes;
 		}
 
-		if( ( hasItem.hasOwnProperty( 'sst' ) || hasItem.hasOwnProperty( 'bottomTemp' ) ) && ( includes.sst || includes.bottomTemp ) ) {
+		console.log( hasItem.hasOwnProperty( 'sst' ), includes.sst, hasItem.hasOwnProperty( 'bottomTemp' ), includes.bottomTemp );
+
+		if( ( hasItem.hasOwnProperty( 'sst' ) && includes.sst ) || ( hasItem.hasOwnProperty( 'bottomTemp' ) && includes.bottomTemp ) ) {
 			// Temp Axes
 			tempAxes.ticks.min = minTemp - 1;
 			tempAxes.ticks.max = maxTemp + 1;
