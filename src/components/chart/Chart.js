@@ -60,7 +60,7 @@ export function Charts ( {restrict, buoyFocus, updateCenter, updateZoom, buoys} 
             : undefined 
         }
       </div>
-      <p><small>Waves v2.0.5</small></p>
+      <p><small>Waves v2.0.8</small></p>
     </div>
   ); 
 }

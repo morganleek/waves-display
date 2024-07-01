@@ -258,7 +258,7 @@ export function wadGenerateChartData( waves, groupedIncludes, multiplier = 1,  )
 		const isMobile = ( window.innerWidth < 768 ) ? false : true; // Screen size
 		
 		// Y Axes
-		if( hasItem.hasOwnProperty( 'hsig' ) ) {
+		if( hasItem.hasOwnProperty( 'hsig' ) && includes.hsig ) {
 			// Wave Height Axes
 			waveHeightAxes.ticks.max = ( Math.ceil( maxWaveHeight ) > 2 ) ? Math.ceil( maxWaveHeight ) : 2; 
 			waveHeightAxes.title.display = isMobile;
@@ -266,7 +266,7 @@ export function wadGenerateChartData( waves, groupedIncludes, multiplier = 1,  )
 			axes["y-axis-1"] = waveHeightAxes;
 		}
 		
-		if( hasItem.hasOwnProperty( 'tp' ) ) {
+		if( hasItem.hasOwnProperty( 'tp' ) && includes.tp ) {
 			// Peak Period Axes
 			peakPeriodAxes.ticks.min = 0;
 			peakPeriodAxes.ticks.max = ( maxPeakPeriod < 25 ) ? 25 : Math.ceil( maxPeakPeriod / 2 ) * 2;
@@ -284,7 +284,7 @@ export function wadGenerateChartData( waves, groupedIncludes, multiplier = 1,  )
 			axes["y-axis-3"] = tempAxes;
 		}
 
-		if( hasItem.hasOwnProperty( 'windspeed' ) ) {
+		if( hasItem.hasOwnProperty( 'windspeed' ) && includes.windSpeed ) {
 			// Peak Period Axes
 			axes["y-axis-4"] = windSpeedAxes;
 		}
