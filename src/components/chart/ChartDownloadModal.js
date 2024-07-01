@@ -40,6 +40,10 @@ export const ChartDownloadModal = ( { close, download, downloadEnabled, download
 };
 
 export const ChartDownloadUserForm = ( { download, buoyId } ) => {
+  const required = [
+    'country',
+    'howWillYou'
+  ];
   const formik = useFormik({
     initialValues: {
       fullName: '', 
@@ -56,8 +60,12 @@ export const ChartDownloadUserForm = ( { download, buoyId } ) => {
 
       // No empty fields allowed
       for( const value in values ) {
-        if( !values[value] && value.indexOf('Other') == -1 ) {
-          errors[value] = "Required";
+        // Check value is in required object
+        if( required.indexOf( value ) >= 0 ) {
+          // Is required
+          if( !values[value] && value.indexOf('Other') == -1 ) {
+            errors[value] = "Required";
+          }
         }
       }
 
@@ -86,7 +94,7 @@ export const ChartDownloadUserForm = ( { download, buoyId } ) => {
   return (
     <form id="chart-download-user-form" className="form-vertical" onSubmit={formik.handleSubmit}>
       <div className="form-group">
-        <label htmlFor="fullName">Full Name *</label>
+        <label htmlFor="fullName">Full Name</label>
         <input 
           type="text"
           className="form-control"
@@ -96,7 +104,7 @@ export const ChartDownloadUserForm = ( { download, buoyId } ) => {
         { formik.touched.fullName && formik.errors.fullName ? <div className="has-errors">{ formik.errors.fullName }</div> : null }
       </div>
       <div className="form-group">
-        <label className="form-label" htmlFor="company">Company *</label>
+        <label className="form-label" htmlFor="company">Company</label>
         <input 
           type="text"
           className="form-control"
@@ -106,7 +114,7 @@ export const ChartDownloadUserForm = ( { download, buoyId } ) => {
         { formik.touched.company && formik.errors.company ? <div className="has-errors">{ formik.errors.company }</div> : null }
       </div>
       <div className="form-group">
-        <label htmlFor="state">State/Provence *</label>
+        <label htmlFor="state">State/Provence</label>
         <input 
           type="text"
           className="form-control"
