@@ -42,3 +42,13 @@
 		display: inline-block;
 	}
 }
+
+.gm-style-iw {
+	button.gm-ui-hover-effect {
+		width: 28px !important;
+		height: 28px !important;
+		& > span {
+			margin: 4px 4px 0 0 !important;
+		}
+	}
+}

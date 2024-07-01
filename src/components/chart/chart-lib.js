@@ -258,16 +258,30 @@ export function wadGenerateChartData( waves, groupedIncludes, multiplier = 1,  )
 		const isMobile = ( window.innerWidth < 768 ) ? false : true; // Screen size
 		
 		// Y Axes
-		if( hasItem.hasOwnProperty( 'hsig' ) && includes.hsig ) {
-			// Wave Height Axes
+		
+		// Wave Height Axes
+		if( 
+			( hasItem.hasOwnProperty( 'hsig' ) && includes.hsig ) ||
+			( hasItem.hasOwnProperty( 'hsigSea' ) && includes.hsigSea ) ||
+			( hasItem.hasOwnProperty( 'hsigSwell' ) && includes.hsigSwell ) ||
+			( hasItem.hasOwnProperty( 'tp' ) && includes.tp ) ||
+			( hasItem.hasOwnProperty( 'tm' ) && includes.tm ) ||
+			( hasItem.hasOwnProperty( 'tmSea' ) && includes.tmSea ) ||
+			( hasItem.hasOwnProperty( 'tmSwell' ) && includes.tmSwell )
+		) {	
 			waveHeightAxes.ticks.max = ( Math.ceil( maxWaveHeight ) > 2 ) ? Math.ceil( maxWaveHeight ) : 2; 
 			waveHeightAxes.title.display = isMobile;
 
 			axes["y-axis-1"] = waveHeightAxes;
 		}
 		
-		if( hasItem.hasOwnProperty( 'tp' ) && includes.tp ) {
-			// Peak Period Axes
+		// Period Axes
+		if( 
+			( hasItem.hasOwnProperty( 'tp' ) && includes.tp ) ||
+			( hasItem.hasOwnProperty( 'tm' ) && includes.tm ) ||
+			( hasItem.hasOwnProperty( 'tmSea' ) && includes.tmSea ) ||
+			( hasItem.hasOwnProperty( 'tmSwell' ) && includes.tmSwell )
+		) {
 			peakPeriodAxes.ticks.min = 0;
 			peakPeriodAxes.ticks.max = ( maxPeakPeriod < 25 ) ? 25 : Math.ceil( maxPeakPeriod / 2 ) * 2;
 			peakPeriodAxes.title.display = isMobile;
@@ -275,10 +289,8 @@ export function wadGenerateChartData( waves, groupedIncludes, multiplier = 1,  )
 			axes["y-axis-2"] = peakPeriodAxes;
 		}
 
-		// console.log( hasItem.hasOwnProperty( 'sst' ), includes.sst, hasItem.hasOwnProperty( 'bottomTemp' ), includes.bottomTemp );
-
+		// Temp Axes
 		if( ( hasItem.hasOwnProperty( 'sst' ) && includes.sst ) || ( hasItem.hasOwnProperty( 'bottomTemp' ) && includes.bottomTemp ) ) {
-			// Temp Axes
 			tempAxes.ticks.min = minTemp - 1;
 			tempAxes.ticks.max = maxTemp + 1;
 			tempAxes.title.display = isMobile;
@@ -286,8 +298,8 @@ export function wadGenerateChartData( waves, groupedIncludes, multiplier = 1,  )
 			axes["y-axis-3"] = tempAxes;
 		}
 
+		// Windspeed
 		if( hasItem.hasOwnProperty( 'windspeed' ) && includes.windSpeed ) {
-			// Peak Period Axes
 			axes["y-axis-4"] = windSpeedAxes;
 		}
 		

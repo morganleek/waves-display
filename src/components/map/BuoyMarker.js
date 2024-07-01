@@ -24,7 +24,8 @@ export const BuoyMarker = ( {
 	} = details;
 
 	// Only show labels on zoom
-	const label = currentZoom > 5 ? web_display_name : "";
+	// const label = currentZoom > 5 ? web_display_name : "";
+	const label = "";
 	
 	// Check if this should be visible
 	if( details.is_enabled === 1 && !showLive ) {
@@ -76,33 +77,30 @@ export const BuoyMarker = ( {
 			position={position} 
 			title={web_display_name}
 			icon={markerIcon(is_enabled === 1 ? "#e26a26" : "#a0a7ac" )}
-			label={label}
-			
 			onClick={ 
 				( e ) => { 
 					setCenter( position );
 					
-					if( is_enabled === 1 ) {
-						const card = document.querySelector( '.card[data-buoy-id="' + id + '"]' );
-						if( card ) {
-							card.scrollIntoView( { behavior: "smooth" } );
-						}
-					}
-					else {
-						setInfoWindow( {
+					setInfoWindow( {
 						id: id,
 						title: web_display_name,
 						position: position,
 						description: description,
 						visible: true
 					} );
+
+					if( is_enabled === 1 ) {
+						const card = document.querySelector( '.card[data-buoy-id="' + id + '"]' );
+						if( card ) {
+							card.scrollIntoView( { behavior: "smooth" } );
+						}
 					}
 				}
 			}
 		/>
 		{ polylinePoints.length > 0 && (
 			<Polyline 
-				strokeColor={"#c4deea"}
+				strokeColor={"#ffabab"}
 				path={ polylinePoints }
 				strokeWeight={"2"}
 			/>
