@@ -159,29 +159,6 @@ export const ChartDownloadUserForm = ( { download, buoyId } ) => {
             value={ formik.values.howWillYouOther } />
         ) : null }
       </div>
-      {/* <div className="form-group">
-        <label htmlFor="howWillYouCheckbox">Let us know where this data will be used: *</label>
-        <input 
-          type="checkbox"
-          name="howWillYouCheckbox[government]"
-          value="1"
-        /> Government <br />
-        <input 
-          type="checkbox"
-          name="howWillYouCheckbox[research-education]"
-          value="1"
-        /> Research/Education <br />
-        <input 
-          type="checkbox"
-          name="howWillYouCheckbox[commercial-industry]"
-          value="1"
-        /> Commercial/Industry <br />
-        <input 
-          type="checkbox"
-          name="howWillYouCheckbox[recreation]"
-          value="1"
-        /> Recreation
-      </div> */}
       <div className="form-group">
         <label htmlFor="howDidYou">How did you hear about us:</label>
         <select 

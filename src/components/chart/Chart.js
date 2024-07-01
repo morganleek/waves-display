@@ -308,59 +308,59 @@ const Chart = ( props ) => {
       ? <ChartTable data={ data } show={ wad.obs_table_fields } { ...props } />
       : undefined;
 
-    const chartGauges = (
-      wad.buoy_display_gauge_wind_direction === "1" ||
-      wad.buoy_display_gauge_sea_surface === "1" ||
-      wad.buoy_display_gauge_sea_state === "1"
-    ) ? (
-      <div className="chart-gauges">
-        { (
-          wad.buoy_display_gauge_wind_direction === "1" 
-          && data.dataPoints.hasOwnProperty( 'winddirect' )
-        )
-          ? (
-            <div className="gauge">
-              <h6>Wind Direction</h6>
-              <div className="gauge-dial gauge-wind-direction" data-level={ ( data.dataPoints.winddirect.data.filter( t => t.y > 0 ).pop().y + 180 ) % 360 }>
-                <div className="needle"></div>
-              </div>
-              <p>
-                { data.dataPoints.winddirect.data.filter( t => t.y > 0 ).pop().y }°
-              </p>
-            </div>
-          )
-          : undefined
-        }
-        { (
-          wad.buoy_display_gauge_sea_surface === "1" 
-          && data.dataPoints.hasOwnProperty( 'sst' )
-        )
-        ? (
-          <div className="gauge">
-            <h6>Sea Surface Temp</h6>
-            <div className="gauge-dial gauge-sea-temp" data-level={ Math.ceil( ( data.dataPoints.sst.data.filter( t => t.y > 0 ).pop().y / 50 ) * 120 ) }>
-              <div className="needle"></div>
-            </div>
-            <p>
-              { data.dataPoints.sst.data.filter( t => t.y > 0 ).pop().y }°C
-            </p>
-          </div>
-        )
-        : undefined
-        }
-        { wad.buoy_display_gauge_sea_state === "1" 
-          ? (
-            <div className="gauge">
-              <h6>Sea State Danger</h6>
-              <div className="gauge-dial gauge-sea-state" data-level={ Math.ceil( ( ( ( 0.5 - 5 ) / 5 ) * 120 + 360 ) % 360 ) }>
-                <div className="needle"></div>
-              </div>
-            </div>
-          )
-          : undefined
-        }
-      </div>
-    ) : undefined;
+    // const chartGauges = (
+    //   wad.buoy_display_gauge_wind_direction === "1" ||
+    //   wad.buoy_display_gauge_sea_surface === "1" ||
+    //   wad.buoy_display_gauge_sea_state === "1"
+    // ) ? (
+    //   <div className="chart-gauges">
+    //     { (
+    //       wad.buoy_display_gauge_wind_direction === "1" 
+    //       && data.dataPoints.hasOwnProperty( 'winddirect' )
+    //     )
+    //       ? (
+    //         <div className="gauge">
+    //           <h6>Wind Direction</h6>
+    //           <div className="gauge-dial gauge-wind-direction" data-level={ ( data.dataPoints.winddirect.data.filter( t => t.y > 0 ).pop().y + 180 ) % 360 }>
+    //             <div className="needle"></div>
+    //           </div>
+    //           <p>
+    //             { data.dataPoints.winddirect.data.filter( t => t.y > 0 ).pop().y }°
+    //           </p>
+    //         </div>
+    //       )
+    //       : undefined
+    //     }
+    //     { (
+    //       wad.buoy_display_gauge_sea_surface === "1" 
+    //       && data.dataPoints.hasOwnProperty( 'sst' )
+    //     )
+    //     ? (
+    //       <div className="gauge">
+    //         <h6>Sea Surface Temp</h6>
+    //         <div className="gauge-dial gauge-sea-temp" data-level={ Math.ceil( ( data.dataPoints.sst.data.filter( t => t.y > 0 ).pop().y / 50 ) * 120 ) }>
+    //           <div className="needle"></div>
+    //         </div>
+    //         <p>
+    //           { data.dataPoints.sst.data.filter( t => t.y > 0 ).pop().y }°C
+    //         </p>
+    //       </div>
+    //     )
+    //     : undefined
+    //     }
+    //     { wad.buoy_display_gauge_sea_state === "1" 
+    //       ? (
+    //         <div className="gauge">
+    //           <h6>Sea State Danger</h6>
+    //           <div className="gauge-dial gauge-sea-state" data-level={ Math.ceil( ( ( ( 0.5 - 5 ) / 5 ) * 120 + 360 ) % 360 ) }>
+    //             <div className="needle"></div>
+    //           </div>
+    //         </div>
+    //       )
+    //       : undefined
+    //     }
+    //   </div>
+    // ) : undefined;
     
     const buttonGroup = !wad.buoy_display_chart_swell_only 
       ? <div className="tools">
@@ -434,7 +434,6 @@ const Chart = ( props ) => {
         </div>
         <div className='card-body'> 
           <div className="canvas-wrapper">
-            { chartGauges }
             { groupedIncludesListItems && !isExpanded && !wad.buoy_display_chart_swell_only
               ? ( 
                 <div className="chart-filter">
