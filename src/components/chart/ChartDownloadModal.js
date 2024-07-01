@@ -183,7 +183,7 @@ export const ChartDownloadUserForm = ( { download, buoyId } ) => {
         /> Recreation
       </div> */}
       <div className="form-group">
-        <label htmlFor="howDidYou">How did you hear about us: *</label>
+        <label htmlFor="howDidYou">How did you hear about us:</label>
         <select 
           className="form-select" 
           name="howDidYou"
