@@ -58,9 +58,12 @@ const ClusterBuoyMarkers = ( {
     });
   }, []);
 
+	// console.log( buoys );
+
 	return (
 		<>
 			{ buoys.map( marker => <BuoyMarker 
+				key={ marker.id }
 				details={ marker } 
 				setCenter={setCenter} 
 				setInfoWindow={setInfoWindow}
@@ -68,7 +71,7 @@ const ClusterBuoyMarkers = ( {
 				currentBounds={currentBounds}
 				showHistoric={showHistoric}
 				showLive={showLive}
-				setMarkerRef={setMarkerRef}
+				markerRef={setMarkerRef}
 			/> ) }
 		</>
 	);
@@ -123,6 +126,7 @@ export const WavesMap = ( { buoys, center, setCenter } ) => {
 				/>
 				<APIProvider apiKey={wad.googleApiKey}>
 					<Map 
+						mapId={ 'da79550a05ef2057' }
 						className="maps" 
 						styles={ mapStyles }
 						defaultBounds={currentBounds}
@@ -149,7 +153,7 @@ export const WavesMap = ( { buoys, center, setCenter } ) => {
 						>
 							<div className="info-window">
 								<div className="info-copy">
-									<p className="title has-text-align-center"><strong>{ infoWindow.title }</strong></p>
+									<p className="title has-text-align-center"> <strong>{ infoWindow.title }</strong></p>
 									<p className="has-text-align-center">{ infoWindow.description }</p>
 									{/* { document.querySelector( '.card[data-buoy-id="' + infoWindow.id + '"]' ) && (
 										<p className="has-text-align-center">

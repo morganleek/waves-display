@@ -15,12 +15,12 @@
 @use './scss/modal';
 @use './scss/form';
 
-.clearfix {
-	&::before,
-	&::after {
-		content: '';
-		display: block;
-		clear: both;
-	}
-}
+// .clearfix {
+// 	&::before,
+// 	&::after {
+// 		content: '';
+// 		display: block;
+// 		clear: both;
+// 	}
+// }
 

@@ -1,5 +1,5 @@
 import domReady from "@wordpress/dom-ready";
-import { render } from "@wordpress/element";
+import { createRoot } from "@wordpress/element";
 import App from './display';
 
 domReady( () => {
@@ -8,5 +8,9 @@ domReady( () => {
 	const restrict = container.dataset.buoys ? container.dataset.buoys.split(",") : [];
 	const mode = container.dataset.theme;
 
-	render( <App restrict={ restrict } mode={mode} />, container );
+	const root = createRoot( container );
+	root.render( 
+		<App restrict={ restrict } mode={ mode } />
+		, container 
+	);
 } );

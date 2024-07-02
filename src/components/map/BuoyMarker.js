@@ -1,9 +1,20 @@
 import React from "react";
 import {
-  Marker
+  Marker,
+	AdvancedMarker
 } from '@vis.gl/react-google-maps';
 import { Polyline } from "./Polyline";
 import { markerIcon, markerTimeIcon, buoyDataToObject, inBounds } from "./map-library";
+import classNames from 'classnames';
+
+const SVGMarker = () => (
+	<svg className="svg-marker" viewBox="0 0 16 16">
+		<path className="border" d="M8,1.63l6.82,4.96-2.61,8.02H3.78L1.18,6.59,8,1.63M8,.39L0,6.2l3.06,9.4h9.89l3.06-9.4L8,.39h0Z" />
+		<g className="bg">
+			<polygon points="3.42 15.11 .59 6.4 8 1.01 15.41 6.4 12.58 15.11 3.42 15.11" />
+		</g>
+	</svg>
+);
 
 export const BuoyMarker = ( { 
 	details, 
@@ -71,8 +82,13 @@ export const BuoyMarker = ( {
 		}
 	}
 
+	if( isNaN( position.lat ) || isNaN( position.lng ) ) {
+		return <></>;
+	}
+	
+
 	return <>
-		<Marker 
+		<AdvancedMarker 
 			ref={markerRef} 
 			position={position} 
 			title={web_display_name}
@@ -97,7 +113,9 @@ export const BuoyMarker = ( {
 					}
 				}
 			}
-		/>
+		>
+			<SVGMarker />
+		</AdvancedMarker>
 		{ polylinePoints.length > 0 && (
 			<Polyline 
 				strokeColor={"#ffabab"}
@@ -107,12 +125,12 @@ export const BuoyMarker = ( {
 		) }
 		{ polylineDates.length > 0 && (
 			polylineDates.map( ( { label, position } ) => (
-				<Marker 
+				<AdvancedMarker 
 					ref={markerRef} 
 					position={position} 
 					label={ { text: label, fontSize: "12px" } }
-					icon={markerTimeIcon("#e26a26")}	
-				/>
+					// icon={markerTimeIcon("#e26a26")}	
+				>❌</AdvancedMarker>
 			) )
 		) }
 	</>;

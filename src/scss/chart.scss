@@ -435,20 +435,7 @@ li[class^="filter-"] {
     background-color: rgba(77, 168, 248, 0.2);
     border-color: rgba(77, 168, 248, 1);
   }
-  &.filter-tp label span::before { 
-    // background-color: rgba(237, 135, 80, 1);
-    // border-color: rgba(235, 127, 74, 0.5);
-    border-radius: 0;
-    border: 0 none;
-    background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGRhdGEtbmFtZT0iTGF5ZXIgMSIgdmlld0JveD0iMCAwIDEyIDEyIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImEiIHgxPSIuODIiIHgyPSIxMS4yMSIgeTE9IjUuOTkiIHkyPSI1Ljk5IiBncmFkaWVudFRyYW5zZm9ybT0ibWF0cml4KDEuMDI5NDQgLS4wMzM5NyAtLjAzMzg2IDEuMDMxNjggLS4wNiAuMDYpIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjZjJhNzYxIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjZWI3ZDRhIi8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHBhdGggZD0iTTExLjUuNSAxLjYyIDMuNDFsMi4wMSAyTC41IDguNTRsMS40OCAxLjQ4IDEuNDggMS40OCAzLjEzLTMuMTMgMiAyLjAxTDExLjUuNXoiIHN0eWxlPSJmaWxsOnVybCgjYSk7c3Ryb2tlLXdpZHRoOjAiLz48L3N2Zz4=");
-  }
-  &.filter-tm label span::before { 
-    // border-color: rgba(255, 158, 64, 1);
-    // background-color: rgba(255, 158, 64, 0.2);
-    border-radius: 0;
-    border: 0 none;
-    background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGRhdGEtbmFtZT0iTGF5ZXIgMSIgdmlld0JveD0iMCAwIDEyIDEyIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImEiIHgxPSIuMzEiIHgyPSIxMC43IiB5MT0iNi41IiB5Mj0iNi41IiBncmFkaWVudFRyYW5zZm9ybT0ibWF0cml4KDEuMDI5NDQgLS4wMzM5NyAtLjAzMzg2IDEuMDMxNjggLjQ4IC0uNDgpIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjNmZjYmZhIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjNGRhOGY4Ii8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHBhdGggZD0iTTExLjUuNSAxLjYyIDMuNDFsMi4wMSAyTC41IDguNTRsMS40OCAxLjQ4IDEuNDggMS40OCAzLjEzLTMuMTMgMiAyLjAxTDExLjUuNXoiIHN0eWxlPSJmaWxsOnVybCgjYSk7c3Ryb2tlLXdpZHRoOjAiLz48L3N2Zz4=");
-  }
+  
   &.filter-sst label span::before { 
     background-color: rgba(194, 59, 34, 0.2);
     border-color: rgba(194, 59, 34, 1);
@@ -477,79 +464,97 @@ li[class^="filter-"] {
     background-color: rgba(254, 240, 39, 0.2);
     border-color: rgba(252, 185, 0, 1);
   }
-  &.filter-tmSwell label span::before {
-    // background-color: #4cc0c033;
-    // border-color: #4cc0c0;
+  &.filter-tp label span::before { 
+    // border-color: rgba(235, 127, 74, 0.5);
+    background-color: rgba(237, 135, 80, 1);
     border-radius: 0;
     border: 0 none;
-    background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMiAxMiI+CiAgPHBhdGggZD0iTTExLjUuNUwxLjYyLDMuNDFsMi4wMSwyLTMuMTMsMy4xMywxLjQ4LDEuNDgsMS40OCwxLjQ4LDMuMTMtMy4xMywyLDIuMDFMMTEuNS41WiIgc3R5bGU9ImZpbGw6ICNkZWYzZjI7IHN0cm9rZTogIzRjYzBjMDsgc3Ryb2tlLW1pdGVybGltaXQ6IDEwOyBzdHJva2Utd2lkdGg6IC41cHg7Ii8+Cjwvc3ZnPg==");
+    clip-path: polygon(0 72%, 35% 35%, 14% 14%, 100% 0, 86% 86%, 65% 65%, 28% 100%);
+    // background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGRhdGEtbmFtZT0iTGF5ZXIgMSIgdmlld0JveD0iMCAwIDEyIDEyIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImEiIHgxPSIuODIiIHgyPSIxMS4yMSIgeTE9IjUuOTkiIHkyPSI1Ljk5IiBncmFkaWVudFRyYW5zZm9ybT0ibWF0cml4KDEuMDI5NDQgLS4wMzM5NyAtLjAzMzg2IDEuMDMxNjggLS4wNiAuMDYpIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjZjJhNzYxIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjZWI3ZDRhIi8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHBhdGggZD0iTTExLjUuNSAxLjYyIDMuNDFsMi4wMSAyTC41IDguNTRsMS40OCAxLjQ4IDEuNDggMS40OCAzLjEzLTMuMTMgMiAyLjAxTDExLjUuNXoiIHN0eWxlPSJmaWxsOnVybCgjYSk7c3Ryb2tlLXdpZHRoOjAiLz48L3N2Zz4=");
+  }
+  &.filter-tm label span::before { 
+    // border-color: rgba(255, 158, 64, 1);
+    background-color: #60bafa;
+    border-radius: 0;
+    border: 0 none;
+    clip-path: polygon(0 72%, 35% 35%, 14% 14%, 100% 0, 86% 86%, 65% 65%, 28% 100%);
+    // background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGRhdGEtbmFtZT0iTGF5ZXIgMSIgdmlld0JveD0iMCAwIDEyIDEyIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImEiIHgxPSIuMzEiIHgyPSIxMC43IiB5MT0iNi41IiB5Mj0iNi41IiBncmFkaWVudFRyYW5zZm9ybT0ibWF0cml4KDEuMDI5NDQgLS4wMzM5NyAtLjAzMzg2IDEuMDMxNjggLjQ4IC0uNDgpIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjNmZjYmZhIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjNGRhOGY4Ii8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHBhdGggZD0iTTExLjUuNSAxLjYyIDMuNDFsMi4wMSAyTC41IDguNTRsMS40OCAxLjQ4IDEuNDggMS40OCAzLjEzLTMuMTMgMiAyLjAxTDExLjUuNXoiIHN0eWxlPSJmaWxsOnVybCgjYSk7c3Ryb2tlLXdpZHRoOjAiLz48L3N2Zz4=");
+  }
+  &.filter-tmSwell label span::before {
+    // border-color: #4cc0c0;
+    background-color: #4cc0c0; // #4cc0c033;
+    border-radius: 0;
+    border: 0 none;
+    clip-path: polygon(0 72%, 35% 35%, 14% 14%, 100% 0, 86% 86%, 65% 65%, 28% 100%);
+    // background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMiAxMiI+CiAgPHBhdGggZD0iTTExLjUuNUwxLjYyLDMuNDFsMi4wMSwyLTMuMTMsMy4xMywxLjQ4LDEuNDgsMS40OCwxLjQ4LDMuMTMtMy4xMywyLDIuMDFMMTEuNS41WiIgc3R5bGU9ImZpbGw6ICNkZWYzZjI7IHN0cm9rZTogIzRjYzBjMDsgc3Ryb2tlLW1pdGVybGltaXQ6IDEwOyBzdHJva2Utd2lkdGg6IC41cHg7Ii8+Cjwvc3ZnPg==");
     
   }
   &.filter-tmSea label span::before {
-    // background-color: rgba(255, 99, 132, 0.2);
     // border-color: rgba(255, 99, 132, 1);
+    background-color: rgba(255, 99, 132, 1); // rgba(255, 99, 132, 0.2);
     border-radius: 0;
     border: 0 none;
-    background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMiAxMiI+CiAgPHBhdGggZD0iTTExLjUuNUwxLjYyLDMuNDFsMi4wMSwyLTMuMTMsMy4xMywxLjQ4LDEuNDgsMS40OCwxLjQ4LDMuMTMtMy4xMywyLDIuMDFMMTEuNS41WiIgc3R5bGU9ImZpbGw6ICNmZmUxZTc7IHN0cm9rZTogI2ZmNjY4Njsgc3Ryb2tlLW1pdGVybGltaXQ6IDEwOyBzdHJva2Utd2lkdGg6IC41cHg7Ii8+Cjwvc3ZnPg==");
+    clip-path: polygon(0 72%, 35% 35%, 14% 14%, 100% 0, 86% 86%, 65% 65%, 28% 100%);
+    // background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMiAxMiI+CiAgPHBhdGggZD0iTTExLjUuNUwxLjYyLDMuNDFsMi4wMSwyLTMuMTMsMy4xMywxLjQ4LDEuNDgsMS40OCwxLjQ4LDMuMTMtMy4xMywyLDIuMDFMMTEuNS41WiIgc3R5bGU9ImZpbGw6ICNmZmUxZTc7IHN0cm9rZTogI2ZmNjY4Njsgc3Ryb2tlLW1pdGVybGltaXQ6IDEwOyBzdHJva2Utd2lkdGg6IC41cHg7Ii8+Cjwvc3ZnPg==");
   }
 }
 
-.chart-gauges {
-  display: grid;
-  gap: 10px;
-  grid-template-columns: repeat(3, 1fr);
-  margin-top: 10px;
-  .gauge {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    h6 {
-      margin: 0 0 5px;
-    }
-    p {
-      font-size: 0.8rem;
-      margin: 5px 0 0;
-      font-weight: 600;
-    }
-    .needle {
-      background: #000; // var(--warning);
-      width: 8px;
-      height: 70px;
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -100%);
-      transform-origin: bottom center;
-      clip-path: polygon(50% 0, 100% 90%, 50% 100%, 0 90%);
-      [data-theme="theme-dark"] & {
-        background: #fa0000;
-      }
-    }
-    .gauge-dial {
-      width: 160px;
-      height: 160px;
-      border-radius: 80px;
-      position: relative;
-      @for $i from 0 through 359 {
-        &[data-level="#{$i}"] .needle {
-          transform: translate(-50%, -100%) rotate(#{$i}deg);
-        }
-      }
-      &.gauge-wind-direction {
-        background: url(../images/compass.svg) 0 0/100% auto no-repeat; // var(--header--background);
-      }
-      &.gauge-sea-temp {
-        background: url(../images/temp-gauge@2x.png) 0 0/100% auto no-repeat;
-        [data-theme="theme-dark"] & {
-          background: url(../images/dark-temp-gauge@2x.png) 0 0/100% auto no-repeat;
-        }
-      }
-      &.gauge-sea-state {
-        background: url(../images/sea-state@2x.png) 50% 50%/100% auto no-repeat;
-        .needle {
-          background: rgba;
-        }
-      }
-    }
-  }
-}
+// .chart-gauges {
+//   display: grid;
+//   gap: 10px;
+//   grid-template-columns: repeat(3, 1fr);
+//   margin-top: 10px;
+//   .gauge {
+//     display: flex;
+//     flex-direction: column;
+//     align-items: center;
+//     h6 {
+//       margin: 0 0 5px;
+//     }
+//     p {
+//       font-size: 0.8rem;
+//       margin: 5px 0 0;
+//       font-weight: 600;
+//     }
+//     .needle {
+//       background: #000; // var(--warning);
+//       width: 8px;
+//       height: 70px;
+//       position: absolute;
+//       left: 50%;
+//       top: 50%;
+//       transform: translate(-50%, -100%);
+//       transform-origin: bottom center;
+//       clip-path: polygon(50% 0, 100% 90%, 50% 100%, 0 90%);
+//       [data-theme="theme-dark"] & {
+//         background: #fa0000;
+//       }
+//     }
+//     .gauge-dial {
+//       width: 160px;
+//       height: 160px;
+//       border-radius: 80px;
+//       position: relative;
+//       @for $i from 0 through 359 {
+//         &[data-level="#{$i}"] .needle {
+//           transform: translate(-50%, -100%) rotate(#{$i}deg);
+//         }
+//       }
+//       &.gauge-wind-direction {
+//         background: url(../images/compass.svg) 0 0/100% auto no-repeat; // var(--header--background);
+//       }
+//       &.gauge-sea-temp {
+//         background: url(../images/temp-gauge@2x.png) 0 0/100% auto no-repeat;
+//         [data-theme="theme-dark"] & {
+//           background: url(../images/dark-temp-gauge@2x.png) 0 0/100% auto no-repeat;
+//         }
+//       }
+//       &.gauge-sea-state {
+//         background: url(../images/sea-state@2x.png) 50% 50%/100% auto no-repeat;
+//         .needle {
+//           background: rgba;
+//         }
+//       }
+//     }
+//   }
+// }

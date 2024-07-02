@@ -52,3 +52,29 @@
 		}
 	}
 }
+
+.buoy-marker-is-enabled,
+.buoy-marker-is-archive {
+	font-size: 2.2em;
+	color: #e26a26;
+	opacity: 0.8;
+	line-height: 0.5em;
+}
+.buoy-marker-is-archive {
+	color: #a0a7ac;
+}
+
+.svg-marker {
+	width: 16px;
+	height: 16px;
+	fill: #e26a26;
+	position: relative;
+	top: 8px;
+	.border {
+		fill: #b24c00;
+	}
+	.bg {
+		opacity: 0.8;
+		fill: #e26a26;
+	}
+}

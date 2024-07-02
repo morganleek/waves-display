@@ -21602,11 +21602,25 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _vis_gl_react_google_maps__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @vis.gl/react-google-maps */ "./node_modules/@vis.gl/react-google-maps/dist/index.modern.mjs");
 /* harmony import */ var _Polyline__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Polyline */ "./src/components/map/Polyline.tsx");
 /* harmony import */ var _map_library__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./map-library */ "./src/components/map/map-library.js");
+/* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! classnames */ "./node_modules/classnames/index.js");
+/* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(classnames__WEBPACK_IMPORTED_MODULE_4__);
 
 
 
 
 
+
+const SVGMarker = () => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("svg", {
+  className: "svg-marker",
+  viewBox: "0 0 16 16"
+}, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("path", {
+  className: "border",
+  d: "M8,1.63l6.82,4.96-2.61,8.02H3.78L1.18,6.59,8,1.63M8,.39L0,6.2l3.06,9.4h9.89l3.06-9.4L8,.39h0Z"
+}), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("g", {
+  className: "bg"
+}, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("polygon", {
+  points: "3.42 15.11 .59 6.4 8 1.01 15.41 6.4 12.58 15.11 3.42 15.11"
+})));
 const BuoyMarker = ({
   details,
   markerRef,
@@ -21681,7 +21695,10 @@ const BuoyMarker = ({
       }));
     }
   }
-  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_vis_gl_react_google_maps__WEBPACK_IMPORTED_MODULE_1__.Marker, {
+  if (isNaN(position.lat) || isNaN(position.lng)) {
+    return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null);
+  }
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_vis_gl_react_google_maps__WEBPACK_IMPORTED_MODULE_1__.AdvancedMarker, {
     ref: markerRef,
     position: position,
     title: web_display_name,
@@ -21704,22 +21721,22 @@ const BuoyMarker = ({
         }
       }
     }
-  }), polylinePoints.length > 0 && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Polyline__WEBPACK_IMPORTED_MODULE_2__.Polyline, {
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(SVGMarker, null)), polylinePoints.length > 0 && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Polyline__WEBPACK_IMPORTED_MODULE_2__.Polyline, {
     strokeColor: "#ffabab",
     path: polylinePoints,
     strokeWeight: "2"
   }), polylineDates.length > 0 && polylineDates.map(({
     label,
     position
-  }) => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_vis_gl_react_google_maps__WEBPACK_IMPORTED_MODULE_1__.Marker, {
+  }) => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_vis_gl_react_google_maps__WEBPACK_IMPORTED_MODULE_1__.AdvancedMarker, {
     ref: markerRef,
     position: position,
     label: {
       text: label,
       fontSize: "12px"
-    },
-    icon: (0,_map_library__WEBPACK_IMPORTED_MODULE_3__.markerTimeIcon)("#e26a26")
-  })));
+    }
+    // icon={markerTimeIcon("#e26a26")}	
+  }, "\u274C")));
 };
 
 /***/ }),
@@ -21776,7 +21793,6 @@ const ClusterBuoyMarkers = ({
   }, [map]);
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     if (!clusterer) return;
-    console.log('go');
     clusterer.clearMarkers();
     clusterer.addMarkers(Object.values(markers));
   }, [clusterer, markers]);
@@ -21797,7 +21813,11 @@ const ClusterBuoyMarkers = ({
       }
     });
   }, []);
+
+  // console.log( buoys );
+
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, buoys.map(marker => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_BuoyMarker__WEBPACK_IMPORTED_MODULE_4__.BuoyMarker, {
+    key: marker.id,
     details: marker,
     setCenter: setCenter,
     setInfoWindow: setInfoWindow,
@@ -21805,7 +21825,7 @@ const ClusterBuoyMarkers = ({
     currentBounds: currentBounds,
     showHistoric: showHistoric,
     showLive: showLive,
-    setMarkerRef: setMarkerRef
+    markerRef: setMarkerRef
   })));
 };
 const MapComponent = ({
@@ -21852,6 +21872,7 @@ const WavesMap = ({
   }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_vis_gl_react_google_maps__WEBPACK_IMPORTED_MODULE_2__.APIProvider, {
     apiKey: wad.googleApiKey
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_vis_gl_react_google_maps__WEBPACK_IMPORTED_MODULE_2__.Map, {
+    mapId: 'da79550a05ef2057',
     className: "maps",
     styles: _map_style_json__WEBPACK_IMPORTED_MODULE_7__,
     defaultBounds: currentBounds,
@@ -21876,7 +21897,7 @@ const WavesMap = ({
     className: "info-copy"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", {
     className: "title has-text-align-center"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("strong", null, infoWindow.title)), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", {
+  }, " ", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("strong", null, infoWindow.title)), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", {
     className: "has-text-align-center"
   }, infoWindow.description)))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(MapComponent, {
     center: center
@@ -73590,7 +73611,8 @@ _wordpress_dom_ready__WEBPACK_IMPORTED_MODULE_1___default()(() => {
   // Narrow results to only certain buoys
   const restrict = container.dataset.buoys ? container.dataset.buoys.split(",") : [];
   const mode = container.dataset.theme;
-  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_2__.render)((0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_display__WEBPACK_IMPORTED_MODULE_3__["default"], {
+  const root = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_2__.createRoot)(container);
+  root.render((0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_display__WEBPACK_IMPORTED_MODULE_3__["default"], {
     restrict: restrict,
     mode: mode
   }), container);
