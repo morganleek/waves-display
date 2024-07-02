@@ -8,6 +8,5 @@ domReady( () => {
 	const restrict = container.dataset.buoys ? container.dataset.buoys.split(",") : [];
 	const mode = container.dataset.theme;
 
-	
 	render( <App restrict={ restrict } mode={mode} />, container );
 } );

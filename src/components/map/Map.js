@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "@wordpress/element";
 import {
   APIProvider,
   Map,
@@ -6,6 +6,7 @@ import {
 	useMap,
 	InfoWindow
 } from '@vis.gl/react-google-maps';
+import { MarkerClusterer } from '@googlemaps/markerclusterer';
 
 import { BuoyMarker } from "./BuoyMarker";
 import { MapKey } from "./MapKey";
@@ -17,6 +18,61 @@ const containerStyle = {
   width: '100%',
   height: '100%'
 };
+
+const ClusterBuoyMarkers = ( { 
+	buoys, 
+	setCenter,
+	setInfoWindow,
+	currentZoom,
+	currentBounds,
+	showHistoric,
+	showLive 
+} ) => {
+	const [markers, setMarkers] = useState({});
+	
+	const map = useMap();
+  const clusterer = useMemo(() => {
+    if (!map) return null;
+
+    return new MarkerClusterer( { map } );
+  }, [map]);
+
+	useEffect(() => {
+    if (!clusterer) return;
+    clusterer.clearMarkers();
+    clusterer.addMarkers(Object.values(markers));
+  }, [clusterer, markers]);
+
+	const setMarkerRef = useCallback((marker, key) => {
+    setMarkers(markers => {
+      if ((marker && markers[key]) || (!marker && !markers[key]))
+        return markers;
+
+      if (marker) {
+        return {...markers, [key]: marker};
+      } else {
+        const {[key]: _, ...newMarkers} = markers;
+
+        return newMarkers;
+      }
+    });
+  }, []);
+
+	return (
+		<>
+			{ buoys.map( marker => <BuoyMarker 
+				details={ marker } 
+				setCenter={setCenter} 
+				setInfoWindow={setInfoWindow}
+				currentZoom={currentZoom}
+				currentBounds={currentBounds}
+				showHistoric={showHistoric}
+				showLive={showLive}
+				setMarkerRef={setMarkerRef}
+			/> ) }
+		</>
+	);
+}
 
 const MapComponent = ( { center } ) => {
 	const map = useMap();
@@ -73,16 +129,15 @@ export const WavesMap = ( { buoys, center, setCenter } ) => {
 						onZoomChanged={(e) => onZoomChange(e)}
 						
 					>
-						{ buoys && buoys.map( marker => <BuoyMarker 
-							markerRef={markerRef} 
-							details={ marker } 
+						{ buoys && <ClusterBuoyMarkers 
+							buoys={ buoys } 
 							setCenter={setCenter} 
 							setInfoWindow={setInfoWindow}
 							currentZoom={currentZoom}
 							currentBounds={currentBounds}
 							showHistoric={showHistoric}
 							showLive={showLive}
-						/> ) }
+						/> }
 					</Map>
 					{ infoWindow && (
 						<InfoWindow

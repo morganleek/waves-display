@@ -1,1 +1,46 @@
-.wp-block-waves-display{display:grid;gap:10px;grid-template-columns:1fr 1fr;min-height:400px;min-height:70vh}.wp-block-waves-display>*{position:relative}.wp-block-waves-display>:before{right:50%;position:absolute;top:50%;transform:translate(50%,-50%)}.wp-block-waves-display .maps{background:#588da8}.wp-block-waves-display .maps:before{color:#fff;content:"Map"}.wp-block-waves-display .charts{background:#f0f0f0}.wp-block-waves-display .charts:before{content:"Charts"}@media(min-width:768px){.wp-block-waves-display .charts{grid-area:1/2/2/3}}.components-form-token-field__suggestions-list{padding-right:0}
+/*!****************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[4].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[4].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[4].use[3]!./src/editor.scss ***!
+  \****************************************************************************************************************************************************************************************************************************************/
+/**
+ * The following styles get applied inside the editor only.
+ *
+ * Replace them with your own styles or remove the file completely.
+ */
+.wp-block-waves-display {
+  min-height: 400px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  min-height: 70vh;
+}
+.wp-block-waves-display > * {
+  position: relative;
+}
+.wp-block-waves-display > *::before {
+  position: absolute;
+  right: 50%;
+  top: 50%;
+  transform: translate(50%, -50%);
+}
+.wp-block-waves-display .maps {
+  background: #588da8;
+}
+.wp-block-waves-display .maps::before {
+  content: "Map";
+  color: #fff;
+}
+.wp-block-waves-display .charts {
+  background: #f0f0f0;
+}
+.wp-block-waves-display .charts::before {
+  content: "Charts";
+}
+@media (min-width: 768px) {
+  .wp-block-waves-display .charts {
+    grid-area: 1/2/2/3;
+  }
+}
+
+.components-form-token-field__suggestions-list {
+  padding-right: 0;
+}
